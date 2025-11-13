@@ -2,7 +2,7 @@
 
 **Working title:** `Go.Breeding` — a 2D, Godot-driven breeding sim focused on **systems-first genetics**, not VN-first presentation.
 
-## High-level pitch
+## 
 Breed, reroll, and evolve demi-species across four orthogonal trait axes. Unlock new species via **readable evolutionary conditions** (e.g., `Cow + Feral + STR ≥ 120 → Minotaur`). Content is data-driven so new species, traits, and evolutions can be added without engine rewrites.
 
 ## What makes it different
