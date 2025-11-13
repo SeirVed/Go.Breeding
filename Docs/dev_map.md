@@ -1,6 +1,6 @@
 # Dev Map (Milestones)
 
-## Phase 0 — Prototype (4–6 weeks equivalent)
+## Phase 0 — Prototype
 - Static PNG placeholders for 6–8 species across 3 silhouettes.
 - Implement core breeding logic (species pick, axes blend, invisible trait rolls).
 - Minimal UI for pairing, results, codex hints.
