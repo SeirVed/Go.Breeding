@@ -1,0 +1,75 @@
+[
+	{
+		"id": "ranch",
+		"name": "Hearthglen Ranch",
+		"icon": "🏡",
+		"position": [0.20, 0.66],
+		"description": "Home soil. Tend the pens, plan pairings, and watch a new bloodline take shape.",
+		"emoji_layers": [
+			{"emoji": "🌾", "position": [0.18, 0.66], "size": 58, "rotation": -9},
+			{"emoji": "🌾", "position": [0.79, 0.67], "size": 62, "rotation": 8},
+			{"emoji": "🌳", "position": [0.74, 0.30], "size": 67},
+			{"emoji": "🏡", "position": [0.47, 0.38], "size": 90},
+			{"emoji": "🐄", "position": [0.35, 0.72], "size": 58},
+			{"emoji": "🐓", "position": [0.61, 0.77], "size": 38}
+		]
+	},
+	{
+		"id": "town",
+		"name": "Briarwick Town",
+		"icon": "🏘️",
+		"position": [0.50, 0.49],
+		"description": "A market town of contracts, rumours, supplies, and people worth knowing.",
+		"emoji_layers": [
+			{"emoji": "🏘️", "position": [0.28, 0.40], "size": 83},
+			{"emoji": "🏛️", "position": [0.65, 0.38], "size": 78},
+			{"emoji": "🌳", "position": [0.84, 0.59], "size": 53},
+			{"emoji": "🛒", "position": [0.40, 0.72], "size": 50},
+			{"emoji": "🧑‍🌾", "position": [0.66, 0.72], "size": 48}
+		]
+	},
+	{
+		"id": "forest",
+		"name": "Whisperwood",
+		"icon": "🌲",
+		"position": [0.75, 0.26],
+		"description": "An old forest where feral traits run strong and paths seldom stay put.",
+		"emoji_layers": [
+			{"emoji": "🌲", "position": [0.18, 0.42], "size": 84},
+			{"emoji": "🌳", "position": [0.43, 0.35], "size": 94},
+			{"emoji": "🌲", "position": [0.74, 0.39], "size": 88},
+			{"emoji": "🦌", "position": [0.51, 0.67], "size": 62},
+			{"emoji": "🍄", "position": [0.25, 0.78], "size": 40},
+			{"emoji": "✨", "position": [0.78, 0.20], "size": 36}
+		]
+	},
+	{
+		"id": "lake",
+		"name": "Moonmere Lake",
+		"icon": "🌊",
+		"position": [0.69, 0.73],
+		"description": "Still water, strange lights, and rare creatures after the sun goes down.",
+		"emoji_layers": [
+			{"emoji": "🌙", "position": [0.73, 0.20], "size": 60},
+			{"emoji": "🌲", "position": [0.18, 0.43], "size": 69},
+			{"emoji": "🌊", "position": [0.48, 0.54], "size": 108},
+			{"emoji": "🦆", "position": [0.36, 0.64], "size": 45},
+			{"emoji": "🐟", "position": [0.62, 0.76], "size": 48},
+			{"emoji": "✨", "position": [0.58, 0.30], "size": 34}
+		]
+	},
+	{
+		"id": "mountains",
+		"name": "The Crown Peaks",
+		"icon": "⛰️",
+		"position": [0.37, 0.20],
+		"description": "Locked — stronger stock and warmer gear will be needed for this climb.",
+		"emoji_layers": [
+			{"emoji": "☁️", "position": [0.24, 0.26], "size": 58},
+			{"emoji": "⛰️", "position": [0.49, 0.45], "size": 116},
+			{"emoji": "🏔️", "position": [0.73, 0.38], "size": 88},
+			{"emoji": "🦅", "position": [0.68, 0.18], "size": 44},
+			{"emoji": "❄️", "position": [0.30, 0.69], "size": 36}
+		]
+	}
+]

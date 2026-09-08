@@ -1,0 +1,8 @@
+.godot/
+.codex-browser-profile*/
+artifacts/
+docs/chat_archive/
+desktop.ini
+*.tmp
+*.log
+export/

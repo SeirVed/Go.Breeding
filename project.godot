@@ -1,0 +1,42 @@
+; Engine configuration file.
+; Go.Breeding — Version 0.2.4 "Jack, Jill & Bonk"
+
+config_version=5
+
+[application]
+
+config/name="Go.Breeding"
+config/description="A systems-first breeding simulation."
+config/version="0.2.4"
+run/main_scene="res://scenes/main.tscn"
+
+[autoload]
+
+GameState="*res://scripts/game_state.gd"
+SpeciesDB="*res://scripts/species_db.gd"
+PairingProgress="*res://scripts/pairing_progress.gd"
+
+[display]
+
+window/size/viewport_width=1152
+window/size/viewport_height=648
+window/size/window_width_override=1152
+window/size/window_height_override=648
+window/stretch/mode="canvas_items"
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+
+[gui]
+
+theme/default_font_multichannel_signed_distance_field=true
+
+[input]
+
+ui_cancel={
+"deadzone": 0.5,
+"events": [Object(InputEventKey,"physical_keycode":4194305,"unicode":27)]
+}
