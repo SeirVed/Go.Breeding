@@ -1,3 +1,5 @@
+## Copyright © 2026 SeirVed. All rights reserved. See LICENSE.md.
+
 class_name BreedingEngine
 extends RefCounted
 

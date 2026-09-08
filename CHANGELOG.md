@@ -2,12 +2,15 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Adopted an explicit proprietary, All Rights Reserved license for all original Go.Breeding material from version 0.1.0 onward.
+- Added ownership, authorised-distribution, third-party provenance, and contribution-control documents to deter unauthorised commercial repackaging and preserve a clean rights chain.
+- Formalised one shared codebase with separately packaged SFW and NSFW content profiles; storefront configuration remains undecided.
 - Formalised the planned Guild Star Ballot: one reusable Gold, Silver, and Bronze star per player across all three commission boards.
 - Defined public raw counts, the transparent `3G + 2S + B` demand score, pairing-type aggregates, momentum views, privacy limits, validation, and backend requirements.
 - Specified the paired paper-doll compatibility and best-fit ladder, with `Emoji Bonk v0` honestly retained as the last-resort placeholder.
 - Clarified that 243 is the baseline ordered body-template target count, while the creature registry and bespoke species variants remain open-ended.
 - Added repository-wide status labels and replaced obsolete static-PNG and fixed-roster roadmap language.
-- Recorded that the repository currently has no license and documented a pending GPL-3.0-or-later client / AGPL-3.0-or-later service recommendation without applying it.
+- Replaced the earlier GPL/AGPL proposal before adoption because commercial redistribution rights conflict with the owner's anti-flipping requirement.
 
 All notable prototype changes are collected here. Earlier production models are retained as history even where a later version replaced them.
 

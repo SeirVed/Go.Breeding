@@ -1,3 +1,5 @@
+## Copyright © 2026 SeirVed. All rights reserved. See LICENSE.md.
+
 extends Control
 
 const BG := Color("#111713")

@@ -1,3 +1,5 @@
+## Copyright © 2026 SeirVed. All rights reserved. See LICENSE.md.
+
 extends Node
 
 const DATA_PATH := "res://data/species.json"

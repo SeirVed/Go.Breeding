@@ -1,3 +1,5 @@
+## Copyright © 2026 SeirVed. All rights reserved. See LICENSE.md.
+
 extends Node
 
 const PROGRESS_PATH := "res://data/breeding_script_progress.json"

@@ -40,6 +40,8 @@ See [`docs/`](docs/README.md) for status-labelled specifications. Phase 0 uses l
 
 **Version 0.2.4 — Jack, Jill & Bonk** expands the old-town commission board into three tabs—Jack & Jill, Jack & Jack, and Jill & Jill—for 243 directional animation commissions. Every unfinished commission honestly reports `PLACEHOLDER ACTIVE`. Pressing Breed now plays the deliberately silly, text-emoji `Emoji Bonk v0` sequence before revealing the deterministic offspring. Proper choreography has not been implemented yet. See [CHANGELOG.md](CHANGELOG.md) for the complete build history. Open this folder in Godot 4.7.2 or run `godot --path .`.
 
-## License status
+## Copyright and license
 
-No license has been selected yet. Until a `LICENSE` file is committed, default copyright applies; public visibility does not make the project open source. See [License decision](docs/license_decision.md).
+Copyright © 2026 SeirVed. All rights reserved.
+
+This is a source-visible proprietary project, not an open-source project. Public access does not grant permission to redistribute, sell, repackage, publish derivative builds, or reuse project assets. See [LICENSE.md](LICENSE.md), [COPYRIGHT.md](COPYRIGHT.md), and [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

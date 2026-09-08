@@ -32,7 +32,8 @@ When prose and runtime data disagree about the present build, runtime data and e
 - `breeding_animation_matrix.md` — three directional 9×9 commission boards.
 - `animation_pipeline.md` — best-fit paired paper-doll resolver and honest fallback ladder.
 - `dev_metrics.md` — Guild Star Ballot, aggregates, privacy, and backend requirements.
-- `license_decision.md` — current no-license state and the pending GPL/AGPL recommendation.
+- `license_decision.md` — adopted proprietary licensing decision and rationale.
+- `distribution_model.md` — shared-code, separate-content SFW/NSFW release architecture.
 
 ## Current headline status
 
