@@ -1,5 +1,7 @@
 # Species Unlock Paths (Evolution Conditions)
 
+> **Status: planned design.** These routes describe intended progression and are not all implemented in the current prototype.
+
 ## Pattern types
 1. **Stat Threshold** (readable; early-game)
 2. **Trait Condition** (invisible trait + axis requirements)

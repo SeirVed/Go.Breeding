@@ -1,5 +1,7 @@
 # Breeding Logic
 
+> **Status: design specification with a prototype subset.** The current demo provides deterministic pairing and offspring presentation. The complete genome-pressure formula, compatibility matrix, Gene-Gel economy, laboratory routes, stability consequences, and balance values below are planned unless verified in runtime code.
+
 ## Species selection (no hybrids)
 Child species = weighted choice of **Parent A species** vs **Parent B species**.
 

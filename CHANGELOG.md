@@ -1,5 +1,14 @@
 # Changelog
 
+## Unreleased — Documentation and Dev Metrics
+
+- Formalised the planned Guild Star Ballot: one reusable Gold, Silver, and Bronze star per player across all three commission boards.
+- Defined public raw counts, the transparent `3G + 2S + B` demand score, pairing-type aggregates, momentum views, privacy limits, validation, and backend requirements.
+- Specified the paired paper-doll compatibility and best-fit ladder, with `Emoji Bonk v0` honestly retained as the last-resort placeholder.
+- Clarified that 243 is the baseline ordered body-template target count, while the creature registry and bespoke species variants remain open-ended.
+- Added repository-wide status labels and replaced obsolete static-PNG and fixed-roster roadmap language.
+- Recorded that the repository currently has no license and documented a pending GPL-3.0-or-later client / AGPL-3.0-or-later service recommendation without applying it.
+
 All notable prototype changes are collected here. Earlier production models are retained as history even where a later version replaced them.
 
 ## 0.2.4 — Jack, Jill & Bonk
@@ -40,14 +49,14 @@ All notable prototype changes are collected here. Earlier production models are 
 - Restored the documented Small, Medium, and Large size bands.
 - Restored the Feral, Neutral (formerly Regular), and Refined morphology bands.
 - Established nine reusable base silhouettes from the 3 × 3 body grid.
-- Added body-type mappings for all 44 creature concepts.
+- Added body-type mappings for the then-current 44-creature registry snapshot; the registry is not capped at 44.
 - Added Bestial, Exotic, Winged, and Tauric exception tags.
 - Added scale, posture, and body-pair planning metadata to breeding results.
 - Separated production progress from player actions: breeding cannot mark development work complete.
 
 ## 0.2.0 — Pair-a-Dice
 
-- Consolidated canonical species, unlocks, archive concepts, and examples into one 44-type registry.
+- Consolidated canonical species, unlocks, archive concepts, and examples into a 44-type registry snapshot designed to grow.
 - Added a temporary developer Gallery entry to the main menu.
 - Added the first four-column emoji creature gallery and species-pair checklist; this approach was replaced in 0.2.1.
 - Added temporary developer Check All and Reset controls; these were subsequently removed.

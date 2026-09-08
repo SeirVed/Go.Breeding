@@ -1,5 +1,7 @@
 # Trait System
 
+> **Status: design specification, partially represented in prototype data.** Listed ranges and systems are not proof that their full gameplay and visuals are implemented.
+
 ## Visible axes (4)
 1) **Feral ↔ Refined** (−1…+1, banded): morphology & behavior silhouette.
 2) **Neotenous ↔ Peramorphous** (−1…+1, banded): growth curve & maturity.

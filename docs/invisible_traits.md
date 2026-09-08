@@ -1,5 +1,7 @@
 # Invisible Traits
 
+> **Status: planned design.** These traits and their balance ranges are not a claim of complete runtime implementation.
+
 All values default to **0.0**; no negatives. Diminishing returns kick in after ~0.15–0.30.
 
 ## Categories & examples

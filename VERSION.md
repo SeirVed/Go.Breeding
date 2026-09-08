@@ -47,7 +47,7 @@ Production-matrix correction and body-pair planning foundation.
 - Replaced the player-style 990-species-pair checklist with a read-only developer progress matrix.
 - Restored the documented Small/Medium/Large × Feral/Neutral/Refined silhouette model.
 - Tracks 45 unique unordered body-pair script targets, including same-body pairs.
-- Added a complete species-to-body mapping for all 44 roster concepts.
+- Added a complete species-to-body mapping for the then-current 44-concept roster snapshot; 44 is not a cap.
 - Added Bestial, Exotic, Winged, and Tauric exception tags.
 - Added provisional scale and posture planning metadata for every species pairing; no finished animation system was present.
 - Breeding no longer changes production progress; progress comes only from the authored-script manifest.
@@ -56,7 +56,7 @@ Production-matrix correction and body-pair planning foundation.
 
 ## Added in 0.2.0
 
-- A unified 44-type registry covering canonical, unlock, archive, and example creatures.
+- A unified 44-type registry snapshot covering canonical, unlock, archive, and example creatures, designed for continued additions.
 - Main-menu Gallery entry marked as a temporary developer feature.
 - Four-column emoji creature Gallery with per-species pairing completion.
 - Full partner checklist for every creature: 990 unique unordered pairs including self-pairs.

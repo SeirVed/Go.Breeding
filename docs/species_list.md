@@ -1,6 +1,10 @@
 # Species List (Starter Roster)
 
+> **Status: curated design roster.** The runtime registry in `data/species.json` is authoritative. Its current count is a snapshot, never a cap; new monsters can be added throughout development.
+
 Tiers communicate availability & difficulty; they are **balance levers**, not power guarantees.
+
+New entries receive stable IDs plus size, morphology, and anatomy metadata so they can inherit existing animation templates. Bespoke species variants may then be added without creating an unbounded species-by-species commission matrix.
 
 ## Common (foundation stock)
 - **Cat (Felis)** – agile, high fertility; Small–Neutral → Small–Refined.

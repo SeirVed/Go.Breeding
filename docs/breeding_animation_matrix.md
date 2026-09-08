@@ -1,5 +1,7 @@
 # Breeding Animation Matrix
 
+> **Status: board UI and placeholder implemented; custom scripts planned.** The 243-cell tracker exists. All commission progress is currently 0%, and `Emoji Bonk v0` is the only playable breeding-action animation.
+
 This document crystallizes the reusable body-pair model recovered from the project archive.
 
 ## Base silhouettes
@@ -53,6 +55,8 @@ The archetype names describe the male-frame and female-frame biomechanics used b
 
 The production goal is at least one authored variant in every cell. No procedural choreography exists yet. Until real animation work is funded and authored, every cell truthfully reports **PLACEHOLDER ACTIVE** and previews `Emoji Bonk v0`: the two text emoji collide, bounce over one another, swap places, and emit `💦`, `💥`, and `💨`.
 
+These 243 targets are an ordered **body-template** matrix, not a species-pair matrix. The creature registry is open-ended. Adding a monster maps it to stable archetype and anatomy metadata; it does not create a fixed roster cap or require a new square against every existing monster. Bespoke species variants may be added indefinitely.
+
 ## Planned procedural dimensions
 
 - Size controls actor scale, reach, anchor spacing, and vertical offset.
@@ -62,6 +66,8 @@ The production goal is at least one authored variant in every cell. No procedura
 - Species controls paper-doll parts, materials, sockets, and additive flavor animation.
 
 These values should not multiply the base script count.
+
+The planned best-fit resolver and fallback ladder are specified in [Paired Paper-Doll Animation Pipeline](animation_pipeline.md). The player prioritisation system is specified in [Dev Metrics: Guild Star Ballot](dev_metrics.md).
 
 ## Exception tags
 
