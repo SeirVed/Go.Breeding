@@ -1,0 +1,9 @@
+Use case: precise-object-edit
+Asset type: isolated character master for a controlled image-to-image pipeline test.
+Input image: the supplied four-character lineup is the canonical identity and style reference. Use ONLY the adult female Insectkin on the far left.
+Primary request: Reproduce that same adult female Insectkin alone as a polished, full-body hero character. She stands in an open, relaxed three-quarter pose with one hand resting lightly on her hip and the other lowered, so her torso and pelvis are readable without crossed limbs.
+Preserve exactly: unmistakably mature adult identity and proportions; petite/slender feminine silhouette with a mature bust, defined waist, rounded hips, normal tapered thighs; warm golden-tan skin; teal-black beetle chitin forming the scalp crest, shoulder caps, forearms/hands, outer-hip plates, shins and clawed feet; two long antennae; two translucent amber-veined wings; large warm brown eyes and mischievous friendly expression; bold dark edge-heavy Soft Storybook Emoji rendering.
+Clothing: retain her simple fitted ivory fabric halter-leotard and narrow brown belt as clearly removable cloth layers sitting above the biological body and chitin. Do not turn the teal chitin into clothing.
+Composition: portrait 2:3, character centered, entire antennae/wings/fingers/clawed feet visible with breathing room.
+Background: clean uniform warm ivory parchment.
+Do not include the phoenix, dragon, void-born, extra figures, turnarounds, swatches, text, logos, watermark, border or checkerboard. No childlike proportions, no duplicated limbs or wings, no glossy 3D, no photorealism. Fully SFW.

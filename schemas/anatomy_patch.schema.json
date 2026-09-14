@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://go-breeding.invalid/schemas/anatomy_patch.schema.json",
+  "title": "Go.Breeding Anatomy Patch",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "asset_id",
+    "revision",
+    "module_kind",
+    "presentation",
+    "body_plans",
+    "size",
+    "view",
+    "surface_families",
+    "anchors",
+    "files",
+    "provenance"
+  ],
+  "properties": {
+    "asset_id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9_.-]+$" },
+    "revision": { "type": "integer", "minimum": 1 },
+    "module_kind": {
+      "enum": ["chest_form", "chest_detail", "pelvis_form", "pelvis_detail"]
+    },
+    "presentation": { "enum": ["sfw", "explicit"] },
+    "anatomy_family": {
+      "enum": ["neutral", "breasts", "vulva", "penis_testes", "cloacal", "species_specific"]
+    },
+    "body_plans": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "humanoid_biped",
+          "digitigrade_biped",
+          "serpentine",
+          "tauric",
+          "quadruped",
+          "amorphous",
+          "constructed"
+        ]
+      }
+    },
+    "size": { "enum": ["small", "regular", "large"] },
+    "view": {
+      "enum": ["front", "three_quarter_left", "three_quarter_right", "side_left", "side_right", "rear"]
+    },
+    "deformation": { "enum": ["neutral", "compressed", "stretched", "active"] },
+    "surface_families": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["skin", "short_fur", "long_fur", "scales", "feathers", "chitin", "plant", "stone", "cosmic", "other"]
+      }
+    },
+    "anchors": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "prefixItems": [
+          { "type": "number", "minimum": 0, "maximum": 1 },
+          { "type": "number", "minimum": 0, "maximum": 1 }
+        ],
+        "items": false
+      },
+      "required": ["root"]
+    },
+    "normalized_bounds": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "number", "minimum": 0, "maximum": 1 },
+        { "type": "number", "minimum": 0, "maximum": 1 },
+        { "type": "number", "minimum": 0, "maximum": 1 },
+        { "type": "number", "minimum": 0, "maximum": 1 }
+      ],
+      "items": false
+    },
+    "files": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["rgba", "mask"],
+      "properties": {
+        "rgba": { "type": "string" },
+        "mask": { "type": "string" },
+        "shadow": { "type": "string" },
+        "highlight": { "type": "string" },
+        "sfw_preview": { "type": "string" }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["method", "created_at"],
+      "properties": {
+        "method": { "type": "string" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "source_asset_ids": { "type": "array", "items": { "type": "string" } },
+        "provider_task_ids": { "type": "array", "items": { "type": "string" } },
+        "notes": { "type": "string" }
+      }
+    }
+  }
+}

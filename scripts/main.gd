@@ -200,6 +200,30 @@ func run_smoke_test() -> void:
 		push_error("Coupling notice-board data failed")
 		get_tree().quit(1)
 		return
+	var mixed_lookup: Dictionary = PairingProgress.get_pairing_lookup("m+f", "Titan", "Ranger")
+	if mixed_lookup.get("commission_key", "") != "jack_jill|large_neutral>medium_neutral" or mixed_lookup.get("pairing_name", "") != "Titan + Ranger" or mixed_lookup.get("coupling_name", "") != "Lifted Horizon":
+		push_error("Pairing name/type lookup failed")
+		get_tree().quit(1)
+		return
+	var same_sex_lookup: Dictionary = PairingProgress.get_pairing_lookup("m+m", "Titan", "Strider")
+	if same_sex_lookup.get("board_id", "") != "jack_jack" or same_sex_lookup.get("group_key", "") != "m+m":
+		push_error("Pairing group lookup failed")
+		get_tree().quit(1)
+		return
+	var female_pair_lookup: Dictionary = PairingProgress.get_pairing_lookup("f+f", "Matron", "Ranger")
+	if female_pair_lookup.get("board_id", "") != "jill_jill" or female_pair_lookup.get("pairing_name", "") != "Matron + Ranger":
+		push_error("Female pairing group lookup failed")
+		get_tree().quit(1)
+		return
+	if PairingProgress.find_pairings("titan+ranger", "m+f").size() != 1:
+		push_error("Pairing search failed")
+		get_tree().quit(1)
+		return
+	var study_record: Dictionary = PairingProgress.get_production_record("research.titan-ranger.golem-cow.v01")
+	if study_record.get("decision", "") != "revise" or study_record.get("lookup", {}).get("group_key", "") != "m+f":
+		push_error("Pairing production-record lookup failed")
+		get_tree().quit(1)
+		return
 	var regular_plan: Dictionary = PairingProgress.build_pairing_plan("cat", "cow")
 	var inverted_plan: Dictionary = PairingProgress.build_pairing_plan("cow", "cat")
 	if regular_plan.pair_key != "small_neutral>large_neutral" or regular_plan.order != "Regular":
@@ -565,12 +589,8 @@ func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> voi
 	board_tabs.alignment = BoxContainer.ALIGNMENT_CENTER
 	board_tabs.add_theme_constant_override("separation", 8)
 	column.add_child(board_tabs)
-	for option in [
-		{"id":"jack_jill", "label":"♂ JACK & JILL ♀"},
-		{"id":"jack_jack", "label":"♂ JACK & JACK ♂"},
-		{"id":"jill_jill", "label":"♀ JILL & JILL ♀"},
-	]:
-		board_tabs.add_child(board_tab_button(option.label, option.id, board_id))
+	for option in PairingProgress.list_pairing_groups():
+		board_tabs.add_child(board_tab_button(option.tab_label, option.board_id, board_id))
 
 	var body := HBoxContainer.new()
 	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
@@ -622,13 +642,16 @@ func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> voi
 
 
 func pairing_board_config(board_id: String) -> Dictionary:
-	match board_id:
-		"jack_jack":
-			return {"title":"JACK & JACK", "row_role":"male", "column_role":"male", "axis":"♂ JACK A ↓    ×    JACK B → ♂", "corner":"♂A \\ ♂B"}
-		"jill_jill":
-			return {"title":"JILL & JILL", "row_role":"female", "column_role":"female", "axis":"♀ JILL A ↓    ×    JILL B → ♀", "corner":"♀A \\ ♀B"}
-		_:
-			return {"title":"JACK & JILL", "row_role":"male", "column_role":"female", "axis":"♂ JACK ↓    ×    JILL → ♀", "corner":"♂ \\ ♀"}
+	var group := PairingProgress.get_pairing_group(board_id)
+	if group.is_empty():
+		group = PairingProgress.get_pairing_group("jack_jill")
+	return {
+		"title": str(group.name).to_upper(),
+		"row_role": group.row_role,
+		"column_role": group.column_role,
+		"axis": group.axis,
+		"corner": group.corner,
+	}
 
 
 func board_tab_button(text_value: String, target_board: String, current_board: String) -> Button:
@@ -694,6 +717,7 @@ func show_pair_notice(panel: PanelContainer, row_body: Dictionary, column_body: 
 	var row_type: Dictionary = PairingProgress.get_archetype(row_role, row_body.id)
 	var column_type: Dictionary = PairingProgress.get_archetype(column_role, column_body.id)
 	var coupling: Dictionary = PairingProgress.get_coupling(row_body.id, column_body.id, board_id, row_role, column_role)
+	var lookup: Dictionary = PairingProgress.get_pairing_lookup(board_id, row_body.id, column_body.id)
 	var percent: int = PairingProgress.progress_percent(row_body.id, column_body.id, board_id)
 	var count: int = PairingProgress.script_count(row_body.id, column_body.id, board_id)
 	var order_name: String = PairingProgress.order_label(row_body.id, column_body.id)
@@ -708,7 +732,7 @@ func show_pair_notice(panel: PanelContainer, row_body: Dictionary, column_body: 
 	pin.custom_minimum_size.y = 25
 	notice.add_child(pin)
 	notice.add_child(build_emoji_bonk(row_type.emoji, column_type.emoji, Vector2(270, 82)))
-	var pairing := label("%s  ×  %s" % [row_type.name, column_type.name], 13, paper_muted)
+	var pairing := label("%s  ·  %s" % [lookup.pairing_name, lookup.group_key], 13, paper_muted)
 	pairing.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	notice.add_child(pairing)
 	var notice_title := label(coupling.name, 24, paper_ink)
@@ -734,7 +758,7 @@ func show_pair_notice(panel: PanelContainer, row_body: Dictionary, column_body: 
 	progress_bar.add_theme_stylebox_override("fill", box(Color("#7c965d"), 5, 0))
 	notice.add_child(progress_bar)
 	var status := "COMPLETE" if percent >= 100 else ("IN PROGRESS" if percent > 0 else "NOT STARTED")
-	var details := label("%s · %s ORDER\n%s %s  →  %s %s\n%d authored script%s · PLACEHOLDER ACTIVE\nEmoji Bonk v0 · proper animation pending funding" % [status, order_name.to_upper(), row_body.size, row_body.morph, column_body.size, column_body.morph, count, "" if count == 1 else "s"], 12, paper_muted)
+	var details := label("%s · %s ORDER\n%s\n%s\n%d authored script%s · PLACEHOLDER ACTIVE\nEmoji Bonk v0 · proper animation pending funding" % [status, order_name.to_upper(), lookup.pairing_type, lookup.commission_key, count, "" if count == 1 else "s"], 12, paper_muted)
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	notice.add_child(details)

@@ -2,6 +2,25 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Abstracted the source-to-output pairing workflow into a reusable gated production pipeline covering matched masters, presentation profiles, static contact-pose approval, motion QA, paper-doll authoring, and runtime integration.
+- Added data-driven pairing-group records and runtime lookups by board/group (`m+f`, `m+m`, `f+f`), role-aware archetype name (`Titan + Ranger`), ordered body type, size pair, morphology pair, coupling title, and stable commission key.
+- Added a provider-neutral Python pairing lookup CLI so external art, generation, and audit tooling resolves the same catalog as the Godot runtime.
+- Added a versioned pairing-production-record schema and research registry with explicit cast overrides, contracts, artifacts, provider costs, and independent character/body/pose/motion/integration gate results.
+- Converted the Gallery board tabs and notice metadata to use the canonical lookup records, eliminating the duplicate hard-coded board configuration.
+- Split the visual pipeline into reproducible chibi/emoji production masters and richer promo-only renders so storefront polish does not become the per-sprite animation budget.
+- Proved a two-reference chibi NSFW conversion workflow with Phoenix and Naga, retaining short proportions, thick contours, feather masses, and serpentine no-leg topology.
+- Added two paid four-second 480p chibi Seedance research idles with exact receipts and QA contact sheets; these remain research assets, not authored runtime coverage.
+- Hardened the Wiro runner with prompt files, provenance receipts, and retry handling for transient post-processing 404s without resubmitting paid tasks.
+- Added ordered 1–30 image Seedance reference mode with `[Image N]` receipt labels and explicit exclusion from first/last-frame mode.
+- Completed two Phoenix/Naga multi-reference paired-motion studies: V1 validated five-image identity/style conditioning but drifted toward a clothed affectionate embrace; V2 reduced the stack to three references and produced a cleaner, more readable concealed adult-innuendo loop while retaining the emoji/chibi style and naga topology.
+- Added the first ordered size-pair motion study, **Titan → Ranger**, using an authored golem/cow chibi staging frame; the result preserved the Large-male/Medium-female scale gap, inward eyelines, planted support, and species anatomy, while demonstrating that generated motion still generalizes counted lift cycles into a softer progression.
+- Added a global paired-scene acting rule for this study: partners focus on each other, never look at the camera, wink at the audience, or otherwise acknowledge the fourth wall.
+- Defined modular `SFW_CLOTHED`, `SFW_UNCLOTHED`, and `NSFW` presentation profiles using independent chest, pelvis, genital-detail, and clothing layers.
+- Added a machine-readable anatomy-patch schema plus a deterministic local extraction/compositing tool, and seeded the ignored local library from retained paid research outputs.
+- Established the exploratory **Soft Storybook Emoji** visual direction with a four-species stress-test lineup, multi-scale Cat/Cow/Elf/Titan studies, a reusable prompt template, and an explicit small-size acceptance checklist.
+- Added a second Insectkin/Phoenix/Dragon/Void-born stress-test lineup, a four-tier Dragon guide, and an exact 16:9 Dragon motion keyframe.
+- Added a credential-safe Wiro Seedance submit/resume helper and recorded the first Dragon motion QA, including the current first/last-frame grid and aspect-ratio quirks.
+- Recorded generated-asset provenance and alpha-channel verification; Cat and Elf scale sheets remain clearly labelled opaque concept studies rather than production sprites.
 - Adopted an explicit proprietary, All Rights Reserved license for all original Go.Breeding material from version 0.1.0 onward.
 - Added ownership, authorised-distribution, third-party provenance, and contribution-control documents to deter unauthorised commercial repackaging and preserve a clean rights chain.
 - Formalised one shared codebase with separately packaged SFW and NSFW content profiles; storefront configuration remains undecided.

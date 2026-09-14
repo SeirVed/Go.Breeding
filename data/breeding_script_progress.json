@@ -1,6 +1,11 @@
 {
   "goal": "At least one authored breeding script for each of 243 directional commissions across three boards.",
   "matrix_semantics": {"boards":{"jack_jill":"Male × Female","jack_jack":"Male × Male","jill_jill":"Female × Female"},"upper_triangle":"Regular order","lower_triangle":"Inverted order","directional":true},
+  "pairing_groups": {
+    "jack_jill": {"key":"m+f","name":"Jack & Jill","row_role":"male","column_role":"female","tab_label":"♂ JACK & JILL ♀","axis":"♂ JACK ↓    ×    JILL → ♀","corner":"♂ \\ ♀"},
+    "jack_jack": {"key":"m+m","name":"Jack & Jack","row_role":"male","column_role":"male","tab_label":"♂ JACK & JACK ♂","axis":"♂ JACK A ↓    ×    JACK B → ♂","corner":"♂A \\ ♂B"},
+    "jill_jill": {"key":"f+f","name":"Jill & Jill","row_role":"female","column_role":"female","tab_label":"♀ JILL & JILL ♀","axis":"♀ JILL A ↓    ×    JILL B → ♀","corner":"♀A \\ ♀B"}
+  },
   "placeholder_animation": "Emoji Bonk v0",
   "body_types": [
     {"id":"small_feral","short":"S-F","size":"Small","morph":"Feral","label":"Feral familiar / beast"},

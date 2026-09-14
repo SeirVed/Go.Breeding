@@ -1,0 +1,8 @@
+Use case: precise-object-edit
+Asset type: isolated character source for a controlled image-to-image production test.
+Input image: the supplied paired bovine model sheet is the edit target and canonical identity reference.
+Primary request: Extract and reproduce ONLY the large hero ADULT FEMALE COW character from the far right of the source. Present her alone, full body from horns through both hooves, in the exact same friendly three-quarter standing pose with one hand on her hip.
+Preserve exactly: her mature adult identity; face, eyes, muzzle, horns, ears, side braid, expression, cream fur and cocoa patch placement; plush curvy torso, soft belly, rounded hips, ordinary tapered thighs; rust-red wrap top, indigo high-waisted shorts, belt, dark gloves, cloven hooves and tufted tail; bold dark edge-heavy Soft Storybook Emoji drawing; flat-to-soft color with one shadow and one highlight family.
+Composition: portrait 2:3, character centered with breathing room on every side, large enough for production editing.
+Background: clean uniform warm ivory parchment, with no guide lines.
+Change nothing about the character design or body proportions. Do not redesign, sexualize, remove clothing, add a pose, crop the horns/hooves/tail, or include the bull, turnarounds, icons, swatches, fragments, text, letters, logos, watermark, border, or checkerboard. No duplicated limbs.

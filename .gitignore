@@ -6,3 +6,27 @@ desktop.ini
 *.tmp
 *.log
 export/
+
+# Local Python bytecode from development helpers
+__pycache__/
+*.py[cod]
+
+# Local credentials and API secrets
+API.txt
+api.txt
+/API.png
+.env
+.env.*
+
+# Generated/reference media stays local until an explicit media release.
+/art/style_exploration/**/*.png
+/art/style_exploration/**/*.jpg
+/art/style_exploration/**/*.jpeg
+/art/style_exploration/**/*.webp
+/art/style_exploration/**/*.gif
+/art/style_exploration/**/*.mp4
+/art/style_exploration/**/*.webm
+/art/style_exploration/**/*.mov
+/art/style_exploration/**/*.wav
+/art/style_exploration/**/*.mp3
+/art/style_exploration/**/*.ogg

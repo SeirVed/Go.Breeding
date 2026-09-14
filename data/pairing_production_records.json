@@ -1,0 +1,58 @@
+[
+  {
+    "schema_version": "1.0",
+    "record_id": "research.titan-ranger.golem-cow.v01",
+    "revision": 1,
+    "status": "research",
+    "decision": "revise",
+    "lookup": {
+      "commission_key": "jack_jill|large_neutral>medium_neutral",
+      "board_id": "jack_jill",
+      "group_key": "m+f",
+      "group_name": "Jack & Jill",
+      "pairing_name": "Titan + Ranger",
+      "pairing_slug": "titan+ranger",
+      "pairing_type_key": "large_neutral>medium_neutral",
+      "pairing_type": "Large Neutral → Medium Neutral",
+      "size_pair": "large>medium",
+      "morph_pair": "neutral>neutral",
+      "order": "Inverted",
+      "coupling_name": "Lifted Horizon"
+    },
+    "cast": [
+      {"slot":"first", "role":"male", "species_id":"golem", "body_id":"large_neutral", "archetype":"Titan", "body_source":"study_override", "override_reason":"The requested test casts the golem as the Large Neutral support frame rather than its registry-default Large Refined frame.", "anatomy_tags":["constructed"]},
+      {"slot":"second", "role":"female", "species_id":"cow", "body_id":"medium_neutral", "archetype":"Ranger", "body_source":"study_override", "override_reason":"The requested test casts this individual cow as Medium Neutral rather than changing the species-wide Large Neutral default.", "anatomy_tags":["bovine"]}
+    ],
+    "contract": {
+      "presentation_profile": "NSFW",
+      "scale_relationship": "The first actor is approximately 1.8 times the second actor's standing height and substantially greater in mass.",
+      "contact_anchor": "pelvis_center_to_pelvis_center",
+      "partner_focus": true,
+      "fourth_wall_policy": "private",
+      "camera": "Locked square three-quarter full-body view",
+      "motion_beats": ["supported lift", "centered settle", "shared forward rock", "private nuzzle"],
+      "loop_target": true,
+      "occlusion_requirements": ["Respect the selected presentation profile at every frame."],
+      "prohibited_changes": ["camera gaze", "viewer wink", "scale equalization", "species drift", "limb mutation", "contact-anchor drift"]
+    },
+    "sources": [
+      {"path":"res://art/style_exploration/size_pair_golem_cow_v01/golem-cow-paired-staging-sfw-v01.png", "role":"generated paired staging frame", "sha256":"68f88c0c90d6ce28c54ff3837d5e6eb0210e6dab88b43b3aa9e370a8e0f47f41", "local_only":false}
+    ],
+    "gates": {
+      "character_match":{"status":"pass", "notes":"Both identities, species, chibi edge language, and requested relative scale remained readable."},
+      "body_profile":{"status":"fail", "notes":"The contract requires the NSFW presentation profile, but the authored source and resulting video remained SFW_CLOTHED."},
+      "static_pose":{"status":"fail", "notes":"The cow's weight and motion origin were staged over the golem's raised thigh/knee rather than the declared pelvis-centered contact anchor."},
+      "motion":{"status":"fail", "notes":"The render was stable but generalized two lift cycles into one soft lift/lean/nuzzle progression around the wrong anchor."},
+      "integration":{"status":"pending", "notes":"Research output only; no paper-doll or runtime animation is implemented."}
+    },
+    "render": {"provider":"Wiro", "model":"bytedance/seedance-2-5", "task_id":"3279808", "duration_seconds":4.042, "resolution":"640x640", "cost_usd":0.42},
+    "artifacts": {
+      "source":{"path":"res://art/style_exploration/size_pair_golem_cow_v01/golem-cow-paired-staging-sfw-v01.png", "role":"first frame", "local_only":false},
+      "prompt":{"path":"res://art/style_exploration/size_pair_golem_cow_v01/golem-cow-seedance-prompt-v01.txt", "role":"motion prompt", "local_only":false},
+      "video":{"path":"local://artifacts/seedance/size_pair_golem_cow_2026-09-14/golem-cow-titan-ranger-v01-480p-4s.mp4", "role":"paid research render", "local_only":true},
+      "receipt":{"path":"local://artifacts/seedance/size_pair_golem_cow_2026-09-14/golem-cow-titan-ranger-v01-receipt.json", "role":"provider receipt", "local_only":true},
+      "qa":{"path":"local://artifacts/seedance/size_pair_golem_cow_2026-09-14/golem-cow-titan-ranger-v01-qa.png", "role":"eight-frame QA sheet", "local_only":true}
+    },
+    "notes": "The paid render is retained as research. Revision must correct presentation and contact anchor in the static source before another motion run."
+  }
+]

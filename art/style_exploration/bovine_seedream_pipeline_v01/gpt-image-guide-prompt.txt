@@ -1,0 +1,39 @@
+Create a polished LANDSCAPE 3:2 paired character design sheet for one related adult anthropomorphic bovine species: an ADULT MALE BULL and an ADULT FEMALE COW. This is the canonical SFW art-direction source for a game, not a scene.
+
+STYLE INVARIANTS from the references:
+- "Soft Storybook Emoji": warm storybook illustration pushed closer to a modern emoji.
+- Very bold, clean, dark local-color outer contours; rounded simplified shapes; sparse interior linework.
+- Flat-to-soft 2D color with exactly one broad soft shadow family and one restrained highlight family. No glossy 3D, no painterly rendering, no photorealism, no pixel art.
+- Friendly expressive large eyes and readable mouths, but unmistakably mature adult faces and adult proportions.
+- The silhouette, face, horns, ears, muzzle, patches, hands/hooves and clothing masses must remain legible at small mobile sizes.
+
+SHARED SPECIES MARKERS:
+- Cream fur with warm cocoa/caramel patches.
+- Pink-peach broad bovine muzzle.
+- Amber-brown eyes.
+- Short polished ochre horns curving upward.
+- Wide dark ears with coral inner ears.
+- Dark cloven hoof feet, five-finger anthropomorphic hands with dark hoof-like fingertips, tufted tail.
+- Related family resemblance without making them twins.
+
+BULL DESIGN:
+- Adult masculine, tall and large/rounded-power body type: broad shoulders and chest, thick neck, strong arms, substantial soft belly, sturdy legs.
+- Confident gentle grin, heavy eyebrows, short cream forelock, slightly squarer jaw and broader muzzle.
+- Simple fitted cream work shirt with rolled sleeves, open indigo leather/fabric vest, high-waisted dark brown work trousers and belt. Clothing follows his clear underlying body structure without hiding it.
+- Avoid superhero muscles; he is strong, soft, and massive.
+
+COW DESIGN:
+- Adult feminine, medium/large curvy body type: mature bust, defined waist, rounded hips and glute silhouette, soft belly, ordinary tapered thighs and calves. IMPORTANT: do not give her swollen bodybuilder thighs or exaggerated muscular legs.
+- Warm self-assured smile, graceful brows and lashes, longer cream forelock gathered into a small side braid, slightly finer muzzle.
+- Simple fitted rust-red sleeveless farm wrap top with a modest neckline and short high-waisted indigo work shorts with belt. Clothing clearly describes the torso, hips, and leg transitions while remaining fully SFW.
+- She is plush and voluptuous, not athletic or hyper-muscular.
+
+SHEET LAYOUT:
+- Large hero three-quarter full-body bull on left and large hero three-quarter full-body cow on right, equal visual importance.
+- Between/around them, smaller clean neutral FRONT and SIDE full-body turnaround views for each character.
+- Along the bottom, one simple emoji-scale bust icon and one tiny full-body icon for each, showing the deliberate simplification at 64px and 32px.
+- Include 8 clean circular palette swatches only.
+- Plain warm ivory/parchment background with faint neat guide dividers and generous breathing room.
+- NO written labels, NO letters, NO numbers, NO logos, NO watermark, NO checkerboard.
+- Every view must preserve the same horn direction, patch map, face, clothing colors, body type, and sex for that character. No duplicated limbs, no missing tails, no mixed clothing.
+- Presentation should feel like a high-end animation model sheet made by one artist and ready to guide dozens of future creatures.

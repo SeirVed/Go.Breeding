@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://go.breeding.local/schemas/pairing_production_record.schema.json",
+  "title": "Go.Breeding Pairing Production Record",
+  "description": "One reproducible concept, research render, authored template, or integrated pairing-animation attempt.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "record_id", "revision", "status", "decision", "lookup", "cast", "contract", "gates", "artifacts"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "record_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+    "revision": {"type": "integer", "minimum": 1},
+    "status": {"enum": ["concept", "research", "candidate", "approved", "integrated", "archived"]},
+    "decision": {"enum": ["pending", "revise", "accept_as_reference", "accept_for_authoring", "accept_for_runtime"]},
+    "lookup": {"$ref": "#/$defs/lookup"},
+    "cast": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {"$ref": "#/$defs/actor"}
+    },
+    "contract": {"$ref": "#/$defs/contract"},
+    "sources": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/artifact"}
+    },
+    "gates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["character_match", "body_profile", "static_pose", "motion", "integration"],
+      "properties": {
+        "character_match": {"$ref": "#/$defs/gate"},
+        "body_profile": {"$ref": "#/$defs/gate"},
+        "static_pose": {"$ref": "#/$defs/gate"},
+        "motion": {"$ref": "#/$defs/gate"},
+        "integration": {"$ref": "#/$defs/gate"}
+      }
+    },
+    "render": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "provider": {"type": "string"},
+        "model": {"type": "string"},
+        "task_id": {"type": "string"},
+        "duration_seconds": {"type": "number", "minimum": 0},
+        "resolution": {"type": "string"},
+        "cost_usd": {"type": "number", "minimum": 0}
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/artifact"}
+    },
+    "notes": {"type": "string"}
+  },
+  "$defs": {
+    "lookup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commission_key", "board_id", "group_key", "group_name", "pairing_name", "pairing_slug", "pairing_type_key", "pairing_type", "size_pair", "morph_pair", "order", "coupling_name"],
+      "properties": {
+        "commission_key": {"type": "string"},
+        "board_id": {"enum": ["jack_jill", "jack_jack", "jill_jill"]},
+        "group_key": {"enum": ["m+f", "m+m", "f+f"]},
+        "group_name": {"type": "string"},
+        "pairing_name": {"type": "string"},
+        "pairing_slug": {"type": "string"},
+        "pairing_type_key": {"type": "string"},
+        "pairing_type": {"type": "string"},
+        "size_pair": {"type": "string"},
+        "morph_pair": {"type": "string"},
+        "order": {"enum": ["Regular", "Inverted"]},
+        "coupling_name": {"type": "string"}
+      }
+    },
+    "actor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["slot", "role", "species_id", "body_id", "archetype", "body_source"],
+      "properties": {
+        "slot": {"enum": ["first", "second"]},
+        "role": {"enum": ["male", "female"]},
+        "species_id": {"type": "string"},
+        "body_id": {"type": "string"},
+        "archetype": {"type": "string"},
+        "body_source": {"enum": ["species_default", "study_override", "authored_variant"]},
+        "override_reason": {"type": "string"},
+        "anatomy_tags": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["presentation_profile", "scale_relationship", "contact_anchor", "partner_focus", "fourth_wall_policy", "camera", "motion_beats"],
+      "properties": {
+        "presentation_profile": {"enum": ["SFW_CLOTHED", "SFW_UNCLOTHED", "NSFW"]},
+        "scale_relationship": {"type": "string"},
+        "contact_anchor": {"type": "string"},
+        "partner_focus": {"type": "boolean"},
+        "fourth_wall_policy": {"enum": ["private", "camera_facing", "deliberate_override"]},
+        "camera": {"type": "string"},
+        "motion_beats": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+        "loop_target": {"type": "boolean"},
+        "occlusion_requirements": {"type": "array", "items": {"type": "string"}},
+        "prohibited_changes": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "notes"],
+      "properties": {
+        "status": {"enum": ["pending", "pass", "fail", "waived"]},
+        "notes": {"type": "string"}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "role"],
+      "properties": {
+        "path": {"type": "string"},
+        "role": {"type": "string"},
+        "sha256": {"type": "string", "pattern": "^[a-fA-F0-9]{64}$"},
+        "local_only": {"type": "boolean"}
+      }
+    }
+  }
+}

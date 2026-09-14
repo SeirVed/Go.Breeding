@@ -35,6 +35,16 @@ Each creature skin supplies:
 - required anatomy and exception tags;
 - optional additive idle and reaction motion.
 
+### Partner focus and fourth-wall rule
+
+Paired breeding scenes default to private interaction rather than audience performance. Actor eyelines target the partner, a relevant contact point, or close naturally during a reaction. They do not look into the camera, wink at the player, present their bodies to the viewer, or otherwise acknowledge a fourth wall unless a specifically labelled variant deliberately overrides this rule. Camera-facing gallery portraits and character-select idles are a separate animation context and do not set the acting language for paired scenes.
+
+### Presentation-independent anatomy layers
+
+Animation timing and body motion must not bake in clothing or explicit anatomy. Each actor root may receive independent chest-form, chest-detail, pelvis-form, pelvis-detail, and clothing layers attached to named anchors. The same motion can therefore render as `SFW_CLOTHED`, `SFW_UNCLOTHED`, or `NSFW` without regenerating choreography.
+
+Compatibility checks apply to anatomy overlays just as they do to animation templates. Missing or incompatible explicit detail falls back to a featureless/species-safe form; it never invents an attachment. See `anatomy_asset_library.md` and `schemas/anatomy_patch.schema.json`.
+
 ## Template metadata
 
 Every animation template should declare:
@@ -61,3 +71,15 @@ The board must report two distinct facts:
 - **Bespoke progress:** a custom animation for this exact commission has been authored and reviewed.
 
 “Fallback exists” must never be presented as “custom commission complete.”
+
+## Generative motion studies
+
+Short external video generations may be used to test whether a static character design remains readable in motion. These clips are reference experiments only. They are not paper-doll templates, production sprites, authored animation coverage, or evidence that the runtime resolver exists.
+
+The local `scripts/wiro_seedance.py` helper submits or resumes Wiro Seedance tasks without committing credentials. It supports first/last frames, ordered sets of 1–30 reference images, 480p or 720p output, four-to-thirty-second durations, polling by task ID/token, and local download. Reference mode addresses inputs as `[Image 1]`, `[Image 2]`, and so on, and cannot be combined with first/last-frame guidance because the provider composes the opening shot itself. Source credentials must remain outside the repository in environment variables or the protected Codex secrets folder.
+
+Provider outputs require visual QA. The 2026-09-13 Dragon experiment demonstrated two current hazards: identical first/last frames produced an embedded white grid, while a first-frame-only retry ignored the requested landscape ratio and returned portrait video. Neither result changes the planned runtime architecture.
+
+The 2026-09-14 Phoenix and Naga chibi studies successfully retained compact silhouettes, thick contours, adult anatomy, and nonhuman topology over four-second first-frame-only animations. They remain research clips, not authored runtime coverage. The helper now stores receipts and retries a completed task's transient output-file 404 instead of resubmitting it.
+
+The first Titan→Ranger study used an authored golem/cow staging image as Seedance's first frame. It preserved a clear Large-male/Medium-female mass difference, stable planted support, dangling hooves, and partner-only eyelines, but generalized two requested lift cycles into one soft lift/lean/nuzzle progression. This supports authored contact poses while reinforcing that generated clips remain motion reference rather than timing masters.
