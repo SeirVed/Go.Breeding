@@ -4,6 +4,8 @@
 
 > **Project status:** early public prototype. The repository distinguishes implemented, placeholder, and planned work. Start with the [documentation index](docs/README.md).
 
+The [interactive project board](docs/project-board.html) is the clearest current snapshot of what exists, what is exploratory, what is merely planned, and what remains placeholder-only.
+
 ## High-level pitch
 Breed, reroll, and evolve demi-species across four orthogonal trait axes. Unlock new species via **readable evolutionary conditions** (e.g., `Cow + Feral + STR ≥ 120 → Minotaur`). Content is data-driven so new species, traits, and evolutions can be added without engine rewrites.
 
