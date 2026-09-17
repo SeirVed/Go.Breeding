@@ -19,7 +19,7 @@ api.txt
 .env
 .env.*
 
-# Generated/reference media stays local until an explicit media release.
+# Test, reference, paid and unproven media stays local until explicitly promoted.
 /art/style_exploration/**/*.png
 /art/style_exploration/**/*.jpg
 /art/style_exploration/**/*.jpeg

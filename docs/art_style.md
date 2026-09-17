@@ -48,6 +48,10 @@ The tiny and medium tiers must be judged at their actual display size. A downsca
 
 The project intentionally uses two rendering tiers. They share identity but do not share production obligations.
 
+### Source-control promotion rule
+
+Production-approved runtime art may be committed and pushed with the code it supports. Test renders, paid generations, reference sheets and unproven style studies remain local under ignored research/artifact paths. Promotion requires that an asset has a declared runtime purpose, passes its transparency/pivot/scale checks, is referenced by a tested manifest, and is described honestly as draft or final. Human Zero is the first promoted draft cutout; its small deterministic SVG sources are public production assets, while Catgirl and paid motion studies remain local research.
+
 ### Tier A — in-game production master
 
 - Approximately 3–3.5 heads tall for ordinary humanoid bodies.

@@ -2,6 +2,7 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Formalized source-control promotion: tested production runtime art may ship with code, while test, paid, reference and unproven media remains local until explicitly promoted.
 - Expanded the reusable motion vocabulary to twenty-one verbs. Nine have visible Rig Studio body-motion prototypes; contact and constraint work remains explicitly `contract_only`.
 - Added a board-, direction-, size- and morph-aware sentence compiler that generates and validates 243 `PLACEHOLDER_PLAN` storyboards. Jack & Jack and Jill & Jill now have distinct same-sex descriptor voices and lead-exchange themes instead of generic awaiting-design text.
 - Added compact placeholder verb sequences to Dev Progress notices plus an ignored JSON dump tool for inspecting every role-labelled sentence. Planning records remain `runtime_ready: false` and do not alter authored-script progress.
