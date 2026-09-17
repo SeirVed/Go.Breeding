@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="36" height="58" viewBox="0 0 36 58">
+  <defs><linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#667253"/><stop offset="1" stop-color="#394338"/></linearGradient></defs>
+  <path d="M18 1C9 1 5 6 6 16l2 34c1 5 4 7 10 7s9-2 10-7l2-34C31 6 27 1 18 1Z" fill="url(#cloth)" stroke="#352b2b" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M10 13c5-3 11-3 16-1" fill="none" stroke="#91a071" stroke-width="3" stroke-linecap="round" opacity=".65"/>
+  <path d="M9 45h18" stroke="#6e4938" stroke-width="6" stroke-linecap="round"/>
+</svg>

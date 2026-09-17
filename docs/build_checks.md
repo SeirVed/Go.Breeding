@@ -8,7 +8,7 @@ Run from the repository root:
 pwsh -File .\scripts\build_check.ps1
 ```
 
-The checker first uses the project's pinned self-contained editor at `C:\Games\Dev\Godot\Godot.exe`, then falls back to a matching executable on `PATH`.
+The checker first uses the project's pinned self-contained editor at `C:\Games\Dev\Godot\Godot.exe`, then falls back to a matching executable on `PATH`. Because the pinned build is self-contained, export needs write access to `C:\Games\Dev\Godot\editor_data\temp`; a restricted shell must run the checker with that narrowly scoped permission.
 
 If Godot is not discoverable by command name, supply it explicitly:
 
@@ -25,6 +25,6 @@ The check requires Godot 4.7.2 and its matching Windows export templates. It per
 5. Produce an ignored, private Windows QA executable.
 6. Run the smoke test from that exported executable.
 
-The export log is also audited to ensure `art/style_exploration/`, the root `API.png`, the editable emergency SVG source and the editor-only `addons/rig_studio/` code are not packed, while the runtime emergency PNG and shared motion data are packed. Research media is intentionally blocked from Godot imports by `art/style_exploration/.gdignore` and is also excluded in `export_presets.cfg`. The artwork smoke test verifies that the one packaged emergency PNG appears whenever no complete cutout exists, while valid static and bone-following probes clip to the invisible rig.
+The export log is also audited to ensure `art/style_exploration/`, the root `API.png`, the editable emergency SVG source, editor-only `addons/rig_studio/` code and every `tools/` QA script are not packed, while the runtime emergency PNG, Human Zero textures and shared motion data are packed. The checker treats Godot's logged `project.binary` temporary-file failure as fatal even if Godot returns exit code zero. Research media is intentionally blocked from Godot imports by `art/style_exploration/.gdignore` and is also excluded in `export_presets.cfg`. The artwork smoke test verifies that Human Zero mounts all fourteen parts without fallback, and that the one packaged emergency PNG still appears whenever another character has no complete cutout.
 
 Logs are written beneath `artifacts/build-checks/`; the QA executable is written beneath `export/`. Both locations are ignored by Git. Passing this check verifies construction and core data contracts, not final visuals, performance, balance, content completeness, or long-session save integrity.

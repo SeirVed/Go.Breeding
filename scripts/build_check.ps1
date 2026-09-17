@@ -9,6 +9,7 @@ $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
 $artifactRoot = Join-Path $projectRoot "artifacts\build-checks"
 $exportRoot = Join-Path $projectRoot "export"
 $qaExecutable = Join-Path $exportRoot "Go.Breeding-v0.2.4-win64-build-check.exe"
+$qaPack = [System.IO.Path]::ChangeExtension($qaExecutable, ".pck")
 
 New-Item -ItemType Directory -Force -Path $artifactRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $exportRoot | Out-Null
@@ -117,6 +118,11 @@ if ($sourceOutput -notmatch "SMOKE_TEST: all framework screens constructed succe
 }
 
 Write-Host "[5/6] Exporting private Windows QA build"
+# Never overwrite an older embedded-PCK executable in place. Godot can leave
+# the stale appended payload behind when a preset changes to a sidecar PCK,
+# causing the runtime to prefer corrupt embedded data over the new pack.
+Remove-Item -LiteralPath $qaExecutable -Force -ErrorAction SilentlyContinue
+Remove-Item -LiteralPath $qaPack -Force -ErrorAction SilentlyContinue
 $exportResult = Invoke-CheckedProcess `
     -FilePath $GodotPath `
     -ArgumentList @("--headless", "--verbose", "--path", $projectRoot, "--export-release", '"Windows Desktop"', $qaExecutable) `
@@ -124,13 +130,17 @@ $exportResult = Invoke-CheckedProcess `
 if (-not (Test-Path -LiteralPath $qaExecutable -PathType Leaf)) {
     throw "Godot reported success but did not create: $qaExecutable"
 }
+$exportErrors = Get-Content -LiteralPath $exportResult.StderrPath -Raw
+if ($exportErrors -match "Couldn't save project\.binary|Can't open file from path .*tmpproject\.binary|SCRIPT ERROR|Failed to load script") {
+    throw "Godot returned success but logged a fatal export error.`n$exportErrors"
+}
 $exportOutput = Get-Content -LiteralPath $exportResult.StdoutPath -Raw
 $packedFiles = ($exportOutput -split "`r?`n") | Where-Object { $_ -match "Storing File:" }
 $packedFileAudit = $packedFiles -join "`n"
 if ($packedFileAudit -match "style_exploration" -or $packedFileAudit -match "API\.png") {
     throw "Export audit failed: private research media or API.png was packed into the QA build."
 }
-if ($packedFileAudit -match "addons/rig_studio" -or $packedFileAudit -match "tools/rig_studio_smoke") {
+if ($packedFileAudit -match "addons/rig_studio" -or $packedFileAudit -match "res://tools/") {
     throw "Export audit failed: editor-only Rig Studio code was packed into the playable build."
 }
 if ($packedFileAudit -notmatch "unknown_character\.png" -or $packedFileAudit -match "unknown_character\.svg") {

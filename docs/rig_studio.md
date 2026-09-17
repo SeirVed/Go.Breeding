@@ -1,6 +1,6 @@
 # Rig Studio v0.2.0
 
-> **Status: functional editor-only authoring draft.** Character construction, variable timed keys, multi-actor staging and three motion-verb prototypes are testable. Finished Human artwork, contact constraints, alternate skeleton topologies and gameplay animation selection are not implemented.
+> **Status: functional editor-only authoring draft.** Character construction, variable timed keys, multi-actor staging, three motion-verb prototypes and a complete draft Human cutout are testable. Production-polished Human artwork, contact constraints, alternate skeleton topologies and gameplay animation selection are not implemented.
 
 ## What it is
 
@@ -18,7 +18,7 @@ Single Builder constructs and diagnoses one reusable paper doll. Its character s
 - **Body foundation:** one exclusive topology selection. Only `humanoid_plantigrade` is implemented; digitigrade, unguligrade, serpentine, tauric, quadruped and amorphous entries are honest `contract_only` metadata.
 - **Additive anatomy:** ears, horns, tail, wings, antennae, halo, fins and extra limbs can be declared independently. Existing art slots work for ears/horns; articulated add-ons remain contracts until their anchor chains exist.
 
-An incomplete cutout is visible over editor guides here. Gameplay continues to use the universal emergency silhouette until all 14 essential humanoid slots—or one valid `full_body` draft—are present.
+The Default Template mounts the complete fourteen-piece Human Zero cutout. Incomplete characters remain visible over editor guides while authoring; gameplay uses the universal emergency silhouette until all 14 essential humanoid slots—or one valid `full_body` draft—are present.
 
 ## Animation Editor
 
@@ -50,4 +50,4 @@ Undo/Redo snapshots characters, artwork and studio motion data together. Save Al
 
 ## Current boundary
 
-This is not yet a full inverse-kinematics or constraint solver. There is no mesh weighting, polygon deformation, automatic foot locking, partner contact resolution, anatomy-aware verb adaptation, runtime animation resolver or proper Human cutout. Simple and Advanced currently share the same key data; Advanced exposes more precision rather than a separate animation. Alternative topology choices are schema contracts until their skeletons and artwork are built.
+This is not yet a full inverse-kinematics or constraint solver. There is no mesh weighting, polygon deformation, automatic foot locking, partner contact resolution, anatomy-aware verb adaptation, runtime animation resolver or production-polished Human art. Human Zero proves the fourteen-part mounting path; it is a replaceable draft, not the final player character. Simple and Advanced currently share the same key data; Advanced exposes more precision rather than a separate animation. Alternative topology choices are schema contracts until their skeletons and artwork are built.

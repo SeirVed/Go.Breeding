@@ -1,6 +1,6 @@
 # Paper-Doll Walk Lab
 
-> **Status: implemented rig/locomotion vertical slice.** One invisible pose provider supports six humanlike body profiles, an artwork manifest, one emergency image and a looping walk. No creature cutout, breeding animation or exceptional-morphology rig is complete.
+> **Status: implemented rig/locomotion vertical slice.** One invisible pose provider supports six humanlike body profiles, a complete draft Human cutout, one emergency image and a looping walk. No creature cutout, breeding animation or exceptional-morphology rig is complete.
 
 ## Purpose
 

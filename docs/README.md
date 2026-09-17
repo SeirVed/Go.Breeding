@@ -34,7 +34,7 @@ When prose and runtime data disagree about the present build, runtime data and e
 - `breeding_animation_matrix.md` — three directional 9×9 commission boards.
 - `animation_pipeline.md` — best-fit paired paper-doll resolver and honest fallback ladder.
 - `paper_doll_walk_lab.md` — implemented six-profile shared-rig locomotion vertical slice and iteration record.
-- `paper_doll_parts.md` — invisible rig, clip-on image manifest, one emergency silhouette, Catgirl cutout plan, and production-part gates.
+- `paper_doll_parts.md` — invisible rig, fourteen-piece Human Zero draft, clip-on image manifest, one emergency silhouette, Catgirl cutout plan, and production-part gates.
 - `rig_studio.md` — custom Godot Rig Studio v0.2.0: Single Builder, Animation Editor, timed keys, onion skins, Propagate, verbs and current limits.
 - `pairing_production_pipeline.md` — reusable source-to-output gates, group/name/type lookups, and reproducible production records.
 - `anatomy_asset_library.md` — modular SFW/NSFW chest, pelvis, clothing, and presentation-profile architecture.

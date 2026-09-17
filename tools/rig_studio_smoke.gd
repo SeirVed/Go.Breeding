@@ -17,11 +17,11 @@ func _run() -> void:
 	screen.size = Vector2(root.size)
 	await process_frame
 	var state: Dictionary = screen.smoke_state()
-	if state.characters < 2 or state.frames != 8 or state.essential_missing != 14 or state.multi_rigs != 2 or state.editor_only:
+	if state.characters < 2 or state.frames != 8 or state.essential_missing != 0 or state.multi_rigs != 2 or state.editor_only:
 		_fail("Character inventory, timeline or editor-only guard failed")
 		return
-	if screen._stage.rig.artwork_state() != "empty_editor_preview" or screen._stage.rig.has_emergency_art():
-		_fail("The editor canvas must expose the rig instead of overlaying emergency game art")
+	if screen._stage.rig.artwork_state() != "cutout" or screen._stage.rig.artwork_piece_count() != 14 or screen._stage.rig.has_emergency_art():
+		_fail("The Human Default Template did not mount its complete 14-piece cutout")
 		return
 	if str(screen._character_picker.get_item_metadata(0)) != "__add_new__" or screen._character_id != "default_template" or str(screen._characters.default_template.get("species_id", "")) != "human":
 		_fail("Single Builder did not start with Add New and the Human Default Template")
@@ -92,6 +92,12 @@ func _run() -> void:
 	if not screen._current_frames()[2].get("offsets", {}).is_empty():
 		_fail("Motion-keyframe undo failed")
 		return
+	# Keep the Human template intact while exercising incomplete-art authoring on
+	# the intentionally artless Catgirl declaration.
+	screen._character_id = "catgirl_base"
+	screen._select_character_in_picker("catgirl_base")
+	screen._apply_preview()
+	screen._refresh_inventory()
 	screen._select_frame(0)
 	screen._select_mode("Art")
 	if screen.stage_begin_drag("head"):

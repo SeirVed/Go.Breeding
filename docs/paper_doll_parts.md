@@ -1,6 +1,6 @@
 # Paper-Doll Artwork Contract
 
-> **Status: working rig and emergency-art contract; no production cutout has been authored.** The Human-based Default Template is asset target zero. The Catgirl remains a later 5′5″ test identity whose species and wardrobe entries are declarations, not mounted production art.
+> **Status: working rig, emergency-art contract and first complete draft cutout.** Human Zero mounts all fourteen ordinary body slots on the Default Template. It is replaceable proof art, not production polish. The Catgirl remains a later 5′5″ test identity whose species and wardrobe entries are declarations, not mounted production art.
 
 ## Runtime rule
 
@@ -31,17 +31,19 @@ If an identity has **no runtime-ready cutout**, the rig displays exactly one tra
 
 The emergency image is an unknown-character indicator, not a procedural creature generator or finished sprite. Its editable SVG source is retained beside the PNG; only the PNG is selected at runtime. The fallback is never shown over a ready cutout. It prevents invisible characters and invalid-resource access while the roster's cutouts are authored over time.
 
-## Human-zero asset plan
+## Human Zero draft
 
-Rig Studio v0.2.0 begins from `default_template`: a Medium Human, plantigrade humanoid with no optional anatomy. The first proper cutout must cover the 14 ordinary humanoid slots and survive the variable-key walk test before any ears, horns, tails or alternate topology are treated as production-ready. A future Human Player is created from this template rather than turning the global template into a player identity.
+`default_template` is a Medium Human, plantigrade humanoid with no optional anatomy. Its `storybook_emoji_v1` draft is assembled from nine transparent SVG sources reused across fourteen named slots: head, torso, bilateral upper/lower arms, hands, upper/lower legs and feet. Thick charcoal edges, warm flat gradients and a simple ranch outfit make seams and scale failures obvious. It survives source and exported-runtime readiness tests without invoking emergency art. A future Human Player is created from this template rather than turning the global template into a player identity.
 
-After the Human base works, Catgirl becomes the first additive-anatomy extension:
+Human Zero is deliberately generic and replaceable. Its job is to prove pivots, overlap, draw order, full-manifest readiness and small-scale readability before bespoke species art. A visual QA capture helper lives at `tools/human_zero_capture.gd`; generated captures remain under ignored `artifacts/`.
+
+With the Human mounting path working, Catgirl becomes the first additive-anatomy extension:
 
 `catgirl_base` remains a 5′5″ female Medium rig with declared orange-tabby species and ranch-scout wardrobe part sets. The generated `art/style_exploration/cat_parts_v01/catgirl-parts-board-v01.png` is research only: its checkerboard is baked in and cannot be clipped as a transparent part. The old code-drawn mannequin was a topology study and has been removed from normal character display.
 
 The Cat Parts Workbench now compares the **developer-only** joint guide, Catgirl with no art, and Catgirl with a broken art path. The latter two correctly display the same single universal silhouette, never a naked skeleton. It does not imply a working Catgirl cutout.
 
-Use Single Builder to author the Human cutout first. Then reuse that proven foundation for a basic alpha-clean Catgirl cutout and add ears and a segmented tail only after the ordinary silhouette holds. Mount real files in the art manifest, review the full variable-key walk at small and large display scales, then refine individual pieces without replacing the rig. Repeat the basic-cutout pass for each new creature before polishing any one creature deeply.
+Use Single Builder to inspect and replace Human Zero without changing its slot contract. Reuse that proven foundation for a basic alpha-clean Catgirl cutout and add ears and a segmented tail only after the ordinary silhouette holds. Mount real files in the art manifest, review the full variable-key walk at small and large display scales, then refine individual pieces without replacing the rig. Repeat the basic-cutout pass for each new creature before polishing any one creature deeply.
 
 Promotion requires transparent pixels outside the silhouette, documented pivot/scale/layer/source metadata, no invisible gaps throughout the walk, and legibility at portrait, map-token and full-character sizes. Exceptional anatomy such as naga tails, wings and tauric bodies may require explicit new anchor contracts; the current humanoid topology does not prove those cases.
 

@@ -2,6 +2,8 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Added **Human Zero**, a complete fourteen-piece `storybook_emoji_v1` Default Template cutout with deterministic transparent SVG sources. Runtime, Rig Studio and exported-build tests now fail if the Human silently falls back to the universal mystery silhouette.
+- Hardened private export validation: fresh QA targets prevent stale embedded payloads, all `tools/` scripts stay out of playable packages, and Godot's false-success `project.binary` export error is promoted to a build failure.
 - Rebuilt the custom editor plugin as **Rig Studio v0.2.0**: split Single Builder, Animation Editor, timeline, Propagate and verb-engine modules; Human Default Template plus Add New; exclusive topology/additive anatomy contracts; variable timed keys and interpolation; Simple/Advanced timeline views; Shift multi-node selection; selected-actor onion skins; one-to-many casts; and data-driven verb blocks. Brace, Pelvis Pulse/Thrust and Reaction Bounce visibly preview, while contact-dependent verbs remain honestly `contract_only`.
 - Added an editor-only multi-rig animation scene to Rig Studio. Authoring can add/remove cast rigs, choose independent character identities, roles, size bands, exact heights and stage positions, and key each actor's pose/stage motion across eight draft frames. This is not paired gameplay choreography or commission coverage yet.
 - Added an editor-only **Rig Studio** Godot workspace from the hand-drawn mockup: character selector, visible authoring anchors, Rig/Art/Animate modes, attached/missing part inventories, project-PNG assignment, image transforms, eight shared walk keyframes, playback, reset, undo/redo and guarded save.
@@ -13,7 +15,7 @@
 - Separated the paper doll into an invisible geometry/motion rig, declared species/wardrobe part sets and a distinct runtime image manifest; rig profiles no longer contain skin, hair, palette or clothing decisions.
 - Added the Cat Parts Workbench and declared orange-tabby/ranch-scout kits. Its former code-drawn base/species/full-character comparison was topology research, not production clip-on art.
 - Made the rig invisible in normal character rendering; explicit developer skeleton mode hides artwork. Valid static and bone-clipped image probes follow anchors, while characters with zero valid art display one transparent universal emergency image, including broken-path cases.
-- Recorded the Catgirl cutout as **not authored yet**. The art manifest is empty, and the generated Cat parts board remains research, not working sprite pieces.
+- Recorded the Catgirl cutout as **not authored yet**. The art manifest contains only Human Zero; the generated Cat parts board remains research, not working sprite pieces.
 - Added a local generated Catgirl parts research board and promotion gates; the opaque checkerboard concept is explicitly not treated as production alpha art.
 - Abstracted the source-to-output pairing workflow into a reusable gated production pipeline covering matched masters, presentation profiles, static contact-pose approval, motion QA, paper-doll authoring, and runtime integration.
 - Added data-driven pairing-group records and runtime lookups by board/group (`m+f`, `m+m`, `f+f`), role-aware archetype name (`Titan + Ranger`), ordered body type, size pair, morphology pair, coupling title, and stable commission key.

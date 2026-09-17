@@ -362,10 +362,21 @@ static func validate_artwork_contract() -> PackedStringArray:
 		errors.append("Universal emergency character art is missing")
 	for key in _artwork.get("characters", {}):
 		var entry: Dictionary = _artwork["characters"][key]
+		var seen_slots := {}
 		for part in entry.get("parts", []):
 			if not part is Dictionary:
 				errors.append("%s has a non-object artwork part" % key)
 				continue
+			var slot := str(part.get("slot", ""))
+			if slot.is_empty():
+				errors.append("%s has artwork without a slot" % key)
+			elif seen_slots.has(slot):
+				errors.append("%s repeats artwork slot %s" % [key, slot])
+			else:
+				seen_slots[slot] = true
+			var path := str(part.get("path", ""))
+			if path.is_empty() or not ResourceLoader.exists(path):
+				errors.append("%s has missing artwork resource %s" % [key, path])
 			if not VALID_ANCHORS.has(str(part.get("anchor", ""))):
 				errors.append("%s has an unknown artwork anchor" % key)
 			if part.has("end_anchor") and not VALID_ANCHORS.has(str(part.end_anchor)):

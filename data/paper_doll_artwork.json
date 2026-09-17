@@ -1,3 +1,26 @@
 {
-  "characters": {}
+  "schema_version": 1,
+  "characters": {
+    "default_template": {
+      "status": "draft_runtime_cutout",
+      "style": "storybook_emoji_v1",
+      "source": "project-authored deterministic SVG",
+      "parts": [
+        {"slot": "upper_leg_left", "path": "res://art/characters/human_default/upper_leg.svg", "anchor": "hip_left", "end_anchor": "knee_left", "rest_length": 54.0, "z": 1},
+        {"slot": "lower_leg_left", "path": "res://art/characters/human_default/lower_leg.svg", "anchor": "knee_left", "end_anchor": "foot_left", "rest_length": 52.0, "z": 2},
+        {"slot": "foot_left", "path": "res://art/characters/human_default/foot_left.svg", "anchor": "foot_left", "offset": [-7.0, 5.0], "z": 3},
+        {"slot": "upper_arm_left", "path": "res://art/characters/human_default/upper_arm.svg", "anchor": "shoulder_left", "end_anchor": "elbow_left", "rest_length": 46.0, "z": 4},
+        {"slot": "lower_arm_left", "path": "res://art/characters/human_default/lower_arm.svg", "anchor": "elbow_left", "end_anchor": "hand_left", "rest_length": 42.0, "z": 5},
+        {"slot": "hand_left", "path": "res://art/characters/human_default/hand.svg", "anchor": "hand_left", "offset": [0.0, 8.0], "z": 6},
+        {"slot": "upper_leg_right", "path": "res://art/characters/human_default/upper_leg.svg", "anchor": "hip_right", "end_anchor": "knee_right", "rest_length": 54.0, "z": 7},
+        {"slot": "lower_leg_right", "path": "res://art/characters/human_default/lower_leg.svg", "anchor": "knee_right", "end_anchor": "foot_right", "rest_length": 52.0, "z": 8},
+        {"slot": "foot_right", "path": "res://art/characters/human_default/foot_right.svg", "anchor": "foot_right", "offset": [7.0, 5.0], "z": 9},
+        {"slot": "torso", "path": "res://art/characters/human_default/torso.svg", "anchor": "torso", "z": 10},
+        {"slot": "upper_arm_right", "path": "res://art/characters/human_default/upper_arm.svg", "anchor": "shoulder_right", "end_anchor": "elbow_right", "rest_length": 46.0, "z": 12},
+        {"slot": "lower_arm_right", "path": "res://art/characters/human_default/lower_arm.svg", "anchor": "elbow_right", "end_anchor": "hand_right", "rest_length": 42.0, "z": 13},
+        {"slot": "hand_right", "path": "res://art/characters/human_default/hand.svg", "anchor": "hand_right", "offset": [0.0, 8.0], "z": 14},
+        {"slot": "head", "path": "res://art/characters/human_default/head.svg", "anchor": "head", "offset": [0.0, -4.0], "z": 20}
+      ]
+    }
+  }
 }

@@ -256,6 +256,14 @@ func run_smoke_test() -> void:
 		push_error("Catgirl base profile failed")
 		get_tree().quit(1)
 		return
+	var human_probe = PaperDollRigScript.new()
+	human_probe.position = Vector2(-500, -500)
+	human_probe.configure_character("default_template")
+	screen_root.add_child(human_probe)
+	if human_probe.artwork_state() != "cutout" or human_probe.artwork_piece_count() != 14 or human_probe.has_emergency_art() or not human_probe.missing_essential_slots().is_empty():
+		push_error("Human Zero cutout did not replace emergency artwork")
+		get_tree().quit(1)
+		return
 	step_walk_lab()
 	if male_small.is_walking() or not is_equal_approx(walk_lab_review_phase, 0.125):
 		push_error("Paper-doll phase review failed")
