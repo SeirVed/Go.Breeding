@@ -21,7 +21,7 @@ The check requires Godot 4.7.2 and its matching Windows export templates. It per
 1. Verify the engine version.
 2. Import resources and compile/initialize the Rig Studio editor plugin.
 3. Run a headless, in-memory Rig Studio interaction test: Single Builder creation and Human Default Template, exclusive/additive anatomy metadata, artwork readiness, multi-node editing, variable keys, interpolation and undo; plus Animation Editor cast add/remove, independent role/size/exact height, onion skins, Propagate and visible verb composition.
-4. Run the source project's built-in `--smoke-test` flow.
+4. Run the source project's built-in `--smoke-test` flow, including descriptor-to-verb compilation for every current directional board cell.
 5. Produce an ignored, private Windows QA executable.
 6. Run the smoke test from that exported executable.
 

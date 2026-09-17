@@ -1,0 +1,53 @@
+{
+  "version": "0.1.0",
+  "status": "PLACEHOLDER_PLAN",
+  "ticks_per_beat": 30,
+  "morph_openers": {
+    "Feral": [
+      {"verb_id": "circle_partner", "roles": {"mover": "first", "target": "second"}, "duration_beats": 2},
+      {"verb_id": "face_partner", "roles": {"actor": "second", "target": "first"}, "duration_beats": 1}
+    ],
+    "Neutral": [
+      {"verb_id": "approach", "roles": {"mover": "first", "target": "second"}, "duration_beats": 2},
+      {"verb_id": "face_partner", "roles": {"actor": "second", "target": "first"}, "duration_beats": 1}
+    ],
+    "Refined": [
+      {"verb_id": "offer_hand", "roles": {"offerer": "first", "receiver": "second"}, "duration_beats": 1},
+      {"verb_id": "approach", "roles": {"mover": "second", "target": "first"}, "duration_beats": 2}
+    ]
+  },
+  "size_patterns": {
+    "equal": [
+      {"verb_id": "plant_stance", "roles": {"actor": "first"}, "duration_beats": 1},
+      {"verb_id": "plant_stance", "roles": {"actor": "second"}, "duration_beats": 1},
+      {"verb_id": "reach_to", "roles": {"reacher": "first", "target": "second"}, "duration_beats": 1}
+    ],
+    "first_larger": [
+      {"verb_id": "lower_center", "roles": {"actor": "first"}, "duration_beats": 1},
+      {"verb_id": "support_lift", "roles": {"support": "first", "rider": "second"}, "duration_beats": 2},
+      {"verb_id": "brace", "roles": {"responder": "first"}, "duration_beats": 1}
+    ],
+    "second_larger": [
+      {"verb_id": "plant_stance", "roles": {"actor": "second"}, "duration_beats": 1},
+      {"verb_id": "supported_climb", "roles": {"climber": "first", "support": "second"}, "duration_beats": 2},
+      {"verb_id": "brace", "roles": {"responder": "second"}, "duration_beats": 1}
+    ]
+  },
+  "board_signatures": {
+    "jack_jill": {"descriptor": "complementary lead and response", "beats": [{"verb_id": "rotate_lead", "roles": {"leader": "first", "follower": "second"}, "duration_beats": 1}]},
+    "jack_jack": {"descriptor": "competitive reciprocity with a visible lead exchange", "beats": [{"verb_id": "exchange_lead", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}]},
+    "jill_jill": {"descriptor": "mirrored reciprocity with a flowing lead exchange", "beats": [{"verb_id": "exchange_lead", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}]}
+  },
+  "core_loop": [
+    {"verb_id": "settle_contact", "roles": {"first": "first", "second": "second"}, "duration_beats": 2},
+    {"verb_id": "hold_anchors", "roles": {"holder": "first", "receiver": "second"}, "duration_beats": 1},
+    {"verb_id": "pelvis_pulse", "roles": {"driver": "first"}, "duration_beats": 4, "parallel_group": "cadence"},
+    {"verb_id": "reaction_bounce", "roles": {"responder": "second"}, "duration_beats": 4, "parallel_group": "cadence"},
+    {"verb_id": "sway_together", "roles": {"first": "first", "second": "second"}, "duration_beats": 2},
+    {"verb_id": "nuzzle", "roles": {"actor": "second", "partner": "first"}, "duration_beats": 1}
+  ],
+  "outro": [
+    {"verb_id": "release", "roles": {"actor": "first"}, "duration_beats": 1},
+    {"verb_id": "reset_loop", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}
+  ]
+}

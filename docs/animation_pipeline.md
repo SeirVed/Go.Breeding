@@ -2,6 +2,8 @@
 
 > **Status: architecture plan with an invisible-rig locomotion vertical slice and editor-only Rig Studio.** `Emoji Bonk v0` remains the universal breeding placeholder. A six-profile pose provider, image manifest, shared draft walk offsets and one emergency character image test anchors and timing; the Catgirl cutout, paired retargeting, compatibility scoring and bespoke choreography are not implemented yet.
 
+The reusable motion language is split into atomic verbs and generated pairing sentences. See `docs/verb_storyboards.md`, `data/animation_verbs.json` and `data/pairing_storyboard_grammar.json`. The compiler covers all current directional board cells as `PLACEHOLDER_PLAN`; this is production planning coverage, not playable animation coverage.
+
 ## Goal
 
 Author a paired 2D cutout—or “paper-doll”—animation once, then populate its Actor A and Actor B slots with compatible creature sprite variants. The system should always choose the most specific animation it can safely play while preserving an honest placeholder at the bottom of the ladder.

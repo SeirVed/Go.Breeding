@@ -30,13 +30,13 @@ The timeline is no longer fixed to eight poses. Each key stores an integer tick,
 
 ## Verb composition
 
-`data/animation_verbs.json` is the first composable-motion vocabulary. A verb block records a stable verb ID, timed range, participant-role mapping and parameters. The initial engine visibly previews:
+`data/animation_verbs.json` is the composable-motion vocabulary. A verb block records a stable verb ID, timed range, participant-role mapping and parameters. Version 0.3.0 defines twenty-one verbs; nine have visible body-offset prototypes while contact-dependent verbs remain contracts. The original three preview examples are:
 
 - `brace`;
 - `pelvis_pulse` / Thrust;
 - `reaction_bounce`.
 
-`reach_to`, `hold_anchors` and `release` are present as `contract_only` definitions. They deliberately do not claim working contact choreography. The intended evaluation order is base pose, body/root verbs, contact constraints, reaction verbs, secondary motion, then manual overrides. Baking verbs into destructive keys is not part of v0.2.0.
+Approach, Circle Partner, Plant Stance, Lower Centre, Rise and Sway Together now also preview. `reach_to`, `hold_anchors`, Support Lift, Supported Climb, Rotate/Exchange Lead, Settle Contact, Nuzzle, Release and Reset Loop remain `contract_only`. They deliberately do not claim working contact choreography. `data/pairing_storyboard_grammar.json` composes these verbs into 243 directional `PLACEHOLDER_PLAN` sentences; see `docs/verb_storyboards.md`. The intended evaluation order is base pose, body/root verbs, contact constraints, reaction verbs, secondary motion, then manual overrides. Baking verbs into destructive keys is not part of v0.2.0.
 
 ## Data and safety
 

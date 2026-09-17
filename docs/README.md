@@ -36,6 +36,7 @@ When prose and runtime data disagree about the present build, runtime data and e
 - `paper_doll_walk_lab.md` — implemented six-profile shared-rig locomotion vertical slice and iteration record.
 - `paper_doll_parts.md` — invisible rig, fourteen-piece Human Zero draft, clip-on image manifest, one emergency silhouette, Catgirl cutout plan, and production-part gates.
 - `rig_studio.md` — custom Godot Rig Studio v0.2.0: Single Builder, Animation Editor, timed keys, onion skins, Propagate, verbs and current limits.
+- `verb_storyboards.md` — twenty-one-verb vocabulary, 243 directional placeholder sentences, same-sex board voices, coverage tests, and the strict non-ready boundary.
 - `pairing_production_pipeline.md` — reusable source-to-output gates, group/name/type lookups, and reproducible production records.
 - `anatomy_asset_library.md` — modular SFW/NSFW chest, pelvis, clothing, and presentation-profile architecture.
 - `dev_metrics.md` — Guild Star Ballot, aggregates, privacy, and backend requirements.

@@ -146,6 +146,9 @@ if ($packedFileAudit -match "addons/rig_studio" -or $packedFileAudit -match "res
 if ($packedFileAudit -notmatch "unknown_character\.png" -or $packedFileAudit -match "unknown_character\.svg") {
     throw "Export audit failed: the runtime emergency PNG must be packed, but its editable SVG source must not be."
 }
+if ($packedFileAudit -notmatch "animation_verbs\.json" -or $packedFileAudit -notmatch "pairing_storyboard_grammar\.json") {
+    throw "Export audit failed: the verb vocabulary and storyboard grammar were not packed."
+}
 
 Write-Host "[6/6] Running exported-build smoke test"
 $runtimeResult = Invoke-CheckedProcess `

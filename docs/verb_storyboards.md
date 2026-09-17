@@ -1,0 +1,56 @@
+# Verbs and Pairing Storyboards
+
+> **Status: planning compiler implemented; runtime choreography incomplete.** The compiler produces 243 directional `PLACEHOLDER_PLAN` records. It does not replace Emoji Bonk, increment commission progress, or claim that contact animation exists.
+
+## Verbs first
+
+`data/animation_verbs.json` is the canonical motion vocabulary. Version 0.3.0 defines twenty-one small actions across travel, orientation, gesture, support, contact, transition, cyclic, reaction and reset categories. Each verb declares participant roles, affected channels, optional required anchors, defaults and one of two honest implementation states:
+
+- `motion_prototype` — Rig Studio can visibly preview the body-offset portion;
+- `contract_only` — the verb is valid planning language but still needs constraints, anchors, IK or a transition implementation.
+
+The nine current motion prototypes are Approach, Circle Partner, Plant Stance, Lower Centre, Brace, Rise, Pelvis Pulse / Thrust, Reaction Bounce and Sway Together. Contact verbs such as Support Lift, Supported Climb, Settle Contact and Hold Anchors remain contracts.
+
+## Then sentences
+
+`data/pairing_storyboard_grammar.json` composes verbs rather than storing 243 unrelated animations. `PairingProgress.build_pairing_storyboard()` resolves:
+
+1. the directional commission and board (`m+f`, `m+m` or `f+f`);
+2. the first partner's Feral, Neutral or Refined opener;
+3. equal scale, first-larger or second-larger mechanics;
+4. the board's lead/response voice;
+5. contact settle, hold, cadence and reaction;
+6. release and loop reset.
+
+The output contains the source commission key, descriptor, readable sentence, timed beats, symbolic role bindings, default parameters, unresolved verbs and total ticks. Pelvis Pulse and Reaction Bounce share the `cadence` parallel window. Every other beat is ordered.
+
+Directional order matters. `Scout → Titan` uses the larger second partner as support and a Supported Climb. `Titan → Scout` lowers the larger first partner and uses Support Lift. They are different storyboards even though the same archetypes appear.
+
+## Board voices
+
+Jack & Jill keeps the established 81 named coupling descriptions and adds a complementary lead/response beat. The same-sex boards now receive real generated direction instead of “awaiting design” filler:
+
+- **Jack & Jack:** competitive reciprocity, leverage and visible lead exchanges; shared Feral, Neutral and Refined pairs shade toward roughhousing, workmanlike counterplay or courtly rivalry.
+- **Jill & Jill:** mirrored reciprocity, flowing role exchange and deliberate hand-offs; shared morph pairs shade toward playful pursuit, cooperative balance or graceful symmetry.
+
+Mixed morph pairs describe the first partner's initiative flowing into or meeting the second partner's counterplay. Size-order text names which partner supplies reach/support and which partner climbs, redirects or works inside that frame.
+
+## Example placeholder sentence
+
+`jack_jack|small_neutral>large_neutral` compiles to fourteen beats:
+
+`Approach → Face Partner → Plant Stance → Supported Climb → Brace → Exchange Lead → Settle Contact → Hold Anchors → Pelvis Pulse / Thrust + Reaction Bounce → Sway Together → Nuzzle → Release → Reset Loop`
+
+The compact sequence appears on each in-game Dev Progress notice. The full role-labelled sentence is its tooltip. Use the ignored QA dump for complete inspection:
+
+```powershell
+Godot.exe --headless --path . --script res://tools/storyboard_dump.gd
+```
+
+This writes `artifacts/pairing-storyboards-placeholder-v01.json` with all 243 records. Generated QA output is not source-controlled or exported.
+
+## Readiness boundary
+
+Every compiled record deliberately sets `status: PLACEHOLDER_PLAN` and `runtime_ready: false`. `validate_storyboard_coverage()` checks the dynamic board/body-type count, unique IDs, minimum beat count, known verb references and the non-ready guard. The runtime smoke test also proves that inverted size order changes the sentence and that both same-sex board voices are present.
+
+The next implementation layer is semantic partner/contact anchors, then constraints for Reach To, Hold Anchors, Support Lift, Supported Climb, Rotate/Exchange Lead, Settle Contact and Reset Loop. Only after a sentence can be evaluated or baked without anchor drift may it become a universal playable template beneath bespoke overrides.

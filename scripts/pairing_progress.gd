@@ -5,6 +5,8 @@ extends Node
 const PROGRESS_PATH := "res://data/breeding_script_progress.json"
 const SPECIES_MAP_PATH := "res://data/species_body_map.json"
 const PRODUCTION_RECORDS_PATH := "res://data/pairing_production_records.json"
+const VERBS_PATH := "res://data/animation_verbs.json"
+const STORYBOARD_GRAMMAR_PATH := "res://data/pairing_storyboard_grammar.json"
 const SIZE_SCALE := {"Small": 0.82, "Medium": 1.0, "Large": 1.22}
 const MORPH_LEAN := {"Feral": -8.0, "Neutral": 0.0, "Refined": 5.0}
 const BOARD_IDS := ["jack_jill", "jack_jack", "jill_jill"]
@@ -18,12 +20,16 @@ var species_map: Dictionary = {}
 var pairing_groups: Dictionary = {}
 var production_records: Array = []
 var production_records_by_id: Dictionary = {}
+var verb_definitions: Dictionary = {}
+var storyboard_grammar: Dictionary = {}
 
 
 func _ready() -> void:
 	var progress_file := FileAccess.open(PROGRESS_PATH, FileAccess.READ)
 	var map_file := FileAccess.open(SPECIES_MAP_PATH, FileAccess.READ)
 	var records_file := FileAccess.open(PRODUCTION_RECORDS_PATH, FileAccess.READ)
+	var verbs_file := FileAccess.open(VERBS_PATH, FileAccess.READ)
+	var storyboard_file := FileAccess.open(STORYBOARD_GRAMMAR_PATH, FileAccess.READ)
 	if progress_file == null or map_file == null:
 		push_error("Could not load breeding script progress data")
 		return
@@ -44,6 +50,14 @@ func _ready() -> void:
 			production_records = records
 			for record in production_records:
 				production_records_by_id[record.get("record_id", "")] = record
+	if verbs_file != null:
+		var verbs_document = JSON.parse_string(verbs_file.get_as_text())
+		if verbs_document is Dictionary:
+			verb_definitions = verbs_document.get("verbs", {})
+	if storyboard_file != null:
+		var storyboard_document = JSON.parse_string(storyboard_file.get_as_text())
+		if storyboard_document is Dictionary:
+			storyboard_grammar = storyboard_document
 
 
 func pair_key(first: String, second: String) -> String:
@@ -225,8 +239,34 @@ func get_coupling(first: String, second: String, board_id: String = "jack_jill",
 	var second_body := get_body_type(second)
 	return {
 		"name": "%s & %s" % [first_type.name, second_type.name],
-		"description": "%s choreography commission: %s %s paired with %s %s. Its bespoke movement theme is still awaiting design." % ["Jack & Jack" if board_id == "jack_jack" else "Jill & Jill", first_body.size, first_body.morph, second_body.size, second_body.morph],
+		"description": _same_sex_description(board_id, first_body, second_body),
 	}
+
+
+func _same_sex_description(board_id: String, first_body: Dictionary, second_body: Dictionary) -> String:
+	var relation: String = _size_relation(first_body, second_body)
+	var size_phrase: String = str({
+		"equal": "Matched scale keeps the exchange reciprocal and easy to reverse",
+		"first_larger": "The first partner supplies reach and support while the second works inside that frame",
+		"second_larger": "The second partner supplies reach and support while the first climbs and redirects",
+	}.get(relation, "The scale relationship drives the staging"))
+	var first_morph := str(first_body.get("morph", "Neutral"))
+	var second_morph := str(second_body.get("morph", "Neutral"))
+	var shared_morph := first_morph == second_morph
+	var voice := ""
+	if board_id == "jack_jack":
+		voice = {
+			"Feral": "competitive roughhousing and quick reversals",
+			"Neutral": "workmanlike leverage and visible lead swaps",
+			"Refined": "courtly rivalry and controlled reciprocity",
+		}.get(first_morph, "competitive reciprocity") if shared_morph else "%s initiative meeting %s counterplay" % [first_morph.to_lower(), second_morph.to_lower()]
+	else:
+		voice = {
+			"Feral": "playful pursuit and instinctive mirroring",
+			"Neutral": "cooperative balance and flowing role exchange",
+			"Refined": "graceful symmetry and deliberate hand-offs",
+		}.get(first_morph, "mirrored reciprocity") if shared_morph else "%s initiative flowing into %s counterplay" % [first_morph.to_lower(), second_morph.to_lower()]
+	return "%s; %s." % [size_phrase, voice]
 
 
 func completed_pair_count(board_id: String = "jack_jill") -> int:
@@ -305,3 +345,158 @@ func build_pairing_plan(species_a: String, species_b: String, board_or_group: St
 		"mode": "Authored variant" if count > 0 else "Placeholder only",
 		"order": order_label(profile_a.body, profile_b.body),
 	}
+
+
+func build_pairing_storyboard(board_or_group: String, first_body_id: String, second_body_id: String) -> Dictionary:
+	var lookup := get_pairing_lookup(board_or_group, first_body_id, second_body_id)
+	if lookup.is_empty() or storyboard_grammar.is_empty():
+		return {}
+	var first_body := get_body_type(first_body_id)
+	var second_body := get_body_type(second_body_id)
+	var relation := _size_relation(first_body, second_body)
+	var board_id := str(lookup.get("board_id", "jack_jill"))
+	var board_signature: Dictionary = storyboard_grammar.get("board_signatures", {}).get(board_id, {})
+	var specs: Array = []
+	specs.append_array(storyboard_grammar.get("morph_openers", {}).get(str(first_body.get("morph", "Neutral")), []))
+	specs.append_array(storyboard_grammar.get("size_patterns", {}).get(relation, []))
+	specs.append_array(board_signature.get("beats", []))
+	specs.append_array(storyboard_grammar.get("core_loop", []))
+	specs.append_array(storyboard_grammar.get("outro", []))
+	var beats := _compile_storyboard_beats(specs)
+	var unresolved := PackedStringArray()
+	for beat in beats:
+		if str(beat.get("implementation_status", "contract_only")) != "motion_prototype":
+			var verb_id := str(beat.get("verb_id", ""))
+			if verb_id not in unresolved:
+				unresolved.append(verb_id)
+	var descriptor := "%s %s uses %s; %s" % [
+		lookup.get("group_name", "Pairing"),
+		lookup.get("pairing_name", ""),
+		board_signature.get("descriptor", "reciprocal staging"),
+		str(lookup.get("coupling_description", "")).trim_suffix("."),
+	]
+	return {
+		"storyboard_id": "placeholder.%s" % str(lookup.get("commission_key", "")).replace("|", ".").replace(">", "-to-"),
+		"status": str(storyboard_grammar.get("status", "PLACEHOLDER_PLAN")),
+		"runtime_ready": false,
+		"commission_key": lookup.get("commission_key", ""),
+		"board_id": board_id,
+		"group_key": lookup.get("group_key", ""),
+		"pairing_name": lookup.get("pairing_name", ""),
+		"coupling_name": lookup.get("coupling_name", ""),
+		"order": lookup.get("order", ""),
+		"size_relation": relation,
+		"descriptor": descriptor + ".",
+		"sentence": _storyboard_sentence(beats, lookup),
+		"duration_ticks": _storyboard_duration(beats),
+		"unresolved_verbs": unresolved,
+		"beats": beats,
+	}
+
+
+func all_pairing_storyboards() -> Array:
+	var result: Array = []
+	for board_id in BOARD_IDS:
+		for first_body in body_types:
+			for second_body in body_types:
+				result.append(build_pairing_storyboard(board_id, str(first_body.id), str(second_body.id)))
+	return result
+
+
+func validate_storyboard_coverage() -> PackedStringArray:
+	var errors := PackedStringArray()
+	if verb_definitions.is_empty():
+		errors.append("Animation verb vocabulary is empty")
+	if storyboard_grammar.is_empty():
+		errors.append("Pairing storyboard grammar is empty")
+	var seen := {}
+	var storyboards := all_pairing_storyboards()
+	var expected := BOARD_IDS.size() * body_types.size() * body_types.size()
+	if storyboards.size() != expected:
+		errors.append("Expected %d directional storyboards, built %d" % [expected, storyboards.size()])
+	for storyboard in storyboards:
+		if storyboard.is_empty():
+			errors.append("Storyboard compiler returned an empty record")
+			continue
+		var id := str(storyboard.get("storyboard_id", ""))
+		if id.is_empty() or seen.has(id):
+			errors.append("Storyboard ID is empty or duplicated: %s" % id)
+		seen[id] = true
+		var beats: Array = storyboard.get("beats", [])
+		if beats.size() < 10:
+			errors.append("%s has fewer than ten verb beats" % id)
+		for beat in beats:
+			var verb_id := str(beat.get("verb_id", ""))
+			if not verb_definitions.has(verb_id):
+				errors.append("%s references missing verb %s" % [id, verb_id])
+		if bool(storyboard.get("runtime_ready", true)):
+			errors.append("%s incorrectly claims runtime readiness" % id)
+	return errors
+
+
+func _size_relation(first_body: Dictionary, second_body: Dictionary) -> String:
+	var rank := {"Small": 0, "Medium": 1, "Large": 2}
+	var first_rank := int(rank.get(str(first_body.get("size", "Medium")), 1))
+	var second_rank := int(rank.get(str(second_body.get("size", "Medium")), 1))
+	if first_rank == second_rank:
+		return "equal"
+	return "first_larger" if first_rank > second_rank else "second_larger"
+
+
+func _compile_storyboard_beats(specs: Array) -> Array:
+	var result: Array = []
+	var cursor := 0
+	var parallel_windows := {}
+	var ticks_per_beat := int(storyboard_grammar.get("ticks_per_beat", 30))
+	for index in specs.size():
+		var spec: Dictionary = specs[index]
+		var verb_id := str(spec.get("verb_id", ""))
+		var definition: Dictionary = verb_definitions.get(verb_id, {})
+		var duration := maxi(1, int(spec.get("duration_beats", 1))) * ticks_per_beat
+		var group := str(spec.get("parallel_group", ""))
+		var start_tick := cursor
+		if not group.is_empty() and parallel_windows.has(group):
+			start_tick = int(parallel_windows[group].start)
+		else:
+			cursor += duration
+			if not group.is_empty():
+				parallel_windows[group] = {"start": start_tick, "end": cursor}
+		var end_tick := start_tick + duration
+		if not group.is_empty() and parallel_windows.has(group):
+			end_tick = int(parallel_windows[group].end)
+		var params: Dictionary = definition.get("defaults", {}).duplicate(true)
+		params.merge(spec.get("params", {}), true)
+		result.append({
+			"index": index,
+			"verb_id": verb_id,
+			"display_name": definition.get("display_name", verb_id.capitalize()),
+			"implementation_status": definition.get("status", "missing"),
+			"start_tick": start_tick,
+			"end_tick": end_tick,
+			"parallel_group": group,
+			"roles": spec.get("roles", {}).duplicate(true),
+			"params": params,
+		})
+	return result
+
+
+func _storyboard_duration(beats: Array) -> int:
+	var duration := 0
+	for beat in beats:
+		duration = maxi(duration, int(beat.get("end_tick", 0)))
+	return duration
+
+
+func _storyboard_sentence(beats: Array, lookup: Dictionary) -> String:
+	var clauses := PackedStringArray()
+	var first_name := str(lookup.get("first", {}).get("archetype", "First"))
+	var second_name := str(lookup.get("second", {}).get("archetype", "Second"))
+	for beat in beats:
+		var participants := PackedStringArray()
+		for participant in beat.get("roles", {}).values():
+			var label := first_name if str(participant) == "first" else second_name
+			if label not in participants:
+				participants.append(label)
+		var subject := " + ".join(participants) if not participants.is_empty() else "Pair"
+		clauses.append("%s: %s" % [subject, beat.get("display_name", beat.get("verb_id", "Verb"))])
+	return " → ".join(clauses)

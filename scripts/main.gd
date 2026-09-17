@@ -239,6 +239,27 @@ func run_smoke_test() -> void:
 		push_error("Pairing search failed")
 		get_tree().quit(1)
 		return
+	var storyboard_errors := PairingProgress.validate_storyboard_coverage()
+	if not storyboard_errors.is_empty():
+		push_error("Pairing storyboard coverage failed: %s" % "; ".join(storyboard_errors))
+		get_tree().quit(1)
+		return
+	var titan_ranger_storyboard := PairingProgress.build_pairing_storyboard("m+f", "large_neutral", "medium_neutral")
+	var small_large_storyboard := PairingProgress.build_pairing_storyboard("m+m", "small_neutral", "large_neutral")
+	var large_small_storyboard := PairingProgress.build_pairing_storyboard("m+m", "large_neutral", "small_neutral")
+	var jill_storyboard := PairingProgress.build_pairing_storyboard("f+f", "medium_refined", "medium_neutral")
+	if titan_ranger_storyboard.get("status", "") != "PLACEHOLDER_PLAN" or bool(titan_ranger_storyboard.get("runtime_ready", true)) or titan_ranger_storyboard.get("beats", []).size() < 10:
+		push_error("Baseline descriptor-to-verb storyboard failed")
+		get_tree().quit(1)
+		return
+	if small_large_storyboard.get("size_relation", "") == large_small_storyboard.get("size_relation", "") or small_large_storyboard.get("sentence", "") == large_small_storyboard.get("sentence", ""):
+		push_error("Directional size-order storyboards collapsed into one sequence")
+		get_tree().quit(1)
+		return
+	if not str(small_large_storyboard.get("descriptor", "")).contains("competitive reciprocity") or not str(jill_storyboard.get("descriptor", "")).contains("mirrored reciprocity"):
+		push_error("Same-sex board descriptors were not specialized")
+		get_tree().quit(1)
+		return
 	show_walk_lab()
 	var walk_dolls := get_tree().get_nodes_in_group("walk_lab_dolls")
 	var male_small := screen_root.find_child("WalkDoll_male_small", true, false)
@@ -1061,6 +1082,7 @@ func show_pair_notice(panel: PanelContainer, row_body: Dictionary, column_body: 
 	var column_type: Dictionary = PairingProgress.get_archetype(column_role, column_body.id)
 	var coupling: Dictionary = PairingProgress.get_coupling(row_body.id, column_body.id, board_id, row_role, column_role)
 	var lookup: Dictionary = PairingProgress.get_pairing_lookup(board_id, row_body.id, column_body.id)
+	var storyboard: Dictionary = PairingProgress.build_pairing_storyboard(board_id, row_body.id, column_body.id)
 	var percent: int = PairingProgress.progress_percent(row_body.id, column_body.id, board_id)
 	var count: int = PairingProgress.script_count(row_body.id, column_body.id, board_id)
 	var order_name: String = PairingProgress.order_label(row_body.id, column_body.id)
@@ -1105,6 +1127,18 @@ func show_pair_notice(panel: PanelContainer, row_body: Dictionary, column_body: 
 	details.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	details.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	notice.add_child(details)
+	var storyboard_rule := HSeparator.new()
+	storyboard_rule.add_theme_color_override("separator", Color("#8a6944"))
+	notice.add_child(storyboard_rule)
+	notice.add_child(label("PLACEHOLDER VERB STORYBOARD", 11, paper_muted))
+	var verb_names := PackedStringArray()
+	for beat in storyboard.get("beats", []):
+		verb_names.append(str(beat.get("display_name", beat.get("verb_id", "verb"))))
+	var storyboard_text := label(" → ".join(verb_names), 11, paper_ink)
+	storyboard_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	storyboard_text.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	storyboard_text.tooltip_text = str(storyboard.get("sentence", ""))
+	notice.add_child(storyboard_text)
 
 
 func build_emoji_bonk(left_emoji: String, right_emoji: String, stage_size: Vector2 = Vector2(270, 82)) -> Control:

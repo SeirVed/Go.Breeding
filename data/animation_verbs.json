@@ -1,53 +1,27 @@
 {
-  "version": "0.2.0",
+  "version": "0.3.0",
   "ticks_per_second": 240,
   "verbs": {
-    "brace": {
-      "display_name": "Brace",
-      "category": "atomic",
-      "status": "motion_prototype",
-      "roles": ["responder"],
-      "channels": ["torso", "pelvis"],
-      "defaults": {"strength": 4.0}
-    },
-    "hold_anchors": {
-      "display_name": "Hold Anchors",
-      "category": "constraint",
-      "status": "contract_only",
-      "roles": ["holder", "receiver"],
-      "requires": ["hand_left", "hand_right", "hold_target_left", "hold_target_right"],
-      "channels": ["hand_left", "hand_right"]
-    },
-    "pelvis_pulse": {
-      "display_name": "Pelvis Pulse / Thrust",
-      "category": "cyclic",
-      "status": "motion_prototype",
-      "roles": ["driver"],
-      "channels": ["pelvis"],
-      "defaults": {"amplitude": 8.0, "repetitions": 4}
-    },
-    "reaction_bounce": {
-      "display_name": "Reaction Bounce",
-      "category": "reaction",
-      "status": "motion_prototype",
-      "roles": ["responder"],
-      "channels": ["pelvis", "torso"],
-      "defaults": {"amplitude": 5.0, "repetitions": 4, "lag": 0.08}
-    },
-    "reach_to": {
-      "display_name": "Reach To",
-      "category": "atomic",
-      "status": "contract_only",
-      "roles": ["reacher", "target"],
-      "requires": ["hand_left", "hand_right"],
-      "channels": ["shoulder_left", "elbow_left", "hand_left", "shoulder_right", "elbow_right", "hand_right"]
-    },
-    "release": {
-      "display_name": "Release",
-      "category": "transition",
-      "status": "contract_only",
-      "roles": ["actor"],
-      "channels": []
-    }
+    "face_partner": {"display_name": "Face Partner", "category": "orientation", "status": "contract_only", "roles": ["actor", "target"], "channels": ["root", "head", "torso"]},
+    "approach": {"display_name": "Approach", "category": "travel", "status": "motion_prototype", "roles": ["mover", "target"], "channels": ["root"], "defaults": {"distance": 18.0, "direction": 1.0}},
+    "circle_partner": {"display_name": "Circle Partner", "category": "travel", "status": "motion_prototype", "roles": ["mover", "target"], "channels": ["root", "torso", "pelvis"], "defaults": {"radius": 10.0, "direction": 1.0}},
+    "offer_hand": {"display_name": "Offer Hand", "category": "gesture", "status": "contract_only", "roles": ["offerer", "receiver"], "requires": ["hand_left", "hand_right"], "channels": ["shoulder_left", "elbow_left", "hand_left"]},
+    "reach_to": {"display_name": "Reach To", "category": "gesture", "status": "contract_only", "roles": ["reacher", "target"], "requires": ["hand_left", "hand_right"], "channels": ["shoulder_left", "elbow_left", "hand_left", "shoulder_right", "elbow_right", "hand_right"]},
+    "plant_stance": {"display_name": "Plant Stance", "category": "support", "status": "motion_prototype", "roles": ["actor"], "channels": ["pelvis", "hip_left", "hip_right", "knee_left", "knee_right", "foot_left", "foot_right"], "defaults": {"width": 6.0, "drop": 2.0}},
+    "lower_center": {"display_name": "Lower Centre", "category": "support", "status": "motion_prototype", "roles": ["actor"], "channels": ["pelvis", "torso", "head"], "defaults": {"depth": 6.0}},
+    "brace": {"display_name": "Brace", "category": "support", "status": "motion_prototype", "roles": ["responder"], "channels": ["torso", "pelvis"], "defaults": {"strength": 4.0}},
+    "rise": {"display_name": "Rise", "category": "transition", "status": "motion_prototype", "roles": ["actor"], "channels": ["pelvis", "torso", "head"], "defaults": {"height": 6.0}},
+    "support_lift": {"display_name": "Support Lift", "category": "contact", "status": "contract_only", "roles": ["support", "rider"], "requires": ["hold_target_left", "hold_target_right", "support_target"], "channels": ["pelvis", "torso", "hand_left", "hand_right"]},
+    "supported_climb": {"display_name": "Supported Climb", "category": "contact", "status": "contract_only", "roles": ["climber", "support"], "requires": ["hold_target_left", "hold_target_right", "step_target"], "channels": ["root", "hand_left", "hand_right", "foot_left", "foot_right"]},
+    "rotate_lead": {"display_name": "Rotate Lead", "category": "transition", "status": "contract_only", "roles": ["leader", "follower"], "requires": ["partner_center"], "channels": ["root", "pelvis", "torso"]},
+    "exchange_lead": {"display_name": "Exchange Lead", "category": "transition", "status": "contract_only", "roles": ["first", "second"], "requires": ["partner_center"], "channels": ["root", "pelvis", "torso", "hand_left", "hand_right"]},
+    "settle_contact": {"display_name": "Settle Contact", "category": "contact", "status": "contract_only", "roles": ["first", "second"], "requires": ["partner_center", "contact_target"], "channels": ["root", "pelvis", "torso"]},
+    "hold_anchors": {"display_name": "Hold Anchors", "category": "constraint", "status": "contract_only", "roles": ["holder", "receiver"], "requires": ["hand_left", "hand_right", "hold_target_left", "hold_target_right"], "channels": ["hand_left", "hand_right"]},
+    "pelvis_pulse": {"display_name": "Pelvis Pulse / Thrust", "category": "cyclic", "status": "motion_prototype", "roles": ["driver"], "channels": ["pelvis"], "defaults": {"amplitude": 8.0, "repetitions": 4}},
+    "reaction_bounce": {"display_name": "Reaction Bounce", "category": "reaction", "status": "motion_prototype", "roles": ["responder"], "channels": ["pelvis", "torso"], "defaults": {"amplitude": 5.0, "repetitions": 4, "lag": 0.08}},
+    "sway_together": {"display_name": "Sway Together", "category": "cyclic", "status": "motion_prototype", "roles": ["first", "second"], "channels": ["pelvis", "torso", "head"], "defaults": {"amplitude": 4.0, "repetitions": 2, "phase": 0.0}},
+    "nuzzle": {"display_name": "Nuzzle", "category": "gesture", "status": "contract_only", "roles": ["actor", "partner"], "requires": ["partner_head"], "channels": ["head", "torso"]},
+    "release": {"display_name": "Release", "category": "transition", "status": "contract_only", "roles": ["actor"], "channels": ["hand_left", "hand_right"]},
+    "reset_loop": {"display_name": "Reset Loop", "category": "transition", "status": "contract_only", "roles": ["first", "second"], "channels": ["root", "pelvis", "torso", "head", "hand_left", "hand_right", "foot_left", "foot_right"]}
   }
 }

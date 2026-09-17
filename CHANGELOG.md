@@ -2,6 +2,9 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Expanded the reusable motion vocabulary to twenty-one verbs. Nine have visible Rig Studio body-motion prototypes; contact and constraint work remains explicitly `contract_only`.
+- Added a board-, direction-, size- and morph-aware sentence compiler that generates and validates 243 `PLACEHOLDER_PLAN` storyboards. Jack & Jack and Jill & Jill now have distinct same-sex descriptor voices and lead-exchange themes instead of generic awaiting-design text.
+- Added compact placeholder verb sequences to Dev Progress notices plus an ignored JSON dump tool for inspecting every role-labelled sentence. Planning records remain `runtime_ready: false` and do not alter authored-script progress.
 - Added **Human Zero**, a complete fourteen-piece `storybook_emoji_v1` Default Template cutout with deterministic transparent SVG sources. Runtime, Rig Studio and exported-build tests now fail if the Human silently falls back to the universal mystery silhouette.
 - Hardened private export validation: fresh QA targets prevent stale embedded payloads, all `tools/` scripts stay out of playable packages, and Godot's false-success `project.binary` export error is promoted to a build failure.
 - Rebuilt the custom editor plugin as **Rig Studio v0.2.0**: split Single Builder, Animation Editor, timeline, Propagate and verb-engine modules; Human Default Template plus Add New; exclusive topology/additive anatomy contracts; variable timed keys and interpolation; Simple/Advanced timeline views; Shift multi-node selection; selected-actor onion skins; one-to-many casts; and data-driven verb blocks. Brace, Pelvis Pulse/Thrust and Reaction Bounce visibly preview, while contact-dependent verbs remain honestly `contract_only`.

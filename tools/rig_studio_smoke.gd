@@ -2,6 +2,7 @@
 extends SceneTree
 
 const Screen := preload("res://addons/rig_studio/rig_studio.gd")
+const VerbEngine := preload("res://addons/rig_studio/verb_engine.gd")
 const CAPTURE_PATH := "res://artifacts/rig-studio-v0.2.0.png"
 const SINGLE_CAPTURE_PATH := "res://artifacts/rig-studio-v0.2.0-single-builder.png"
 
@@ -247,6 +248,11 @@ func _run() -> void:
 		return
 	if str(screen._verb_definitions.hold_anchors.get("status", "")) != "contract_only":
 		_fail("Unimplemented contact verbs must remain honestly marked contract-only")
+		return
+	var stance_probe := VerbEngine.offsets_for_actor([{"verb_id": "plant_stance", "start_tick": 0, "end_tick": 60, "actors": {"actor": "A"}, "params": {"width": 6.0, "drop": 2.0}}], 30.0, "A")
+	var sway_probe := VerbEngine.offsets_for_actor([{"verb_id": "sway_together", "start_tick": 0, "end_tick": 60, "actors": {"first": "A", "second": "B"}, "params": {"amplitude": 4.0, "repetitions": 1.0, "phase": 0.125}}], 15.0, "A")
+	if screen._verb_definitions.size() < 21 or stance_probe.get("foot_left", [0.0, 0.0])[0] >= 0.0 or stance_probe.get("foot_right", [0.0, 0.0])[0] <= 0.0 or absf(float(sway_probe.get("torso", [0.0, 0.0])[0])) < 0.5:
+		_fail("Expanded verb vocabulary or new motion prototypes failed")
 		return
 	print("RIG_STUDIO_V020: builder creation, variable keys, multi-select, onion skins, propagation and verb composition passed")
 	print("MULTI_RIG_SMOKE: independent cast sizes, arbitrary rig count, keyed actor poses and stage motion passed")
