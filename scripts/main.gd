@@ -252,6 +252,12 @@ func run_smoke_test() -> void:
 		push_error("Baseline descriptor-to-verb storyboard failed")
 		get_tree().quit(1)
 		return
+	var titan_ranger_instances := PairingProgress.instantiate_storyboard(titan_ranger_storyboard, "GOLEM", "COW")
+	var titan_ranger_preview_instances := PairingProgress.instantiate_storyboard(titan_ranger_storyboard, "GOLEM", "COW", false)
+	if titan_ranger_instances.size() != titan_ranger_storyboard.get("beats", []).size() or titan_ranger_preview_instances.is_empty() or titan_ranger_preview_instances.size() >= titan_ranger_instances.size() or str(titan_ranger_instances[0].get("actors", {}).get("mover", "")) != "GOLEM":
+		push_error("Symbolic storyboard roles did not bind to concrete actors")
+		get_tree().quit(1)
+		return
 	if small_large_storyboard.get("size_relation", "") == large_small_storyboard.get("size_relation", "") or small_large_storyboard.get("sentence", "") == large_small_storyboard.get("sentence", ""):
 		push_error("Directional size-order storyboards collapsed into one sequence")
 		get_tree().quit(1)

@@ -25,6 +25,17 @@ var storyboard_grammar: Dictionary = {}
 
 
 func _ready() -> void:
+	body_types.clear()
+	scripts.clear()
+	progress.clear()
+	archetypes.clear()
+	couplings.clear()
+	species_map.clear()
+	pairing_groups.clear()
+	production_records.clear()
+	production_records_by_id.clear()
+	verb_definitions.clear()
+	storyboard_grammar.clear()
 	var progress_file := FileAccess.open(PROGRESS_PATH, FileAccess.READ)
 	var map_file := FileAccess.open(SPECIES_MAP_PATH, FileAccess.READ)
 	var records_file := FileAccess.open(PRODUCTION_RECORDS_PATH, FileAccess.READ)
@@ -403,6 +414,31 @@ func all_pairing_storyboards() -> Array:
 	return result
 
 
+func instantiate_storyboard(storyboard: Dictionary, first_actor_id: String = "A", second_actor_id: String = "B", include_contracts: bool = true) -> Array:
+	var instances: Array = []
+	for beat in storyboard.get("beats", []):
+		if not include_contracts and str(beat.get("implementation_status", "contract_only")) != "motion_prototype":
+			continue
+		var actors := {}
+		for role in beat.get("roles", {}):
+			var symbolic_actor := str(beat.roles[role])
+			actors[str(role)] = first_actor_id if symbolic_actor == "first" else second_actor_id
+		instances.append({
+			"id": "%s.beat_%02d" % [storyboard.get("storyboard_id", "storyboard"), int(beat.get("index", instances.size()))],
+			"verb_id": beat.get("verb_id", ""),
+			"start_tick": beat.get("start_tick", 0),
+			"end_tick": beat.get("end_tick", 1),
+			"actors": actors,
+			"params": beat.get("params", {}).duplicate(true),
+			"source_status": beat.get("implementation_status", "contract_only"),
+		})
+	return instances
+
+
+func build_pairing_verb_instances(board_or_group: String, first_body_id: String, second_body_id: String, first_actor_id: String = "A", second_actor_id: String = "B", include_contracts: bool = true) -> Array:
+	return instantiate_storyboard(build_pairing_storyboard(board_or_group, first_body_id, second_body_id), first_actor_id, second_actor_id, include_contracts)
+
+
 func validate_storyboard_coverage() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if verb_definitions.is_empty():
@@ -431,6 +467,13 @@ func validate_storyboard_coverage() -> PackedStringArray:
 				errors.append("%s references missing verb %s" % [id, verb_id])
 		if bool(storyboard.get("runtime_ready", true)):
 			errors.append("%s incorrectly claims runtime readiness" % id)
+		var instances := instantiate_storyboard(storyboard, "QA_A", "QA_B")
+		if instances.size() != beats.size():
+			errors.append("%s did not instantiate every planned beat" % id)
+		for instance in instances:
+			for actor_id in instance.get("actors", {}).values():
+				if str(actor_id) not in ["QA_A", "QA_B"]:
+					errors.append("%s retained an unresolved symbolic actor" % id)
 	return errors
 
 

@@ -8,6 +8,7 @@ const STUDIO_PATH := "res://data/paper_doll_studio.json"
 const CHARACTERS_PATH := "res://data/paper_doll_characters.json"
 const VERBS_PATH := "res://data/animation_verbs.json"
 const ANATOMY_PATH := "res://data/anatomy_components.json"
+const PairingProgressScript := preload("res://scripts/pairing_progress.gd")
 const TICKS_PER_SECOND := 240
 const MULTI_TEMPLATE_ID := "multi_actor_scene_v1"
 const PARTS := [
@@ -38,6 +39,7 @@ var _studio_data: Dictionary = {}
 var _characters: Dictionary = {}
 var _verb_definitions: Dictionary = {}
 var _anatomy_catalog: Dictionary = {}
+var _pairing_progress
 var _artwork_mtime := 0
 var _studio_mtime := 0
 var _characters_mtime := 0
@@ -94,6 +96,10 @@ var _cast_note: Label
 func _ready() -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
+	_pairing_progress = PairingProgressScript.new()
+	add_child(_pairing_progress)
+	if _pairing_progress.body_types.is_empty():
+		_pairing_progress._ready()
 	_load_documents()
 	_build_ui()
 	_refresh_character_picker()
@@ -212,7 +218,7 @@ func _build_ui() -> void:
 	_y_field = _single_builder_panel.y_field
 	_z_field = _single_builder_panel.z_field
 	_animation_editor_panel = RigStudioAnimationEditorPanel.new()
-	_animation_editor_panel.setup(self, _characters)
+	_animation_editor_panel.setup(self, _characters, _pairing_progress.body_types)
 	_cast_inventory = _animation_editor_panel
 	right.add_child(_cast_inventory)
 	_cast_actor_list = _animation_editor_panel.actor_list
@@ -494,6 +500,56 @@ func _height_limits(band: String) -> Vector2:
 		"small": return Vector2(1.0, 47.5)
 		"large": return Vector2(96.0, 240.0)
 		_: return Vector2(48.0, 95.5)
+
+
+func _load_pairing_storyboard() -> void:
+	if _scene_mode != "animation_editor" or _animation_editor_panel == null:
+		return
+	var actors := _current_cast()
+	if actors.size() < 2:
+		_animation_editor_panel.storyboard_note.text = "A pairing sentence needs at least two actors."
+		return
+	var board_picker := _animation_editor_panel.storyboard_board_picker
+	var first_picker := _animation_editor_panel.storyboard_first_picker
+	var second_picker := _animation_editor_panel.storyboard_second_picker
+	var board_id := str(board_picker.get_item_metadata(board_picker.selected))
+	var first_body_id := str(first_picker.get_item_metadata(first_picker.selected))
+	var second_body_id := str(second_picker.get_item_metadata(second_picker.selected))
+	var storyboard: Dictionary = _pairing_progress.build_pairing_storyboard(board_id, first_body_id, second_body_id)
+	if storyboard.is_empty():
+		_animation_editor_panel.storyboard_note.text = "The selected pairing did not compile."
+		return
+	_push_undo()
+	var lookup: Dictionary = _pairing_progress.get_pairing_lookup(board_id, first_body_id, second_body_id)
+	var height_defaults := {"small": 42.0, "medium": 72.0, "large": 102.0}
+	for actor_index in 2:
+		var side: Dictionary = lookup.get("first" if actor_index == 0 else "second", {})
+		var actor: Dictionary = actors[actor_index]
+		var size_id := str(side.get("size", "Medium")).to_lower()
+		actor["role"] = str(side.get("role", "male"))
+		actor["size"] = size_id
+		actor["height_inches"] = float(height_defaults.get(size_id, 72.0))
+		actors[actor_index] = actor
+	var instances: Array = _pairing_progress.instantiate_storyboard(storyboard, str(actors[0].get("id", "A")), str(actors[1].get("id", "B")))
+	var template := _multi_template()
+	template["actors"] = actors
+	template["duration_ticks"] = int(storyboard.get("duration_ticks", 240))
+	template["verbs"] = instances
+	template["storyboard_source"] = {
+		"storyboard_id": storyboard.get("storyboard_id", ""),
+		"commission_key": storyboard.get("commission_key", ""),
+		"status": storyboard.get("status", "PLACEHOLDER_PLAN"),
+		"runtime_ready": false,
+	}
+	_studio_data["motion_templates"][MULTI_TEMPLATE_ID] = template
+	_selected_actor_id = str(actors[0].get("id", "A"))
+	_frame_index = 0
+	_preview_phase = 0.0
+	_dirty = true
+	_apply_multi_preview()
+	_refresh_cast_ui()
+	_refresh_timeline()
+	_animation_editor_panel.storyboard_note.text = "%s · %d beats · PLACEHOLDER_PLAN · unresolved contact verbs remain inert." % [storyboard.get("pairing_name", "Pairing"), instances.size()]
 
 
 func _choose_cast_actor(index: int) -> void:

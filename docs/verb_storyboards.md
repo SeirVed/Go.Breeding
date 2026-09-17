@@ -24,6 +24,10 @@ The nine current motion prototypes are Approach, Circle Partner, Plant Stance, L
 
 The output contains the source commission key, descriptor, readable sentence, timed beats, symbolic role bindings, default parameters, unresolved verbs and total ticks. Pelvis Pulse and Reaction Bounce share the `cadence` parallel window. Every other beat is ordered.
 
+`instantiate_storyboard()` binds symbolic `first` and `second` references to concrete Rig Studio actor IDs such as `A` and `B`. A preview-only option removes `contract_only` beats so the nine implemented body-motion verbs can be evaluated without pretending the missing contact beats ran. The full instance list retains inert contracts for authoring and inspection.
+
+Rig Studio's Animation Editor exposes board, first-body and second-body selectors plus **Load sentence into Actor A/B**. Loading is one undoable operation: it applies the board's roles and size bands to the first two actors, extends the timeline duration, stores source metadata and inserts all fourteen beats. Implemented beats preview; inert contracts remain visible as the work queue. Loading never writes commission progress.
+
 Directional order matters. `Scout → Titan` uses the larger second partner as support and a Supported Climb. `Titan → Scout` lowers the larger first partner and uses Support Lift. They are different storyboards even though the same archetypes appear.
 
 ## Board voices

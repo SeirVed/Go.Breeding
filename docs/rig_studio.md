@@ -38,6 +38,8 @@ The timeline is no longer fixed to eight poses. Each key stores an integer tick,
 
 Approach, Circle Partner, Plant Stance, Lower Centre, Rise and Sway Together now also preview. `reach_to`, `hold_anchors`, Support Lift, Supported Climb, Rotate/Exchange Lead, Settle Contact, Nuzzle, Release and Reset Loop remain `contract_only`. They deliberately do not claim working contact choreography. `data/pairing_storyboard_grammar.json` composes these verbs into 243 directional `PLACEHOLDER_PLAN` sentences; see `docs/verb_storyboards.md`. The intended evaluation order is base pose, body/root verbs, contact constraints, reaction verbs, secondary motion, then manual overrides. Baking verbs into destructive keys is not part of v0.2.0.
 
+Animation Editor can load any compiled board/body-type sentence into Actor A/B as one undoable authoring operation. It binds symbolic roles, adjusts the first two cast profiles, expands the timeline and lists all beats. This is a scaffold for refinement, not playable coverage; unresolved contract beats remain inert and the stored source metadata keeps `runtime_ready: false`.
+
 ## Data and safety
 
 - `data/paper_doll_characters.json` — Default Template and character definitions.

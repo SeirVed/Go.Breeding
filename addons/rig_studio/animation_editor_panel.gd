@@ -11,9 +11,13 @@ var height_field: SpinBox
 var stage_x_field: SpinBox
 var stage_y_field: SpinBox
 var note: Label
+var storyboard_board_picker: OptionButton
+var storyboard_first_picker: OptionButton
+var storyboard_second_picker: OptionButton
+var storyboard_note: Label
 
 
-func setup(studio: Control, characters: Dictionary) -> void:
+func setup(studio: Control, characters: Dictionary, body_types: Array = []) -> void:
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
 	var cast := VBoxContainer.new()
 	cast.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -61,6 +65,22 @@ func setup(studio: Control, characters: Dictionary) -> void:
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.text = "Shift-click nodes to multi-select. Simple mode composes verb blocks; Advanced exposes timed keys, interpolation and Propagate."
 	cast.add_child(note)
+	_caption(cast, "PAIRING SENTENCE · PLACEHOLDER PLAN")
+	storyboard_board_picker = OptionButton.new()
+	for board in [{"id": "jack_jill", "label": "Jack & Jill · m+f"}, {"id": "jack_jack", "label": "Jack & Jack · m+m"}, {"id": "jill_jill", "label": "Jill & Jill · f+f"}]:
+		storyboard_board_picker.add_item(board.label)
+		storyboard_board_picker.set_item_metadata(storyboard_board_picker.item_count - 1, board.id)
+	cast.add_child(storyboard_board_picker)
+	var pairing_row := HBoxContainer.new()
+	pairing_row.add_theme_constant_override("separation", 5)
+	cast.add_child(pairing_row)
+	storyboard_first_picker = _body_picker(pairing_row, "First", body_types)
+	storyboard_second_picker = _body_picker(pairing_row, "Second", body_types)
+	_button(cast, "Load sentence into Actor A/B", studio._load_pairing_storyboard)
+	storyboard_note = Label.new()
+	storyboard_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	storyboard_note.text = "Loads all beats for authoring. Contract-only beats remain visible but inert; this does not create commission progress."
+	cast.add_child(storyboard_note)
 
 
 func refresh_characters(characters: Dictionary) -> void:
@@ -105,3 +125,17 @@ func _spin(parent: Control, title: String, minimum: float, maximum: float, step_
 	spin.value_changed.connect(studio._change_actor_number.bind(field))
 	column.add_child(spin)
 	return spin
+
+
+func _body_picker(parent: Control, title: String, body_types: Array) -> OptionButton:
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(column)
+	_caption(column, title)
+	var picker := OptionButton.new()
+	picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for body in body_types:
+		picker.add_item("%s · %s" % [body.get("short", "?"), body.get("label", body.get("id", "body"))])
+		picker.set_item_metadata(picker.item_count - 1, str(body.get("id", "")))
+	column.add_child(picker)
+	return picker

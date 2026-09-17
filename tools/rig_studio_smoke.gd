@@ -254,6 +254,19 @@ func _run() -> void:
 	if screen._verb_definitions.size() < 21 or stance_probe.get("foot_left", [0.0, 0.0])[0] >= 0.0 or stance_probe.get("foot_right", [0.0, 0.0])[0] <= 0.0 or absf(float(sway_probe.get("torso", [0.0, 0.0])[0])) < 0.5:
 		_fail("Expanded verb vocabulary or new motion prototypes failed")
 		return
+	screen._animation_editor_panel.storyboard_board_picker.select(1)
+	screen._animation_editor_panel.storyboard_first_picker.select(1)
+	screen._animation_editor_panel.storyboard_second_picker.select(7)
+	screen._load_pairing_storyboard()
+	var loaded_template: Dictionary = screen._multi_template()
+	var loaded_actors: Array = loaded_template.get("actors", [])
+	if screen._current_verbs().size() != 14 or int(loaded_template.get("duration_ticks", 0)) <= 240 or loaded_actors.size() < 2 or str(loaded_actors[0].get("size", "")) != "small" or str(loaded_actors[1].get("size", "")) != "large" or str(loaded_actors[1].get("role", "")) != "male" or str(loaded_template.get("storyboard_source", {}).get("status", "")) != "PLACEHOLDER_PLAN":
+		_fail("Loading a compiled pairing sentence into Actor A/B failed")
+		return
+	screen._header_action("Undo")
+	if screen._current_verbs().size() != 1 or int(screen._multi_template().get("duration_ticks", 0)) != 240:
+		_fail("Pairing sentence load was not one undoable operation")
+		return
 	print("RIG_STUDIO_V020: builder creation, variable keys, multi-select, onion skins, propagation and verb composition passed")
 	print("MULTI_RIG_SMOKE: independent cast sizes, arbitrary rig count, keyed actor poses and stage motion passed")
 	print("RIG_STUDIO_SMOKE: editor UI, anchor drag, shared keyframe, undo and mode separation passed")
