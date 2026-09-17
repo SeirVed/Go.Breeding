@@ -1,0 +1,45 @@
+{
+  "species_cat_orange_tabby": {
+    "display_name": "Orange Tabby Cat",
+    "kind": "species",
+    "pieces": [
+      "fur_surface",
+      "cat_ears",
+      "cat_hair_tuft",
+      "cat_cheek_fur",
+      "cat_eye_plates",
+      "cat_muzzle",
+      "cat_tail_chain",
+      "cat_chest_bib",
+      "cat_paw_hands",
+      "cat_paw_feet",
+      "tabby_stripes"
+    ],
+    "anchors": ["head", "torso", "pelvis", "hand_left", "hand_right", "foot_left", "foot_right"],
+    "palette": {
+      "fur": "#ee9a4a",
+      "fur_shadow": "#d97734",
+      "cream": "#fff0d2",
+      "inner_ear": "#f18c8b",
+      "nose": "#cc6267",
+      "eye": "#78a944",
+      "stripe": "#c9652e",
+      "hair": "#b65d2f"
+    }
+  },
+  "wardrobe_ranch_scout": {
+    "display_name": "Ranch Scout",
+    "kind": "wardrobe",
+    "pieces": ["cream_top", "cropped_jacket", "teal_shorts", "belt", "brown_boots"],
+    "anchors": ["torso", "pelvis", "foot_left", "foot_right"],
+    "palette": {
+      "top": "#fff3dc",
+      "jacket": "#b94336",
+      "jacket_shadow": "#893126",
+      "shorts": "#27717a",
+      "shorts_shadow": "#1c5259",
+      "leather": "#704634",
+      "metal": "#e1b04c"
+    }
+  }
+}

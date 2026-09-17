@@ -1,6 +1,6 @@
 # Soft Storybook Emoji Art Direction
 
-> **Status: exploratory visual specification.** Static concept studies exist. This document does not claim production sprites, animation rigs, or final character designs.
+> **Status: exploratory visual specification with one generic motion prototype.** Static concept studies and the six-profile Paper-Doll Walk Lab exist. Species production sprites and final character designs are not locked.
 
 ## Purpose
 
@@ -145,7 +145,7 @@ Show four consistent static interpretations: tiny head icon, medium full-body sp
 
 ## Initial stress-test cast
 
-- **Cat:** small, quick, ear-and-tail-led silhouette.
+- **Catgirl base:** 5′5″ Medium–Neutral, quick, ear-and-tail-led silhouette; the first planned species and wardrobe cutout stack for the invisible paper-doll rig. Its actual alpha-clean sprite pieces have not been authored yet.
 - **Cow:** large, broad, horn-and-muzzle-led silhouette.
 - **Elf:** medium, refined humanoid with ear-and-hair-led silhouette.
 - **Golem/Titan:** enormous constructed body using mass, stone grouping, moss, and a restrained emissive core.

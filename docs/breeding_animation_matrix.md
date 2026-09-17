@@ -16,7 +16,7 @@ Every ordinary species maps to one of nine body silhouettes:
 
 The primary dimensions are:
 
-- **Size:** Small (1.2–1.5 m), Medium (1.5–1.8 m), Large (1.8–2.4 m+).
+- **Size:** Small (below 4′0″), Medium (4′0″ to below 8′0″, centred near 6′0″), Large (8′0″+). Each character also retains an explicit standing height because biomechanics can vary substantially inside a band.
 - **Morphology:** Feral, Neutral, Refined.
 
 The old term **Regular** became **Neutral** in the maintained design documents. “Pure” is not an established band; **Refined** is the intended animal-to-humanoid end of the axis.

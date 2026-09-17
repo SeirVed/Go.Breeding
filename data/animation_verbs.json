@@ -1,0 +1,53 @@
+{
+  "version": "0.2.0",
+  "ticks_per_second": 240,
+  "verbs": {
+    "brace": {
+      "display_name": "Brace",
+      "category": "atomic",
+      "status": "motion_prototype",
+      "roles": ["responder"],
+      "channels": ["torso", "pelvis"],
+      "defaults": {"strength": 4.0}
+    },
+    "hold_anchors": {
+      "display_name": "Hold Anchors",
+      "category": "constraint",
+      "status": "contract_only",
+      "roles": ["holder", "receiver"],
+      "requires": ["hand_left", "hand_right", "hold_target_left", "hold_target_right"],
+      "channels": ["hand_left", "hand_right"]
+    },
+    "pelvis_pulse": {
+      "display_name": "Pelvis Pulse / Thrust",
+      "category": "cyclic",
+      "status": "motion_prototype",
+      "roles": ["driver"],
+      "channels": ["pelvis"],
+      "defaults": {"amplitude": 8.0, "repetitions": 4}
+    },
+    "reaction_bounce": {
+      "display_name": "Reaction Bounce",
+      "category": "reaction",
+      "status": "motion_prototype",
+      "roles": ["responder"],
+      "channels": ["pelvis", "torso"],
+      "defaults": {"amplitude": 5.0, "repetitions": 4, "lag": 0.08}
+    },
+    "reach_to": {
+      "display_name": "Reach To",
+      "category": "atomic",
+      "status": "contract_only",
+      "roles": ["reacher", "target"],
+      "requires": ["hand_left", "hand_right"],
+      "channels": ["shoulder_left", "elbow_left", "hand_left", "shoulder_right", "elbow_right", "hand_right"]
+    },
+    "release": {
+      "display_name": "Release",
+      "category": "transition",
+      "status": "contract_only",
+      "roles": ["actor"],
+      "channels": []
+    }
+  }
+}

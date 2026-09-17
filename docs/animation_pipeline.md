@@ -1,6 +1,6 @@
 # Paired Paper-Doll Animation Pipeline
 
-> **Status: architecture plan.** `Emoji Bonk v0` is implemented as the universal placeholder. Real paper-doll rigs, retargeting, compatibility scoring, and bespoke choreography are not implemented yet.
+> **Status: architecture plan with an invisible-rig locomotion vertical slice and editor-only Rig Studio.** `Emoji Bonk v0` remains the universal breeding placeholder. A six-profile pose provider, image manifest, shared draft walk offsets and one emergency character image test anchors and timing; the Catgirl cutout, paired retargeting, compatibility scoring and bespoke choreography are not implemented yet.
 
 ## Goal
 
@@ -26,7 +26,7 @@ Direction is part of the key at every tier: Small→Large and Large→Small are 
 
 A template owns one shared stage and two named actor roots. Each actor exposes consistent anchors such as root, hips, torso, head, hands, feet, and effect origin. Shared timing and contact anchors prevent the two independently populated dolls from drifting apart.
 
-Each creature skin supplies:
+Each character composition selects reusable species, wardrobe and later identity part sets. Together those kits supply:
 
 - ordered sprite layers and z-order;
 - local anchor offsets and limb lengths;
@@ -34,6 +34,8 @@ Each creature skin supplies:
 - attachments such as ears, tails, horns, wings, extra limbs, or effects;
 - required anatomy and exception tags;
 - optional additive idle and reaction motion.
+
+The underlying rig profile contains geometry and motion only; it is invisible during normal character rendering. It must not contain a species palette, ears, fur, hair or clothes. Rig Studio v0.2.0 separates Single Builder character construction from an Animation Editor supporting one-to-many actors, variable timed keys, multi-node edits, onion skins, Propagate and data-driven verb blocks. Three motion verbs visibly preview; contact-dependent verbs remain explicitly `contract_only`. This is still editor authoring, not a working compatibility resolver or paired gameplay player. See `paper_doll_parts.md` for clipping/readiness/fallback and `rig_studio.md` for exact authoring boundaries.
 
 ### Partner focus and fourth-wall rule
 

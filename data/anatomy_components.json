@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "topologies": {
+    "humanoid_plantigrade": {"display_name": "Humanoid · plantigrade", "status": "implemented", "exclusive_slot": "body_foundation"},
+    "humanoid_digitigrade": {"display_name": "Humanoid · digitigrade", "status": "contract_only", "exclusive_slot": "body_foundation"},
+    "humanoid_unguligrade": {"display_name": "Humanoid · unguligrade", "status": "contract_only", "exclusive_slot": "body_foundation"},
+    "serpentine": {"display_name": "Serpentine / Naga", "status": "contract_only", "exclusive_slot": "body_foundation", "replaces": ["leg_pair", "foot_pair"]},
+    "tauric": {"display_name": "Tauric / Centaur", "status": "contract_only", "exclusive_slot": "body_foundation", "replaces": ["lower_body", "leg_pair"]},
+    "quadruped": {"display_name": "Quadruped / Bestial", "status": "contract_only", "exclusive_slot": "body_foundation"},
+    "amorphous": {"display_name": "Amorphous / Slime", "status": "contract_only", "exclusive_slot": "body_foundation"}
+  },
+  "attachments": {
+    "antennae": {"display_name": "Antennae", "mount_slot": "head_attachment", "status": "contract_only"},
+    "back_wings": {"display_name": "Back wings", "mount_slot": "back_attachment", "status": "contract_only"},
+    "dorsal_fins": {"display_name": "Dorsal fins", "mount_slot": "back_attachment", "status": "contract_only"},
+    "ears": {"display_name": "Species ears", "mount_slot": "ear_pair", "status": "art_slot"},
+    "extra_limb_pair": {"display_name": "Extra limb pair", "mount_slot": "extra_limbs", "status": "contract_only"},
+    "halo": {"display_name": "Halo / floating ring", "mount_slot": "head_orbit", "status": "contract_only"},
+    "horns": {"display_name": "Horns / antlers", "mount_slot": "horn_pair", "status": "art_slot"},
+    "tail": {"display_name": "Segmented tail", "mount_slot": "tail_mount", "status": "contract_only", "supports_count": true}
+  }
+}

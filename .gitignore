@@ -15,6 +15,7 @@ __pycache__/
 API.txt
 api.txt
 /API.png
+/API.png.import
 .env
 .env.*
 
@@ -30,3 +31,4 @@ api.txt
 /art/style_exploration/**/*.wav
 /art/style_exploration/**/*.mp3
 /art/style_exploration/**/*.ogg
+/art/style_exploration/**/*.import

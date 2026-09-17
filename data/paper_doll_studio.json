@@ -1,0 +1,40 @@
+{
+  "characters": {},
+  "motion_templates": {
+    "walk_humanoid_v1": {
+      "display_name": "Shared Humanoid Walk · Draft",
+      "duration_ticks": 240,
+      "frames": [
+        {"tick": 0, "interpolation": "smooth", "offsets": {}},
+        {"tick": 30, "interpolation": "smooth", "offsets": {}},
+        {"tick": 60, "interpolation": "smooth", "offsets": {}},
+        {"tick": 90, "interpolation": "smooth", "offsets": {}},
+        {"tick": 120, "interpolation": "smooth", "offsets": {}},
+        {"tick": 150, "interpolation": "smooth", "offsets": {}},
+        {"tick": 180, "interpolation": "smooth", "offsets": {}},
+        {"tick": 210, "interpolation": "smooth", "offsets": {}}
+      ]
+    },
+    "multi_actor_scene_v1": {
+      "display_name": "Multi-Rig Scene · Draft",
+      "kind": "authoring_stage_only",
+      "duration_ticks": 240,
+      "timeline_mode": "simple",
+      "verbs": [],
+      "actors": [
+        {"id": "A", "character_id": "", "role": "male", "size": "large", "height_inches": 102.0, "stage_x": -140.0, "stage_y": 0.0, "rig_offsets": {}},
+        {"id": "B", "character_id": "", "role": "female", "size": "medium", "height_inches": 65.0, "stage_x": 140.0, "stage_y": 0.0, "rig_offsets": {}}
+      ],
+      "frames": [
+        {"tick": 0, "interpolation": "smooth", "actors": {}},
+        {"tick": 30, "interpolation": "smooth", "actors": {}},
+        {"tick": 60, "interpolation": "smooth", "actors": {}},
+        {"tick": 90, "interpolation": "smooth", "actors": {}},
+        {"tick": 120, "interpolation": "smooth", "actors": {}},
+        {"tick": 150, "interpolation": "smooth", "actors": {}},
+        {"tick": 180, "interpolation": "smooth", "actors": {}},
+        {"tick": 210, "interpolation": "smooth", "actors": {}}
+      ]
+    }
+  }
+}

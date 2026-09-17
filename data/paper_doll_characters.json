@@ -1,0 +1,21 @@
+{
+  "default_template": {
+    "display_name": "Default Template",
+    "kind": "template",
+    "species_id": "human",
+    "role": "male",
+    "size": "medium",
+    "height_inches": 72.0,
+    "topology": "humanoid_plantigrade",
+    "attachments": [],
+    "part_sets": []
+  },
+  "catgirl_base": {
+    "display_name": "Catgirl Base",
+    "species_id": "cat",
+    "role": "female",
+    "size": "medium",
+    "height_inches": 65.0,
+    "part_sets": ["species_cat_orange_tabby", "wardrobe_ranch_scout"]
+  }
+}

@@ -1,5 +1,10 @@
 ; Engine configuration file.
-; Go.Breeding — Version 0.2.4 "Jack, Jill & Bonk"
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
 
 config_version=5
 
@@ -9,6 +14,7 @@ config/name="Go.Breeding"
 config/description="A systems-first breeding simulation."
 config/version="0.2.4"
 run/main_scene="res://scenes/main.tscn"
+config/features=PackedStringArray("4.7")
 
 [autoload]
 
@@ -18,17 +24,13 @@ PairingProgress="*res://scripts/pairing_progress.gd"
 
 [display]
 
-window/size/viewport_width=1152
-window/size/viewport_height=648
 window/size/window_width_override=1152
 window/size/window_height_override=648
 window/stretch/mode="canvas_items"
 
-[rendering]
+[editor_plugins]
 
-renderer/rendering_method="gl_compatibility"
-renderer/rendering_method.mobile="gl_compatibility"
-textures/default_filters/use_nearest_mipmap_filter=false
+enabled=PackedStringArray("res://addons/rig_studio/plugin.cfg")
 
 [gui]
 
@@ -38,5 +40,11 @@ theme/default_font_multichannel_signed_distance_field=true
 
 ui_cancel={
 "deadzone": 0.5,
-"events": [Object(InputEventKey,"physical_keycode":4194305,"unicode":27)]
+"events": [Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":16,"window_id":0,"alt_pressed":false,"shift_pressed":false,"ctrl_pressed":false,"meta_pressed":false,"pressed":false,"keycode":0,"physical_keycode":4194305,"key_label":0,"unicode":27,"location":0,"echo":false,"script":null)
+]
 }
+
+[rendering]
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"

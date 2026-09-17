@@ -1,5 +1,5 @@
 {
-  "cat":{"body":"small_neutral","tags":[]},
+  "cat":{"body":"medium_neutral","tags":[]},
   "wolf":{"body":"medium_feral","tags":[]},
   "rabbit":{"body":"small_neutral","tags":[]},
   "cow":{"body":"large_neutral","tags":[]},
@@ -8,7 +8,7 @@
   "dog":{"body":"medium_neutral","tags":[]},
   "fish":{"body":"small_neutral","tags":["Exotic"]},
   "slime":{"body":"small_feral","tags":["Exotic"]},
-  "human":{"body":"medium_refined","tags":[]},
+  "human":{"body":"medium_neutral","tags":[]},
   "elf":{"body":"medium_refined","tags":[]},
   "plant":{"body":"medium_neutral","tags":["Exotic"]},
   "insect":{"body":"small_feral","tags":["Winged"]},

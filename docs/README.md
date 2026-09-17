@@ -33,11 +33,15 @@ When prose and runtime data disagree about the present build, runtime data and e
 - `art_style.md` — exploratory Soft Storybook Emoji visual grammar, scale tiers, and reusable generation template.
 - `breeding_animation_matrix.md` — three directional 9×9 commission boards.
 - `animation_pipeline.md` — best-fit paired paper-doll resolver and honest fallback ladder.
+- `paper_doll_walk_lab.md` — implemented six-profile shared-rig locomotion vertical slice and iteration record.
+- `paper_doll_parts.md` — invisible rig, clip-on image manifest, one emergency silhouette, Catgirl cutout plan, and production-part gates.
+- `rig_studio.md` — custom Godot Rig Studio v0.2.0: Single Builder, Animation Editor, timed keys, onion skins, Propagate, verbs and current limits.
 - `pairing_production_pipeline.md` — reusable source-to-output gates, group/name/type lookups, and reproducible production records.
 - `anatomy_asset_library.md` — modular SFW/NSFW chest, pelvis, clothing, and presentation-profile architecture.
 - `dev_metrics.md` — Guild Star Ballot, aggregates, privacy, and backend requirements.
 - `license_decision.md` — adopted proprietary licensing decision and rationale.
 - `distribution_model.md` — shared-code, separate-content SFW/NSFW release architecture.
+- `build_checks.md` — repeatable source smoke test, clean private export, export audit, and exported-build smoke test.
 
 ## Current headline status
 

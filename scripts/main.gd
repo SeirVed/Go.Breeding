@@ -10,6 +10,7 @@ const MUTED := Color("#a8ac91")
 const ACCENT := Color("#d6a84b")
 const GREEN := Color("#76946a")
 const DANGER := Color("#b86f62")
+const PaperDollRigScript := preload("res://scripts/paper_doll.gd")
 
 var screen_root: Control
 var title_label: Label
@@ -19,6 +20,7 @@ var locations: Array = []
 var previous_screen := "menu"
 var toast_label: Label
 var emoji_font: SystemFont
+var walk_lab_review_phase := 0.0
 
 
 func _ready() -> void:
@@ -50,6 +52,12 @@ func _ready() -> void:
 		GameState.new_game(0, false)
 		show_breeding_pen()
 		capture_bonk.call_deferred()
+	if OS.get_cmdline_user_args().has("--capture-walk-lab"):
+		show_walk_lab()
+		capture_preview.call_deferred()
+	if OS.get_cmdline_user_args().has("--capture-cat-parts"):
+		show_cat_parts_lab()
+		capture_preview.call_deferred()
 	if OS.get_cmdline_user_args().has("--smoke-test"):
 		run_smoke_test.call_deferred()
 
@@ -113,7 +121,15 @@ func capture_preview() -> void:
 	await get_tree().process_frame
 	await get_tree().create_timer(0.15).timeout
 	DirAccess.make_dir_recursive_absolute("res://artifacts")
+	if DisplayServer.get_name() == "headless":
+		push_error("Preview capture requires a rendering display driver; headless mode has no viewport texture")
+		get_tree().quit(1)
+		return
 	var image := get_viewport().get_texture().get_image()
+	if image == null:
+		push_error("Preview capture could not read the viewport texture")
+		get_tree().quit(1)
+		return
 	var filename := "v0.2.4-main-menu.png"
 	if OS.get_cmdline_user_args().has("--capture-map"):
 		filename = "v0.2.4-map.png"
@@ -125,6 +141,10 @@ func capture_preview() -> void:
 		filename = "v0.2.4-offspring.png"
 	elif OS.get_cmdline_user_args().has("--capture-bonk"):
 		filename = "v0.2.4-emoji-bonk.png"
+	elif OS.get_cmdline_user_args().has("--capture-walk-lab"):
+		filename = "v0.2.4-walk-lab.png"
+	elif OS.get_cmdline_user_args().has("--capture-cat-parts"):
+		filename = "v0.2.4-cat-parts-lab.png"
 	var error := image.save_png("res://artifacts/" + filename)
 	print("PREVIEW_CAPTURE: ", error_string(error))
 	get_tree().quit(0 if error == OK else 1)
@@ -219,6 +239,75 @@ func run_smoke_test() -> void:
 		push_error("Pairing search failed")
 		get_tree().quit(1)
 		return
+	show_walk_lab()
+	var walk_dolls := get_tree().get_nodes_in_group("walk_lab_dolls")
+	var male_small := screen_root.find_child("WalkDoll_male_small", true, false)
+	var female_large := screen_root.find_child("WalkDoll_female_large", true, false)
+	var catgirl_base := screen_root.find_child("WalkDoll_female_medium", true, false)
+	if PaperDollRigScript.profile_count() != 6 or PaperDollRigScript.character_count() < 1 or PaperDollRigScript.part_set_count() != 2 or not PaperDollRigScript.validate_profiles().is_empty() or not PaperDollRigScript.validate_characters().is_empty() or not PaperDollRigScript.validate_part_sets().is_empty() or not PaperDollRigScript.validate_artwork_contract().is_empty() or walk_dolls.size() != 6 or male_small == null or female_large == null or catgirl_base == null:
+		push_error("Paper-doll walk lab failed")
+		get_tree().quit(1)
+		return
+	if male_small.profile_key() != "male_small" or female_large.profile_key() != "female_large":
+		push_error("Paper-doll profile assignment failed")
+		get_tree().quit(1)
+		return
+	if catgirl_base.character_key() != "catgirl_base" or not is_equal_approx(catgirl_base.display_height_inches(), 65.0) or catgirl_base.resolved_part_sets.size() != 2 or catgirl_base.artwork_state() != "debug_skeleton":
+		push_error("Catgirl base profile failed")
+		get_tree().quit(1)
+		return
+	step_walk_lab()
+	if male_small.is_walking() or not is_equal_approx(walk_lab_review_phase, 0.125):
+		push_error("Paper-doll phase review failed")
+		get_tree().quit(1)
+		return
+	show_cat_parts_lab()
+	var cat_parts_dolls := get_tree().get_nodes_in_group("cat_parts_dolls")
+	var states: Array[String] = []
+	for doll in cat_parts_dolls:
+		states.append(doll.artwork_state())
+	states.sort()
+	if cat_parts_dolls.size() != 3 or states != ["debug_skeleton", "emergency_placeholder", "emergency_placeholder"]:
+		push_error("Invisible skeleton/emergency artwork states failed")
+		get_tree().quit(1)
+		return
+	var art_probe = PaperDollRigScript.new()
+	art_probe.position = Vector2(-500, -500)
+	art_probe.configure_character("catgirl_base")
+	screen_root.add_child(art_probe)
+	art_probe.use_artwork_parts_for_test([
+		{"slot": "full_body", "path": "res://art/placeholder/unknown_character.png", "anchor": "head", "scale": 0.2},
+		{"slot": "QAUpperArm", "path": "res://art/placeholder/unknown_character.png", "anchor": "shoulder_left", "end_anchor": "elbow_left", "rest_length": 256.0, "scale": 0.12},
+		{"slot": "BrokenPiece", "path": "res://art/missing/broken-piece.png", "anchor": "torso"},
+	])
+	var head_probe := art_probe.find_child("full_body", true, false) as Sprite2D
+	var arm_probe := art_probe.find_child("QAUpperArm", true, false) as Sprite2D
+	if art_probe.artwork_state() != "cutout" or art_probe.has_emergency_art() or art_probe.artwork_piece_count() != 2 or head_probe == null or arm_probe == null or head_probe.position != art_probe.get_anchor_local("head") or arm_probe.position != art_probe.get_anchor_local("shoulder_left"):
+		push_error("Artwork clipping onto head anchor failed")
+		get_tree().quit(1)
+		return
+	var resting_angle := arm_probe.rotation
+	art_probe.set_cycle_phase(0.25)
+	if is_equal_approx(resting_angle, arm_probe.rotation) or head_probe.position != art_probe.get_anchor_local("head"):
+		push_error("Clipped artwork failed to follow animated bone/anchor")
+		get_tree().quit(1)
+		return
+	art_probe.use_artwork_parts_for_test([
+		{"slot": "head", "path": "res://art/placeholder/unknown_character.png", "anchor": "head", "scale": 0.2},
+	])
+	if art_probe.artwork_state() != "emergency_placeholder" or not art_probe.has_emergency_art() or art_probe.missing_essential_slots().size() != 13:
+		push_error("Incomplete character art was promoted over the emergency image")
+		get_tree().quit(1)
+		return
+	art_probe.set_editor_preview(true)
+	art_probe.use_artwork_parts_for_test([
+		{"slot": "head", "path": "res://art/placeholder/unknown_character.png", "anchor": "head", "scale": 0.2},
+	])
+	if art_probe.artwork_state() != "incomplete_cutout" or art_probe.has_emergency_art():
+		push_error("Editor preview failed to expose incomplete artwork without the runtime placeholder")
+		get_tree().quit(1)
+		return
+	art_probe.queue_free()
 	var study_record: Dictionary = PairingProgress.get_production_record("research.titan-ranger.golem-cow.v01")
 	if study_record.get("decision", "") != "revise" or study_record.get("lookup", {}).get("group_key", "") != "m+f":
 		push_error("Pairing production-record lookup failed")
@@ -226,11 +315,11 @@ func run_smoke_test() -> void:
 		return
 	var regular_plan: Dictionary = PairingProgress.build_pairing_plan("cat", "cow")
 	var inverted_plan: Dictionary = PairingProgress.build_pairing_plan("cow", "cat")
-	if regular_plan.pair_key != "small_neutral>large_neutral" or regular_plan.order != "Regular":
+	if regular_plan.pair_key != "medium_neutral>large_neutral" or regular_plan.order != "Regular":
 		push_error("Regular species-to-silhouette pairing map failed")
 		get_tree().quit(1)
 		return
-	if inverted_plan.pair_key != "large_neutral>small_neutral" or inverted_plan.order != "Inverted" or regular_plan.pair_key == inverted_plan.pair_key:
+	if inverted_plan.pair_key != "large_neutral>medium_neutral" or inverted_plan.order != "Inverted" or regular_plan.pair_key == inverted_plan.pair_key:
 		push_error("Species-to-silhouette pairing map failed")
 		get_tree().quit(1)
 		return
@@ -314,6 +403,7 @@ func show_main_menu() -> void:
 	buttons.add_child(continue_button)
 	buttons.add_child(menu_button("LOAD GAME", show_load_screen, "Choose a journal entry"))
 	buttons.add_child(menu_button("DEV PROGRESS", show_gallery, "Procedural breeding-script coverage"))
+	buttons.add_child(menu_button("WALK LAB", show_walk_lab, "Invisible rig poses and emergency-art review"))
 	buttons.add_child(menu_button("OPTIONS", show_options, "Display, sound, and text"))
 	buttons.add_spacer(false)
 	buttons.add_child(menu_button("EXIT", request_exit, "Close the game"))
@@ -562,6 +652,251 @@ func show_location() -> void:
 	if selected_location.id == "ranch":
 		column.add_child(small_button("💞  OPEN BREEDING PEN", show_breeding_pen, true))
 	column.add_child(small_button("←  RETURN TO MAP", show_map, true))
+
+
+func show_walk_lab() -> void:
+	clear_screen("WalkLab")
+	var margin := MarginContainer.new()
+	margin.position = Vector2(22, 14)
+	margin.size = Vector2(1108, 620)
+	screen_root.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 8)
+	margin.add_child(column)
+
+	var header := HBoxContainer.new()
+	header.add_theme_constant_override("separation", 16)
+	column.add_child(header)
+	var heading := VBoxContainer.new()
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(label("🚶  PAPER-DOLL WALK LAB", 29, INK))
+	heading.add_child(label("DEBUG SKELETON ONLY · HIDDEN DURING CHARACTER RENDERING", 12, ACCENT))
+	header.add_child(heading)
+	header.add_child(label("PROTOTYPE · NOT CEMENTED", 13, MUTED))
+
+	var stage_panel := PanelContainer.new()
+	stage_panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	stage_panel.add_theme_stylebox_override("panel", box(Color("#151d18"), 10, 1, Color("#35463a")))
+	column.add_child(stage_panel)
+	var stage_margin := MarginContainer.new()
+	for side in ["left", "right", "top", "bottom"]:
+		stage_margin.add_theme_constant_override("margin_" + side, 10)
+	stage_panel.add_child(stage_margin)
+	var lineup := HBoxContainer.new()
+	lineup.alignment = BoxContainer.ALIGNMENT_CENTER
+	lineup.add_theme_constant_override("separation", 8)
+	stage_margin.add_child(lineup)
+	for role in ["male", "female"]:
+		for size in ["small", "medium", "large"]:
+			var character_id := "catgirl_base" if role == "female" and size == "medium" else ""
+			lineup.add_child(walk_lab_card(role, size, character_id))
+
+	var controls := HBoxContainer.new()
+	controls.alignment = BoxContainer.ALIGNMENT_CENTER
+	controls.add_theme_constant_override("separation", 8)
+	column.add_child(controls)
+	controls.add_child(small_button("½×  STROLL", set_walk_lab_speed.bind(0.5)))
+	controls.add_child(small_button("1×  WALK", set_walk_lab_speed.bind(1.0), true))
+	controls.add_child(small_button("1½×  HURRY", set_walk_lab_speed.bind(1.5)))
+	controls.add_child(small_button("⏯  PAUSE", toggle_walk_lab))
+	controls.add_child(small_button("⏭  STEP", step_walk_lab))
+	controls.add_child(small_button("🐾  CAT PARTS", show_cat_parts_lab))
+	controls.add_child(small_button("←  MENU", show_main_menu))
+
+
+func show_cat_parts_lab() -> void:
+	clear_screen("CatPartsLab")
+	var margin := MarginContainer.new()
+	margin.position = Vector2(22, 14)
+	margin.size = Vector2(1108, 620)
+	screen_root.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 8)
+	margin.add_child(column)
+
+	var header := HBoxContainer.new()
+	column.add_child(header)
+	var heading := VBoxContainer.new()
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(label("🐾  CAT PARTS WORKBENCH", 29, INK))
+	heading.add_child(label("SAME 5′5″ RIG · HIDDEN GUIDE · SINGLE EMERGENCY IMAGE", 12, ACCENT))
+	header.add_child(heading)
+	header.add_child(label("PARTS STUDY · NOT FINAL ART", 13, MUTED))
+
+	var stage := HBoxContainer.new()
+	stage.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	stage.alignment = BoxContainer.ALIGNMENT_CENTER
+	stage.add_theme_constant_override("separation", 8)
+	column.add_child(stage)
+	stage.add_child(cat_parts_card("1 · GUIDE", "DEBUG VIEW ONLY", PackedStringArray(["none"])))
+	stage.add_child(cat_parts_card("2 · NO ART", "CATGIRL · 5′5″", PackedStringArray()))
+	stage.add_child(cat_parts_card("3 · BAD PATH", "SAME EMERGENCY ART", PackedStringArray(["invalid"])))
+	stage.add_child(cat_parts_manifest())
+
+	var controls := HBoxContainer.new()
+	controls.alignment = BoxContainer.ALIGNMENT_CENTER
+	controls.add_theme_constant_override("separation", 8)
+	column.add_child(controls)
+	controls.add_child(small_button("⏯  PAUSE", toggle_cat_parts_lab))
+	controls.add_child(small_button("⏭  STEP", step_cat_parts_lab))
+	controls.add_child(small_button("←  WALK LAB", show_walk_lab))
+	controls.add_child(small_button("←  MENU", show_main_menu))
+
+
+func cat_parts_card(title_text: String, detail_text: String, enabled_kinds: PackedStringArray) -> PanelContainer:
+	var card := PanelContainer.new()
+	card.custom_minimum_size = Vector2(215, 458)
+	card.clip_contents = true
+	card.add_theme_stylebox_override("panel", compact_box(PANEL, 9, 1, Color("#405143")))
+	var canvas := Control.new()
+	canvas.custom_minimum_size = Vector2(215, 458)
+	card.add_child(canvas)
+	var title := label(title_text, 16, INK)
+	title.position = Vector2(8, 10)
+	title.size = Vector2(199, 24)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	canvas.add_child(title)
+	var detail := label(detail_text, 11, MUTED)
+	detail.position = Vector2(6, 35)
+	detail.size = Vector2(203, 22)
+	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	canvas.add_child(detail)
+	var doll = PaperDollRigScript.new()
+	doll.name = "CatPartsDoll_%s" % title_text.replace(" ", "_")
+	doll.position = Vector2(107.5, 422.0)
+	doll.scale = Vector2.ONE * 1.70
+	doll.configure_character("catgirl_base", enabled_kinds)
+	if enabled_kinds.has("none"):
+		doll.set_debug_skeleton(true)
+	elif enabled_kinds.has("invalid"):
+		doll.use_artwork_parts_for_test([{"slot": "MissingHead", "path": "res://art/missing/broken-head.png", "anchor": "head"}])
+	doll.set_cycle_phase(walk_lab_review_phase)
+	doll.add_to_group("cat_parts_dolls")
+	canvas.add_child(doll)
+	var ground := HSeparator.new()
+	ground.position = Vector2(18, 429)
+	ground.size = Vector2(179, 2)
+	ground.add_theme_color_override("separator", Color("#526657"))
+	canvas.add_child(ground)
+	return card
+
+
+func cat_parts_manifest() -> PanelContainer:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(390, 458)
+	panel.add_theme_stylebox_override("panel", compact_box(Color("#151d18"), 9, 1, Color("#405143")))
+	var margin := MarginContainer.new()
+	for side in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + side, 14)
+	panel.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 6)
+	margin.add_child(column)
+	column.add_child(label("ARTWORK RESOLUTION", 15, ACCENT))
+	for item in ["1 · Choose character + exact height", "2 · Load valid image parts", "3 · Clip each part to its anchor/bone", "4 · Move artwork with the invisible rig", "5 · If ZERO valid parts, show one", "     universal emergency silhouette"]:
+		column.add_child(label(item, 13, INK))
+	column.add_child(HSeparator.new())
+	column.add_child(label("CATGIRL PRODUCTION STATUS", 12, MUTED))
+	for item in ["✓ rig/height/anchors", "✓ emergency asset + bad-path guard", "○ basic Catgirl cutout: not made", "○ polished Catgirl parts: research only"]:
+		column.add_child(label(item, 13, INK))
+	column.add_spacer(false)
+	var note := label("The guide skeleton is never visible during normal character rendering. One emergency image appears only while all character art is absent or unusable.", 12, MUTED)
+	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	column.add_child(note)
+	return panel
+
+
+func toggle_cat_parts_lab() -> void:
+	var dolls := get_tree().get_nodes_in_group("cat_parts_dolls")
+	if dolls.is_empty():
+		return
+	var next_walking: bool = not dolls[0].is_walking()
+	for doll in dolls:
+		doll.set_walking(next_walking)
+
+
+func step_cat_parts_lab() -> void:
+	walk_lab_review_phase = fposmod(walk_lab_review_phase + 0.125, 1.0)
+	for doll in get_tree().get_nodes_in_group("cat_parts_dolls"):
+		doll.set_walking(false)
+		doll.set_cycle_phase(walk_lab_review_phase)
+
+
+func walk_lab_card(role: String, size: String, character_id: String = "") -> PanelContainer:
+	var card := PanelContainer.new()
+	card.custom_minimum_size = Vector2(167, 420)
+	card.clip_contents = true
+	card.add_theme_stylebox_override("panel", compact_box(PANEL, 9, 1, Color("#405143")))
+	var canvas := Control.new()
+	canvas.custom_minimum_size = Vector2(167, 420)
+	card.add_child(canvas)
+
+	var role_label := "M" if role == "male" else "F"
+	var title := label("%s · %s" % [role_label, size.to_upper()], 16, INK)
+	title.position = Vector2(10, 9)
+	title.size = Vector2(147, 26)
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	canvas.add_child(title)
+	var profile: Dictionary = PaperDollRigScript.get_profile(role, size)
+	var display_height := float(profile.get("height_inches", 0.0))
+	var detail_text := "%s · MANNEQUIN" % height_label(display_height)
+	if not character_id.is_empty():
+		var character: Dictionary = PaperDollRigScript.get_character(character_id)
+		display_height = float(character.get("height_inches", display_height))
+		detail_text = "%s · CATGIRL BASE" % height_label(display_height)
+	var detail := label(detail_text, 11, MUTED)
+	detail.position = Vector2(6, 34)
+	detail.size = Vector2(155, 22)
+	detail.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	canvas.add_child(detail)
+
+	var doll = PaperDollRigScript.new()
+	doll.name = "WalkDoll_%s_%s" % [role, size]
+	doll.position = Vector2(83.5, 385.0)
+	if character_id.is_empty():
+		doll.configure(role, size)
+	else:
+		doll.configure_character(character_id)
+	doll.set_debug_skeleton(true)
+	doll.set_cycle_phase(walk_lab_review_phase)
+	doll.add_to_group("walk_lab_dolls")
+	canvas.add_child(doll)
+
+	var ground := HSeparator.new()
+	ground.position = Vector2(16, 391)
+	ground.size = Vector2(135, 2)
+	ground.add_theme_color_override("separator", Color("#526657"))
+	canvas.add_child(ground)
+	return card
+
+
+func set_walk_lab_speed(value: float) -> void:
+	for doll in get_tree().get_nodes_in_group("walk_lab_dolls"):
+		doll.set_animation_speed(value)
+	show_toast("Walk speed: %.1f×" % value)
+
+
+func height_label(total_inches: float) -> String:
+	var rounded_inches := int(round(total_inches))
+	return "%d′%d″" % [rounded_inches / 12, rounded_inches % 12]
+
+
+func toggle_walk_lab() -> void:
+	var dolls := get_tree().get_nodes_in_group("walk_lab_dolls")
+	if dolls.is_empty():
+		return
+	var should_walk: bool = not dolls[0].is_walking()
+	for doll in dolls:
+		doll.set_walking(should_walk)
+	show_toast("Walk cycle resumed" if should_walk else "Walk cycle paused")
+
+
+func step_walk_lab() -> void:
+	walk_lab_review_phase = fposmod(walk_lab_review_phase + 0.125, 1.0)
+	for doll in get_tree().get_nodes_in_group("walk_lab_dolls"):
+		doll.set_walking(false)
+		doll.set_cycle_phase(walk_lab_review_phase)
+	show_toast("Review phase: %d / 8" % int(walk_lab_review_phase * 8.0))
 
 
 func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> void:

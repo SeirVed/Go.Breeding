@@ -1,6 +1,6 @@
 # Appearance System (2D, Godot 4)
 
-> **Status: planned asset architecture.** The current build uses text emoji composites. It does not yet contain production paper-doll rigs, sprite atlases, or retargeted animation.
+> **Status: planned creature-appearance architecture with an invisible-rig and editor-authoring prototype.** The main game still uses text emoji composites. Walk Lab has six pose profiles and image-part binding; the editor-only Rig Studio can assign draft cutouts. Gameplay uses one universal emergency silhouette until art is complete. There are no production creature cutouts, sprite atlases or paired retargeted animations yet.
 
 ## Philosophy
 Param-driven paper‑doll with **bands** for Feral/Refined and Neotenous/Peramorphous, **palettes** for Elements, and **FX** for Stability.

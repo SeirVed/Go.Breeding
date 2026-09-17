@@ -7,7 +7,8 @@ Tiers communicate availability & difficulty; they are **balance levers**, not po
 New entries receive stable IDs plus size, morphology, and anatomy metadata so they can inherit existing animation templates. Bespoke species variants may then be added without creating an unbounded species-by-species commission matrix.
 
 ## Common (foundation stock)
-- **Cat (Felis)** – agile, high fertility; Small–Neutral → Small–Refined.
+- **Human (Homo)** – Player Character and paper-doll calibration zero; Medium–Neutral by default with exact-height variation.
+- **Cat (Felis)** – agile, high fertility; current 5′5″ Catgirl base is Medium–Neutral, with individual variation handled by explicit height.
 - **Wolf (Canis)** – strength/pack instincts; Medium–Feral → Medium–Neutral.
 - **Rabbit (Lepus)** – fecundity specialist; Small–Neutral.
 - **Cow (Bovida)** – durable resource producer; Large–Neutral → Large–Refined.
@@ -32,7 +33,8 @@ New entries receive stable IDs plus size, morphology, and anatomy metadata so th
 ## Silhouette mapping (baseline)
 | Species | Size | Morph band (default) | Notes |
 |---|---|---|---|
-| Cat | Small | Neutral | Range: Small‑Feral ↔ Small‑Refined |
+| Human | Medium | Neutral | Player Character; Default Template calibration zero |
+| Cat | Medium | Neutral | First Catgirl base: 5′5″; individual height remains explicit |
 | Wolf | Medium | Feral | Can reach Neutral |
 | Rabbit | Small | Neutral | High neotenous bias |
 | Cow | Large | Neutral | Can reach Refined; horns addon |
