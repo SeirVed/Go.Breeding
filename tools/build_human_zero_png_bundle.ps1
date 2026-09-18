@@ -11,6 +11,8 @@ $manifest = Get-Content -LiteralPath $manifestPath -Raw | ConvertFrom-Json
 $magick = Get-Command magick.exe -ErrorAction Stop
 $canvasWidth = [int]$manifest.canvas[0]
 $canvasHeight = [int]$manifest.canvas[1]
+$rasterScale = [int]$manifest.raster_scale
+$svgDensity = 96 * $rasterScale
 $temporaryBase = [System.IO.Path]::GetFullPath([System.IO.Path]::GetTempPath())
 $temporaryRoot = Join-Path $temporaryBase ("go-breeding-human-zero-" + [guid]::NewGuid().ToString("N"))
 
@@ -39,9 +41,16 @@ try {
         $piecePath = Join-Path $temporaryRoot ("piece-{0:d3}.png" -f $entryIndex)
         $nextCanvasPath = Join-Path $temporaryRoot ("canvas-{0:d3}.png" -f $entryIndex)
 
-        & $magick.Source -background none $sourcePath -resize "${width}x${height}!" $piecePath
+        # Density must be declared before the SVG input. This asks the vector
+        # renderer for a native 4x raster instead of rendering at 1x and then
+        # enlarging those pixels.
+        & $magick.Source -background none -density $svgDensity $sourcePath -colorspace sRGB -type TrueColorAlpha -define png:color-type=6 $piecePath
         if ($LASTEXITCODE -ne 0) {
             throw "ImageMagick could not rasterize $sourcePath"
+        }
+        $actualGeometry = & $magick.Source identify -format "%wx%h" $piecePath
+        if ($actualGeometry -ne "${width}x${height}") {
+            throw "Vector raster size mismatch for $($entry.id): expected ${width}x${height}, got $actualGeometry"
         }
         & $magick.Source $canvasPath $piecePath -geometry "+${x}+${y}" -composite $nextCanvasPath
         if ($LASTEXITCODE -ne 0) {
