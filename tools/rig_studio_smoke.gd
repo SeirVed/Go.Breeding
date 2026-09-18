@@ -3,8 +3,9 @@ extends SceneTree
 
 const Screen := preload("res://addons/rig_studio/rig_studio.gd")
 const VerbEngine := preload("res://addons/rig_studio/verb_engine.gd")
-const CAPTURE_PATH := "res://artifacts/rig-studio-v0.2.0.png"
-const SINGLE_CAPTURE_PATH := "res://artifacts/rig-studio-v0.2.0-single-builder.png"
+const ContactSolver := preload("res://addons/rig_studio/contact_lock_solver.gd")
+const CAPTURE_PATH := "res://artifacts/rig-studio-v0.3.1.png"
+const SINGLE_CAPTURE_PATH := "res://artifacts/rig-studio-v0.3.1-single-builder.png"
 
 
 func _init() -> void:
@@ -13,6 +14,14 @@ func _init() -> void:
 
 
 func _run() -> void:
+	var captured_socket := ContactSolver.capture_normalized(Vector2(15.0, 22.0), Vector2(10.0, 20.0), Vector2(10.0, 30.0))
+	if not bool(captured_socket.get("valid", false)) or Vector2(float(captured_socket.local_offset[0]), float(captured_socket.local_offset[1])).distance_to(Vector2(0.5, 0.2)) > 0.0001:
+		_fail("Contact solver failed to capture a normalized virtual socket")
+		return
+	var rotated_scaled_socket := ContactSolver.resolve_normalized(captured_socket.local_offset, Vector2(100.0, 100.0), Vector2(80.0, 100.0))
+	if not bool(rotated_scaled_socket.get("valid", false)) or Vector2(rotated_scaled_socket.point).distance_to(Vector2(96.0, 110.0)) > 0.0001:
+		_fail("Contact solver failed to preserve offset through secondary rotation and scale")
+		return
 	var screen = Screen.new()
 	root.add_child(screen)
 	screen.size = Vector2(root.size)
@@ -169,6 +178,28 @@ func _run() -> void:
 	if screen._multi_stage.actor_count() != 4:
 		_fail("Cast removal undo failed")
 		return
+	screen.multi_stage_select_actor("A", "hand_left")
+	var target_picker: OptionButton = screen._animation_editor_panel.contact_target_picker
+	for item in target_picker.item_count:
+		if str(target_picker.get_item_metadata(item)) == "B":
+			target_picker.select(item)
+			break
+	screen._capture_contact_lock()
+	if screen._current_contact_locks().size() != 1 or str(screen._current_contact_locks()[0].get("status", "")) != "authoring_prototype":
+		_fail("Contact-lock UI did not persist its honest authoring-prototype record")
+		return
+	screen._multi_stage.set_actor_offsets("B", {"torso": [36.0, 0.0]})
+	screen._multi_stage.set_phase(0.0)
+	var lock_id := str(screen._current_contact_locks()[0].get("id", ""))
+	var locked_source: Vector2 = screen._multi_stage.anchor_stage_position("A", "hand_left")
+	var virtual_target: Vector2 = screen._multi_stage.resolved_contact_targets.get(lock_id, Vector2.INF)
+	if locked_source.distance_to(virtual_target) > 0.25:
+		_fail("Captured source anchor did not follow the rotated secondary virtual socket")
+		return
+	screen._header_action("Undo")
+	if not screen._current_contact_locks().is_empty():
+		_fail("Contact-lock creation was not undoable")
+		return
 	screen._select_mode("Animate")
 	screen._select_frame(2)
 	screen.multi_stage_select_actor("B", "head")
@@ -275,6 +306,7 @@ func _run() -> void:
 		return
 	print("RIG_STUDIO_V020: builder creation, variable keys, multi-select, onion skins, propagation and verb composition passed")
 	print("MULTI_RIG_SMOKE: independent cast sizes, arbitrary rig count, keyed actor poses and stage motion passed")
+	print("CONTACT_LOCK_SMOKE: normalized virtual sockets preserved secondary rotation and scale")
 	print("RIG_STUDIO_SMOKE: editor UI, anchor drag, shared keyframe, undo and mode separation passed")
 	if OS.get_cmdline_user_args().has("--capture-rig-studio"):
 		screen._load_documents()
@@ -298,7 +330,12 @@ func _run() -> void:
 		DisplayServer.window_set_size(Vector2i(1280, 720))
 		screen.size = Vector2(float(ProjectSettings.get_setting("display/window/size/viewport_width")), float(ProjectSettings.get_setting("display/window/size/viewport_height")))
 		await process_frame
-		print("RIG_STUDIO_LAYOUT: viewport=%s screen=%s root=%s split=%s stage=%s right=%s" % [root.size, screen.size, screen.get_child(0).size, screen.get_child(0).get_child(1).size, screen._stage.size, screen.get_child(0).get_child(1).get_child(1).size])
+		if not capture_single:
+			screen._cast_inventory.scroll_vertical = maxi(0, int(screen._animation_editor_panel.contact_list.position.y) - 36)
+			await process_frame
+		var ui_root: VBoxContainer = screen.get_child(1)
+		var split: HSplitContainer = ui_root.get_child(1)
+		print("RIG_STUDIO_LAYOUT: viewport=%s screen=%s root=%s split=%s stage=%s right=%s" % [root.size, screen.size, ui_root.size, split.size, screen._stage.size, split.get_child(1).size])
 		await RenderingServer.frame_post_draw
 		var image := root.get_texture().get_image()
 		if image.save_png(SINGLE_CAPTURE_PATH if capture_single else CAPTURE_PATH) != OK:

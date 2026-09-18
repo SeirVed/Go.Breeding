@@ -7,6 +7,7 @@ const BACKGROUND := Color("#17251f")
 const GRID := Color("#30483a")
 const ACTIVE := Color("#ffcf73")
 const INACTIVE := Color("#b5ac97")
+const CONTACT := Color("#65e5c2")
 const PREVIEW_ZOOM := 1.35
 
 var studio
@@ -16,6 +17,8 @@ var labels: Dictionary = {}
 var ghost_previous: Dictionary = {}
 var ghost_next: Dictionary = {}
 var stage_motion_offsets: Dictionary = {}
+var contact_locks: Array = []
+var resolved_contact_targets: Dictionary = {}
 var _frames: Array = []
 var _duration_ticks := 240
 var _verbs: Array = []
@@ -180,6 +183,11 @@ func set_verbs(verbs: Array) -> void:
 	set_phase(_phase)
 
 
+func set_contact_locks(locks: Array) -> void:
+	contact_locks = locks.duplicate(true)
+	set_phase(_phase)
+
+
 func set_onion_skin(enabled: bool) -> void:
 	_onion_enabled = enabled
 	_refresh_ghost_visibility()
@@ -190,11 +198,14 @@ func set_phase(phase: float) -> void:
 	_phase = fposmod(phase, 1.0)
 	stage_motion_offsets.clear()
 	var tick := _phase * _duration_ticks
+	var overlays := {}
 	for actor in actors:
 		var id := str(actor.get("id", ""))
 		stage_motion_offsets[id] = _stage_motion_at(_phase, id)
 		var rig: PaperDollRig = rigs[id]
-		rig.set_overlay_offsets(RigStudioVerbEngine.offsets_for_actor(_verbs, tick, id))
+		var verb_offsets: Dictionary = RigStudioVerbEngine.offsets_for_actor(_verbs, tick, id)
+		overlays[id] = verb_offsets
+		rig.set_overlay_offsets(verb_offsets)
 		rig.set_cycle_phase(_phase)
 		var previous_phase := _adjacent_phase(-1)
 		var next_phase := _adjacent_phase(1)
@@ -203,7 +214,97 @@ func set_phase(phase: float) -> void:
 		ghost_next[id].set_overlay_offsets(RigStudioVerbEngine.offsets_for_actor(_verbs, next_phase * _duration_ticks, id))
 		ghost_next[id].set_cycle_phase(next_phase)
 	_place_rigs()
+	_apply_contact_locks(overlays)
+	_place_rigs()
 	queue_redraw()
+
+
+func _apply_contact_locks(overlays: Dictionary) -> void:
+	resolved_contact_targets.clear()
+	var base_positions := {}
+	for actor in actors:
+		var actor_id := str(actor.get("id", ""))
+		var positions := {}
+		for anchor in PaperDollRig.VALID_ANCHORS:
+			positions[anchor] = anchor_stage_position(actor_id, anchor)
+		base_positions[actor_id] = positions
+	var all_sources := {}
+	for lock_value in contact_locks:
+		if lock_value is Dictionary:
+			all_sources["%s:%s" % [lock_value.get("source_actor", ""), lock_value.get("source_anchor", "")]] = true
+	var claimed_sources := {}
+	for lock_value in contact_locks:
+		if not lock_value is Dictionary:
+			continue
+		var lock: Dictionary = lock_value
+		if not RigStudioContactLockSolver.validate_lock(lock).is_empty():
+			continue
+		var source_actor := str(lock.get("source_actor", ""))
+		var source_anchor := str(lock.get("source_anchor", ""))
+		var target_actor := str(lock.get("target_actor", ""))
+		var ownership_key := "%s:%s" % [source_actor, source_anchor]
+		if claimed_sources.has(ownership_key) or not base_positions.has(source_actor) or not base_positions.has(target_actor):
+			continue
+		var target_frame: Dictionary = lock.get("target_frame", {})
+		var origin_anchor := str(target_frame.get("origin_anchor", ""))
+		var axis_anchor := str(target_frame.get("axis_anchor", ""))
+		if all_sources.has("%s:%s" % [target_actor, origin_anchor]) or all_sources.has("%s:%s" % [target_actor, axis_anchor]):
+			# Chained/cyclic constraints need a graph solver. The point prototype
+			# remains order-independent by resolving only against unconstrained frames.
+			continue
+		if not base_positions[target_actor].has(origin_anchor) or not base_positions[target_actor].has(axis_anchor):
+			continue
+		var resolved := RigStudioContactLockSolver.resolve_normalized(
+			target_frame.get("local_offset", []),
+			base_positions[target_actor][origin_anchor],
+			base_positions[target_actor][axis_anchor]
+		)
+		if not bool(resolved.get("valid", false)):
+			continue
+		var source_position: Vector2 = base_positions[source_actor].get(source_anchor, Vector2.ZERO)
+		var target_position: Vector2 = resolved.point
+		var rig: PaperDollRig = rigs[source_actor]
+		var scale_factor := maxf(0.001, rig.visual_scale() * PREVIEW_ZOOM)
+		var local_delta: Vector2 = (target_position - source_position).rotated(-rig.rotation) / scale_factor
+		var actor_overlay: Dictionary = overlays.get(source_actor, {}).duplicate(true)
+		var previous := _stage_vector(actor_overlay.get(source_anchor, [0.0, 0.0]))
+		var corrected := previous + local_delta * clampf(float(lock.get("weight", 1.0)), 0.0, 1.0)
+		actor_overlay[source_anchor] = [corrected.x, corrected.y]
+		overlays[source_actor] = actor_overlay
+		rig.set_overlay_offsets(actor_overlay)
+		claimed_sources[ownership_key] = true
+		resolved_contact_targets[str(lock.get("id", ownership_key))] = target_position
+
+
+func capture_contact_lock(source_actor: String, source_anchor: String, target_actor: String, origin_anchor: String, axis_anchor: String) -> Dictionary:
+	if source_actor == target_actor or not rigs.has(source_actor) or not rigs.has(target_actor):
+		return {"valid": false, "reason": "Choose a different secondary actor."}
+	var captured := RigStudioContactLockSolver.capture_normalized(
+		anchor_stage_position(source_actor, source_anchor),
+		anchor_stage_position(target_actor, origin_anchor),
+		anchor_stage_position(target_actor, axis_anchor)
+	)
+	if not bool(captured.get("valid", false)):
+		return captured
+	return {
+		"valid": true,
+		"lock": {
+			"id": "lock_%s_%s_to_%s_%s_%s" % [source_actor, source_anchor, target_actor, origin_anchor, axis_anchor],
+			"status": "authoring_prototype",
+			"source_actor": source_actor,
+			"source_anchor": source_anchor,
+			"target_actor": target_actor,
+			"target_frame": {
+				"origin_anchor": origin_anchor,
+				"axis_anchor": axis_anchor,
+				"local_offset": captured.local_offset,
+				"offset_space": "normalized_span",
+			},
+			"inherit_rotation": true,
+			"inherit_scale": true,
+			"weight": 1.0,
+		}
+	}
 
 
 func _stage_motion_at(phase: float, id: String) -> Vector2:
@@ -259,11 +360,15 @@ func _stage_vector(value: Variant) -> Vector2:
 	return Vector2.ZERO
 
 
-func _anchor_screen_position(id: String, anchor: String) -> Vector2:
+func anchor_stage_position(id: String, anchor: String) -> Vector2:
 	var rig := get_actor_rig(id)
 	if rig == null:
 		return Vector2.ZERO
-	return rig.position + rig.get_anchor_local(anchor) * rig.visual_scale() * PREVIEW_ZOOM
+	return rig.position + (rig.get_anchor_local(anchor) * rig.visual_scale() * PREVIEW_ZOOM).rotated(rig.rotation)
+
+
+func _anchor_screen_position(id: String, anchor: String) -> Vector2:
+	return anchor_stage_position(id, anchor)
 
 
 func _draw() -> void:
@@ -276,6 +381,20 @@ func _draw() -> void:
 		for anchor in selected_anchors:
 			var point := _anchor_screen_position(selected_actor_id, anchor)
 			draw_arc(point, 15.0, 0.0, TAU, 32, ACTIVE, 2.5, true)
+	for lock_value in contact_locks:
+		if not lock_value is Dictionary:
+			continue
+		var lock: Dictionary = lock_value
+		var id := str(lock.get("id", ""))
+		if not resolved_contact_targets.has(id):
+			continue
+		var target: Vector2 = resolved_contact_targets[id]
+		var source := anchor_stage_position(str(lock.get("source_actor", "")), str(lock.get("source_anchor", "")))
+		draw_dashed_line(source, target, CONTACT, 2.0, 6.0, true)
+		draw_circle(target, 7.0, Color(CONTACT, 0.22))
+		draw_arc(target, 10.0, 0.0, TAU, 24, CONTACT, 2.0, true)
+		draw_line(target + Vector2(-6.0, 0.0), target + Vector2(6.0, 0.0), CONTACT, 2.0, true)
+		draw_line(target + Vector2(0.0, -6.0), target + Vector2(0.0, 6.0), CONTACT, 2.0, true)
 
 
 func _gui_input(event: InputEvent) -> void:

@@ -11,6 +11,11 @@ var height_field: SpinBox
 var stage_x_field: SpinBox
 var stage_y_field: SpinBox
 var note: Label
+var contact_list: ItemList
+var contact_target_picker: OptionButton
+var contact_origin_picker: OptionButton
+var contact_axis_picker: OptionButton
+var contact_note: Label
 var storyboard_board_picker: OptionButton
 var storyboard_first_picker: OptionButton
 var storyboard_second_picker: OptionButton
@@ -66,6 +71,25 @@ func setup(studio: Control, characters: Dictionary, body_types: Array = []) -> v
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.text = "Shift-click nodes to multi-select. Simple mode composes verb blocks; Advanced exposes timed keys, interpolation and Propagate."
 	cast.add_child(note)
+	_caption(cast, "CONTACT LOCKS · AUTHORING PROTOTYPE")
+	contact_list = ItemList.new()
+	contact_list.custom_minimum_size.y = 72
+	cast.add_child(contact_list)
+	contact_target_picker = OptionButton.new()
+	cast.add_child(contact_target_picker)
+	var contact_frame_row := HBoxContainer.new()
+	contact_frame_row.add_theme_constant_override("separation", 5)
+	cast.add_child(contact_frame_row)
+	contact_origin_picker = _anchor_picker(contact_frame_row, "Secondary origin", "pelvis")
+	contact_axis_picker = _anchor_picker(contact_frame_row, "Secondary axis", "torso")
+	var contact_actions := HBoxContainer.new()
+	cast.add_child(contact_actions)
+	_button(contact_actions, "Capture selected → secondary frame", studio._capture_contact_lock)
+	_button(contact_actions, "Remove lock", studio._remove_contact_lock)
+	contact_note = Label.new()
+	contact_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	contact_note.text = "Select one source node. The virtual socket stores an offset in the secondary actor's rotating, scaling local frame. Point correction works; limb-chain IK is not implemented."
+	cast.add_child(contact_note)
 	_caption(cast, "PAIRING SCENE · PHASED PLACEHOLDER PLAN")
 	storyboard_board_picker = OptionButton.new()
 	for board in [{"id": "jack_jill", "label": "Jack & Jill · m+f"}, {"id": "jack_jack", "label": "Jack & Jack · m+m"}, {"id": "jill_jill", "label": "Jill & Jill · f+f"}]:
@@ -112,6 +136,47 @@ func refresh_characters(characters: Dictionary) -> void:
 		actor_character_picker.set_item_metadata(actor_character_picker.item_count - 1, key)
 
 
+func refresh_contact_controls(actors: Array, locks: Array, source_actor: String, source_anchors: Array[String]) -> void:
+	if contact_target_picker == null:
+		return
+	var previous_target := ""
+	if contact_target_picker.item_count > 0 and contact_target_picker.selected >= 0:
+		previous_target = str(contact_target_picker.get_item_metadata(contact_target_picker.selected))
+	contact_target_picker.clear()
+	for actor in actors:
+		var id := str(actor.get("id", ""))
+		if id == source_actor:
+			continue
+		contact_target_picker.add_item("Secondary actor %s" % id)
+		contact_target_picker.set_item_metadata(contact_target_picker.item_count - 1, id)
+		if id == previous_target:
+			contact_target_picker.select(contact_target_picker.item_count - 1)
+	contact_list.clear()
+	for lock_value in locks:
+		if not lock_value is Dictionary:
+			continue
+		var lock: Dictionary = lock_value
+		var frame: Dictionary = lock.get("target_frame", {})
+		contact_list.add_item("%s:%s  →  %s:%s/%s" % [lock.get("source_actor", "?"), lock.get("source_anchor", "?"), lock.get("target_actor", "?"), frame.get("origin_anchor", "?"), frame.get("axis_anchor", "?")])
+		contact_list.set_item_metadata(contact_list.item_count - 1, str(lock.get("id", "")))
+	var source_label := "%s:%s" % [source_actor, source_anchors[0]] if source_anchors.size() == 1 else "select exactly one source node"
+	contact_note.text = "%d lock%s · source %s · virtual sockets inherit secondary rotation + scale. Point correction works; limb-chain IK is not implemented." % [locks.size(), "" if locks.size() == 1 else "s", source_label]
+
+
+func selected_contact_target() -> String:
+	if contact_target_picker == null or contact_target_picker.item_count == 0 or contact_target_picker.selected < 0:
+		return ""
+	return str(contact_target_picker.get_item_metadata(contact_target_picker.selected))
+
+
+func selected_contact_origin() -> String:
+	return str(contact_origin_picker.get_item_metadata(contact_origin_picker.selected))
+
+
+func selected_contact_axis() -> String:
+	return str(contact_axis_picker.get_item_metadata(contact_axis_picker.selected))
+
+
 func _caption(parent: Control, words: String) -> void:
 	var label := Label.new()
 	label.text = words
@@ -150,5 +215,21 @@ func _body_picker(parent: Control, title: String, body_types: Array) -> OptionBu
 	for body in body_types:
 		picker.add_item("%s · %s" % [body.get("short", "?"), body.get("label", body.get("id", "body"))])
 		picker.set_item_metadata(picker.item_count - 1, str(body.get("id", "")))
+	column.add_child(picker)
+	return picker
+
+
+func _anchor_picker(parent: Control, title: String, initial: String) -> OptionButton:
+	var column := VBoxContainer.new()
+	column.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	parent.add_child(column)
+	_caption(column, title)
+	var picker := OptionButton.new()
+	picker.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for anchor in PaperDollRig.VALID_ANCHORS:
+		picker.add_item(str(anchor).replace("_", " ").capitalize())
+		picker.set_item_metadata(picker.item_count - 1, anchor)
+		if anchor == initial:
+			picker.select(picker.item_count - 1)
 	column.add_child(picker)
 	return picker

@@ -21,6 +21,7 @@
       "duration_ticks": 240,
       "timeline_mode": "simple",
       "verbs": [],
+      "contact_locks": [],
       "actors": [
         {"id": "A", "character_id": "", "role": "male", "size": "large", "height_inches": 102.0, "stage_x": -140.0, "stage_y": 0.0, "rig_offsets": {}},
         {"id": "B", "character_id": "", "role": "female", "size": "medium", "height_inches": 65.0, "stage_x": 140.0, "stage_y": 0.0, "rig_offsets": {}}

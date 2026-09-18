@@ -1187,7 +1187,8 @@ func show_animation_progress(board_id: String = "jack_jill") -> void:
 		"CLIMAX · board-aware planned shell",
 		"END / UNCOUPLE · planned shell",
 		"243 directional scene plans · PLACEHOLDER_PLAN",
-		"Contact + size solver · NOT IMPLEMENTED",
+		"Virtual contact socket · EDITOR PROTOTYPE (point only)",
+		"Limb IK + support/size solver · NOT IMPLEMENTED",
 		"Runtime best-fit resolver · NOT IMPLEMENTED",
 		"Playable fallback · Emoji Bonk v0 ACTIVE",
 	]

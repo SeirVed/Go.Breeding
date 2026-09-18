@@ -1,6 +1,6 @@
 # Parametric Choreography Architecture
 
-> **Status: authoring architecture and validated placeholder compiler.** The vocabulary, 12 loop families, 24 A/B loop variants, five-phase scene shape and 243 directional scene plans exist as data. No loop variant is production-authored, the contact/size solver and runtime best-fit resolver do not exist, and `Emoji Bonk v0` remains the only playable breeding presentation.
+> **Status: authoring architecture and validated placeholder compiler.** The vocabulary, 12 loop families, 24 A/B loop variants, five-phase scene shape and 243 directional scene plans exist as data. Rig Studio has an editor-only virtual contact-socket prototype, but no loop variant is production-authored, limb-chain IK and the runtime best-fit resolver do not exist, and `Emoji Bonk v0` remains the only playable breeding presentation.
 
 ## Purpose
 
@@ -121,7 +121,17 @@ Large→Small and Small→Large therefore never collapse into one biomechanical 
 
 ### 6. Contact correction and best-fit resolution
 
-Future evaluation order:
+Rig Studio v0.3.1 implements the first authoring-only point-correction slice. A contact lock contains:
+
+- one driven `source_actor` and `source_anchor`;
+- one different `target_actor`;
+- `origin_anchor` and `axis_anchor` on that secondary actor, which define an oriented local frame;
+- a two-dimensional `local_offset`, normalized by the current distance between those two reference anchors;
+- explicit rotation/scale inheritance, weight and `authoring_prototype` status.
+
+The contact point does **not** need to be another named anchor. Capture projects the current source point into the secondary frame. Evaluation reconstructs it from the secondary frame every pose, so the virtual socket follows translation, rotation and uniform size changes. A single source anchor may own only one lock; self-targets, collapsed reference frames, malformed offsets and duplicate ownership are invalid. The current solver directly corrects the named point from an order-independent base-pose snapshot, so target-frame anchors must be unconstrained and chained/cyclic graphs are rejected. It does not yet solve the source limb chain, support weight, penetration, directional-size tolerances or gameplay playback.
+
+Evaluation order target:
 
 1. sample the authored base pose;
 2. apply body/root verbs;
@@ -142,6 +152,7 @@ The future resolver will score candidates by topology, directional size relation
 - `data/paper_doll_characters.json` — character topology, size, role and attachment declarations.
 - `data/paper_doll_artwork.json` — artwork mounted to character slots.
 - `data/paper_doll_studio.json` — authoring-stage cast, poses, verb instances and imported scene metadata.
+- `addons/rig_studio/contact_lock_solver.gd` — pure capture/reconstruction math for normalized virtual sockets.
 
 `build_pairing_scene()` selects a compatible loop family deterministically from board, morphology and directional size relation. It emits five phases, flattened timed beats, contracts, source IDs and unresolved verbs. `instantiate_scene()` binds symbolic `first` and `second` roles to concrete Rig Studio actor IDs and can load either the whole graph or one isolated phase.
 
@@ -166,9 +177,9 @@ A compiled plan is not a completed commission. A character registry row is not u
 
 ## Next implementation order
 
-1. Define semantic partner/contact anchors and tolerances.
+1. Add limb-chain IK and explicit support/tolerance records above the proven virtual-socket transform.
 2. Author one complete Grounded Front-Aligned A loop for two equal Medium Human rigs.
-3. Implement contact correction and verify a clean repeat boundary.
+3. Verify contact correction and a clean repeat boundary across the whole loop.
 4. Retarget the loop to one-band and two-band directional size tests.
 5. Author its B variation and phase transitions.
 6. Add runtime best-fit selection while retaining Emoji Bonk as the final safety fallback.

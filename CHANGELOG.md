@@ -2,6 +2,8 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Upgraded Rig Studio to **v0.3.1** with editor-only virtual contact sockets. An arbitrary source anchor can be captured as a normalized offset in a second actor's two-anchor local frame, then follow that frame's translation, rotation and scale. Locks persist in scene data, render as cyan authoring guides, clean up with removed actors and participate in Undo/Redo.
+- Added strict contact-lock validation and transform tests. One lock owns one source anchor; self-targets, collapsed reference frames, malformed offsets and duplicate ownership are rejected or skipped. This is proven point correction, not limb-chain IK, authored choreography, runtime animation coverage or a completed commission.
 - Formalized the **2D Parametric Choreography System**: invisible rig + artwork skins → verbs/adverbs → loop sentences → phased scene graphs → future contact/size solver and best-fit resolver.
 - Added a machine-readable scene grammar with 12 biomechanical loop families, independently tracked A/B forms (24 planned variants), entry/exit contracts and five directional size relations including two-band extremes.
 - Added and validated 243 five-phase `PLACEHOLDER_PLAN` scenes using Intro / Couple → Loop A → Loop B → Climax → End / Uncouple. All remain `runtime_ready: false`; zero loop variants are reported as authored.

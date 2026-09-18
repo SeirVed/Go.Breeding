@@ -146,7 +146,7 @@ func _build_ui() -> void:
 	header.add_theme_constant_override("separation", 8)
 	root.add_child(header)
 	var title := Label.new()
-	title.text = "RIG STUDIO  ·  v0.3.0"
+	title.text = "RIG STUDIO  ·  v0.3.1"
 	title.add_theme_font_size_override("font_size", 20)
 	header.add_child(title)
 	_scene_picker = OptionButton.new()
@@ -379,6 +379,19 @@ func _current_verbs() -> Array:
 	return _multi_template().get("verbs", []).duplicate(true)
 
 
+func _current_contact_locks() -> Array:
+	return _multi_template().get("contact_locks", []).duplicate(true)
+
+
+func _set_contact_locks(locks: Array) -> void:
+	var template := _multi_template()
+	template["contact_locks"] = locks.duplicate(true)
+	_studio_data["motion_templates"][MULTI_TEMPLATE_ID] = template
+	_dirty = true
+	_multi_stage.set_contact_locks(locks)
+	_refresh_cast_ui()
+
+
 func _set_verbs(verbs: Array) -> void:
 	var template := _multi_template()
 	template["verbs"] = verbs.duplicate(true)
@@ -431,6 +444,7 @@ func _apply_multi_preview() -> void:
 	_multi_stage.set_cast(_current_cast(), art_by_character, _characters)
 	_multi_stage.set_frames(_current_multi_frames(), _duration_ticks())
 	_multi_stage.set_verbs(_current_verbs())
+	_multi_stage.set_contact_locks(_current_contact_locks())
 	_multi_stage.set_onion_skin(_timeline.onion_enabled() if _timeline != null else false)
 	if _timeline != null:
 		_timeline.select_view_mode(str(_multi_template().get("timeline_mode", "simple")))
@@ -490,7 +504,8 @@ func _refresh_cast_ui() -> void:
 	_role_picker.disabled = not has_actor
 	_size_picker.disabled = not has_actor
 	_updating_cast_ui = false
-	_status.text = "ANIMATION EDITOR · %d actors · %d verb blocks  |  %s" % [actors.size(), _current_verbs().size(), "UNSAVED" if _dirty else "saved"]
+	_animation_editor_panel.refresh_contact_controls(actors, _current_contact_locks(), _selected_actor_id, _multi_stage.selected_anchors)
+	_status.text = "ANIMATION EDITOR · %d actors · %d verb blocks · %d contact locks  |  %s" % [actors.size(), _current_verbs().size(), _current_contact_locks().size(), "UNSAVED" if _dirty else "saved"]
 	var selected_nodes := ", ".join(_multi_stage.selected_anchors) if not _multi_stage.selected_anchors.is_empty() else "none"
 	_selection.text = "Actor %s · %s in · %s %s · nodes %s · %s mode" % [chosen.get("id", "none"), chosen.get("height_inches", "—"), chosen.get("size", "—"), chosen.get("role", "—"), selected_nodes, _mode]
 
@@ -624,6 +639,11 @@ func _remove_cast_actor() -> void:
 		cast_frame.erase(removed_id)
 		frame["actors"] = cast_frame
 	template["frames"] = frames
+	var retained_locks := []
+	for lock_value in template.get("contact_locks", []):
+		if lock_value is Dictionary and str(lock_value.get("source_actor", "")) != removed_id and str(lock_value.get("target_actor", "")) != removed_id:
+			retained_locks.append(lock_value)
+	template["contact_locks"] = retained_locks
 	_studio_data["motion_templates"][MULTI_TEMPLATE_ID] = template
 	_selected_actor_id = str(actors[0].get("id", ""))
 	_dirty = true
@@ -991,6 +1011,67 @@ func multi_stage_select_actor(id: String, anchor: String, additive: bool = false
 	_refresh_cast_ui()
 
 
+func _capture_contact_lock() -> void:
+	if _scene_mode != "animation_editor" or _animation_editor_panel == null:
+		return
+	if _multi_stage.selected_anchors.size() != 1:
+		_animation_editor_panel.contact_note.text = "Select exactly one source node before capturing a contact lock."
+		return
+	var source_anchor := _multi_stage.selected_anchors[0]
+	var target_actor := _animation_editor_panel.selected_contact_target()
+	var origin_anchor := _animation_editor_panel.selected_contact_origin()
+	var axis_anchor := _animation_editor_panel.selected_contact_axis()
+	if target_actor.is_empty():
+		_animation_editor_panel.contact_note.text = "Add or choose a different secondary actor."
+		return
+	if origin_anchor == axis_anchor:
+		_animation_editor_panel.contact_note.text = "Secondary origin and axis anchors must differ."
+		return
+	var captured := _multi_stage.capture_contact_lock(_selected_actor_id, source_anchor, target_actor, origin_anchor, axis_anchor)
+	if not bool(captured.get("valid", false)):
+		_animation_editor_panel.contact_note.text = str(captured.get("reason", "Could not capture the virtual socket."))
+		return
+	var new_lock: Dictionary = captured.lock
+	var locks := _current_contact_locks()
+	for existing_value in locks:
+		if not existing_value is Dictionary:
+			continue
+		if str(existing_value.get("source_actor", "")) == _selected_actor_id and str(existing_value.get("source_anchor", "")) == source_anchor:
+			_animation_editor_panel.contact_note.text = "%s:%s already owns a contact lock. Remove it before assigning another." % [_selected_actor_id, source_anchor]
+			return
+		var existing_frame: Dictionary = existing_value.get("target_frame", {})
+		var new_source_drives_existing_frame := str(existing_value.get("target_actor", "")) == _selected_actor_id and source_anchor in [str(existing_frame.get("origin_anchor", "")), str(existing_frame.get("axis_anchor", ""))]
+		var existing_source_drives_new_frame := str(existing_value.get("source_actor", "")) == target_actor and str(existing_value.get("source_anchor", "")) in [origin_anchor, axis_anchor]
+		if new_source_drives_existing_frame or existing_source_drives_new_frame:
+			_animation_editor_panel.contact_note.text = "Chained or cyclic contact frames are not supported by the point prototype. Choose unconstrained secondary reference anchors."
+			return
+	_push_undo()
+	locks.append(new_lock)
+	_set_contact_locks(locks)
+	_animation_editor_panel.contact_note.text = "Captured %s:%s in %s's %s→%s frame. Rotation and scale inheritance are active; IK remains pending." % [_selected_actor_id, source_anchor, target_actor, origin_anchor, axis_anchor]
+
+
+func _remove_contact_lock() -> void:
+	if _animation_editor_panel == null:
+		return
+	var selected := _animation_editor_panel.contact_list.get_selected_items()
+	if selected.is_empty():
+		_animation_editor_panel.contact_note.text = "Select a contact lock in the list first."
+		return
+	var id := str(_animation_editor_panel.contact_list.get_item_metadata(int(selected[0])))
+	var locks := _current_contact_locks()
+	var removed := false
+	for index in range(locks.size() - 1, -1, -1):
+		if locks[index] is Dictionary and str(locks[index].get("id", "")) == id:
+			if not removed:
+				_push_undo()
+			removed = true
+			locks.remove_at(index)
+	if removed:
+		_set_contact_locks(locks)
+		_animation_editor_panel.contact_note.text = "Contact lock removed."
+
+
 func multi_stage_begin_drag(_id: String, _anchor: String) -> bool:
 	if _mode == "Art" or _playing:
 		return false
@@ -1350,4 +1431,4 @@ func _save_all() -> void:
 
 
 func smoke_state() -> Dictionary:
-	return {"characters": _character_picker.item_count - 1, "frames": _timeline.key_button_count(), "mode": _mode, "essential_missing": _stage.rig.missing_essential_slots().size(), "multi_rigs": _multi_stage.actor_count(), "scene_mode": _scene_mode, "timeline_mode": _timeline.view_mode, "verbs": _current_verbs().size(), "editor_only": Engine.is_editor_hint()}
+	return {"characters": _character_picker.item_count - 1, "frames": _timeline.key_button_count(), "mode": _mode, "essential_missing": _stage.rig.missing_essential_slots().size(), "multi_rigs": _multi_stage.actor_count(), "scene_mode": _scene_mode, "timeline_mode": _timeline.view_mode, "verbs": _current_verbs().size(), "contact_locks": _current_contact_locks().size(), "editor_only": Engine.is_editor_hint()}
