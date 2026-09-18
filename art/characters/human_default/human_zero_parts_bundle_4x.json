@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "display_name": "Human Zero Unique Parts Bundle · 4x",
+  "status": "draft_runtime_cutout_derivative",
+  "source": "project-authored deterministic SVG",
+  "raster_scale": 4,
+  "canvas": [1024, 640],
+  "entries": [
+    {"id": "head", "source": "head.svg", "rect": [24, 24, 288, 312], "slots": ["head"]},
+    {"id": "torso", "source": "torso.svg", "rect": [336, 24, 312, 328], "slots": ["torso"]},
+    {"id": "hand", "source": "hand.svg", "rect": [680, 24, 120, 128], "slots": ["hand_left", "hand_right"]},
+    {"id": "foot_left", "source": "foot_left.svg", "rect": [816, 24, 184, 120], "slots": ["foot_left"]},
+    {"id": "foot_right", "source": "foot_right.svg", "rect": [816, 168, 184, 120], "slots": ["foot_right"]},
+    {"id": "upper_arm", "source": "upper_arm.svg", "rect": [24, 376, 128, 208], "slots": ["upper_arm_left", "upper_arm_right"]},
+    {"id": "lower_arm", "source": "lower_arm.svg", "rect": [176, 392, 112, 192], "slots": ["lower_arm_left", "lower_arm_right"]},
+    {"id": "upper_leg", "source": "upper_leg.svg", "rect": [336, 368, 152, 240], "slots": ["upper_leg_left", "upper_leg_right"]},
+    {"id": "lower_leg", "source": "lower_leg.svg", "rect": [528, 376, 144, 232], "slots": ["lower_leg_left", "lower_leg_right"]}
+  ]
+}

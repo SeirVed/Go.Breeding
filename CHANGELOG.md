@@ -2,6 +2,7 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Added a deterministic transparent 4× PNG atlas of Human Zero's nine unique SVG parts, exact atlas metadata and a reproducible ImageMagick build tool. The runtime manifest remains on individual SVGs until raster density can be separated safely from logical part size.
 - Upgraded Rig Studio to **v0.3.1** with editor-only virtual contact sockets. An arbitrary source anchor can be captured as a normalized offset in a second actor's two-anchor local frame, then follow that frame's translation, rotation and scale. Locks persist in scene data, render as cyan authoring guides, clean up with removed actors and participate in Undo/Redo.
 - Added strict contact-lock validation and transform tests. One lock owns one source anchor; self-targets, collapsed reference frames, malformed offsets and duplicate ownership are rejected or skipped. This is proven point correction, not limb-chain IK, authored choreography, runtime animation coverage or a completed commission.
 - Formalized the **2D Parametric Choreography System**: invisible rig + artwork skins → verbs/adverbs → loop sentences → phased scene graphs → future contact/size solver and best-fit resolver.
