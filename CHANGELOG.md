@@ -2,6 +2,11 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Formalized the **2D Parametric Choreography System**: invisible rig + artwork skins → verbs/adverbs → loop sentences → phased scene graphs → future contact/size solver and best-fit resolver.
+- Added a machine-readable scene grammar with 12 biomechanical loop families, independently tracked A/B forms (24 planned variants), entry/exit contracts and five directional size relations including two-band extremes.
+- Added and validated 243 five-phase `PLACEHOLDER_PLAN` scenes using Intro / Couple → Loop A → Loop B → Climax → End / Uncouple. All remain `runtime_ready: false`; zero loop variants are reported as authored.
+- Upgraded Rig Studio to v0.3.0 with whole-scene and isolated-phase loading into Actor A/B as undoable authoring operations.
+- Expanded the in-game Dev Progress screen into an Overview plus separate Commission, Character and Animation boards, keeping registry data, prototypes, plans, authored work and playable coverage visibly distinct.
 - Formalized source-control promotion: tested production runtime art may ship with code, while test, paid, reference and unproven media remains local until explicitly promoted.
 - Expanded the reusable motion vocabulary to twenty-one verbs. Nine have visible Rig Studio body-motion prototypes; contact and constraint work remains explicitly `contract_only`.
 - Added a board-, direction-, size- and morph-aware sentence compiler that generates and validates 243 `PLACEHOLDER_PLAN` storyboards. Jack & Jack and Jill & Jill now have distinct same-sex descriptor voices and lead-exchange themes instead of generic awaiting-design text.

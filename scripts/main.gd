@@ -38,6 +38,15 @@ func _ready() -> void:
 	if OS.get_cmdline_user_args().has("--capture-gallery"):
 		show_gallery()
 		capture_preview.call_deferred()
+	if OS.get_cmdline_user_args().has("--capture-dev-characters"):
+		show_gallery("", "jack_jill", "characters")
+		capture_preview.call_deferred()
+	if OS.get_cmdline_user_args().has("--capture-dev-animation"):
+		show_gallery("", "jack_jill", "animation")
+		capture_preview.call_deferred()
+	if OS.get_cmdline_user_args().has("--capture-dev-commissions"):
+		show_gallery("", "jack_jill", "commissions")
+		capture_preview.call_deferred()
 	if OS.get_cmdline_user_args().has("--capture-breeding"):
 		GameState.new_game(0, false)
 		show_breeding_pen()
@@ -135,6 +144,12 @@ func capture_preview() -> void:
 		filename = "v0.2.4-map.png"
 	elif OS.get_cmdline_user_args().has("--capture-gallery"):
 		filename = "v0.2.4-dev-progress.png"
+	elif OS.get_cmdline_user_args().has("--capture-dev-characters"):
+		filename = "v0.2.4-dev-characters.png"
+	elif OS.get_cmdline_user_args().has("--capture-dev-animation"):
+		filename = "v0.2.4-dev-animation.png"
+	elif OS.get_cmdline_user_args().has("--capture-dev-commissions"):
+		filename = "v0.2.4-dev-commissions.png"
 	elif OS.get_cmdline_user_args().has("--capture-breeding"):
 		filename = "v0.2.4-breeding.png"
 	elif OS.get_cmdline_user_args().has("--capture-offspring"):
@@ -184,7 +199,7 @@ func run_smoke_test() -> void:
 	show_intro(0)
 	show_intro(1)
 	show_intro(2)
-	show_gallery()
+	show_gallery("", "jack_jill", "commissions")
 	var notice_button := screen_root.find_child("PairNotice_jack_jill_small_feral_to_small_neutral", true, false) as Button
 	var notice_panel := screen_root.find_child("PairNotice", true, false) as PanelContainer
 	if notice_button == null or notice_panel == null:
@@ -196,14 +211,29 @@ func run_smoke_test() -> void:
 		push_error("Notice-board selection failed")
 		get_tree().quit(1)
 		return
-	show_gallery("", "jack_jack")
+	show_gallery("", "jack_jack", "commissions")
 	if screen_root.find_child("PairNotice_jack_jack_small_feral_to_small_neutral", true, false) == null:
 		push_error("Jack & Jack board failed")
 		get_tree().quit(1)
 		return
-	show_gallery("", "jill_jill")
+	show_gallery("", "jill_jill", "commissions")
 	if screen_root.find_child("PairNotice_jill_jill_small_feral_to_small_neutral", true, false) == null:
 		push_error("Jill & Jill board failed")
+		get_tree().quit(1)
+		return
+	show_gallery("", "jack_jill", "overview")
+	if screen_root.name != "DevProgressOverview":
+		push_error("Dev Progress overview failed")
+		get_tree().quit(1)
+		return
+	show_gallery("", "jack_jill", "characters")
+	if screen_root.name != "DevProgressCharacters":
+		push_error("Character progress board failed")
+		get_tree().quit(1)
+		return
+	show_gallery("", "jack_jill", "animation")
+	if screen_root.name != "DevProgressAnimation":
+		push_error("Animation progress board failed")
 		get_tree().quit(1)
 		return
 	show_breeding_pen()
@@ -244,6 +274,11 @@ func run_smoke_test() -> void:
 		push_error("Pairing storyboard coverage failed: %s" % "; ".join(storyboard_errors))
 		get_tree().quit(1)
 		return
+	var scene_errors := PairingProgress.validate_scene_coverage()
+	if not scene_errors.is_empty():
+		push_error("Pairing scene coverage failed: %s" % "; ".join(scene_errors))
+		get_tree().quit(1)
+		return
 	var titan_ranger_storyboard := PairingProgress.build_pairing_storyboard("m+f", "large_neutral", "medium_neutral")
 	var small_large_storyboard := PairingProgress.build_pairing_storyboard("m+m", "small_neutral", "large_neutral")
 	var large_small_storyboard := PairingProgress.build_pairing_storyboard("m+m", "large_neutral", "small_neutral")
@@ -260,6 +295,11 @@ func run_smoke_test() -> void:
 		return
 	if small_large_storyboard.get("size_relation", "") == large_small_storyboard.get("size_relation", "") or small_large_storyboard.get("sentence", "") == large_small_storyboard.get("sentence", ""):
 		push_error("Directional size-order storyboards collapsed into one sequence")
+		get_tree().quit(1)
+		return
+	var extreme_scene := PairingProgress.build_pairing_scene("m+f", "large_neutral", "small_neutral")
+	if extreme_scene.get("size_relation", "") != "first_two_larger" or extreme_scene.get("phases", []).size() != 5 or PairingProgress.instantiate_scene(extreme_scene, "TITAN", "SCOUT", "loop_a").is_empty():
+		push_error("Phased extreme-size scene compilation failed")
 		get_tree().quit(1)
 		return
 	if not str(small_large_storyboard.get("descriptor", "")).contains("competitive reciprocity") or not str(jill_storyboard.get("descriptor", "")).contains("mirrored reciprocity"):
@@ -934,7 +974,16 @@ func step_walk_lab() -> void:
 	show_toast("Review phase: %d / 8" % int(walk_lab_review_phase * 8.0))
 
 
-func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> void:
+func show_gallery(_focus_id: String = "", board_id: String = "jack_jill", section: String = "overview") -> void:
+	if section == "overview":
+		show_dev_progress_overview(board_id)
+		return
+	if section == "characters":
+		show_character_progress(board_id)
+		return
+	if section == "animation":
+		show_animation_progress(board_id)
+		return
 	clear_screen("DevProgress")
 	var board: Dictionary = pairing_board_config(board_id)
 	var margin := MarginContainer.new()
@@ -955,6 +1004,7 @@ func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> voi
 	header.add_child(heading)
 	header.add_child(label("%d / %d TOTAL FINISHED" % [PairingProgress.completed_commission_count(), PairingProgress.total_commission_count()], 13, MUTED))
 	header.add_child(small_button("← MENU", show_main_menu))
+	add_dev_progress_tabs(column, "commissions", board_id)
 	var board_tabs := HBoxContainer.new()
 	board_tabs.alignment = BoxContainer.ALIGNMENT_CENTER
 	board_tabs.add_theme_constant_override("separation", 8)
@@ -962,10 +1012,14 @@ func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> voi
 	for option in PairingProgress.list_pairing_groups():
 		board_tabs.add_child(board_tab_button(option.tab_label, option.board_id, board_id))
 
+	var body_scroll := ScrollContainer.new()
+	body_scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	column.add_child(body_scroll)
 	var body := HBoxContainer.new()
-	body.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	body.add_theme_constant_override("separation", 10)
-	column.add_child(body)
+	body_scroll.add_child(body)
 
 	var detail_panel := PanelContainer.new()
 	detail_panel.name = "PairNotice"
@@ -1011,6 +1065,233 @@ func show_gallery(_focus_id: String = "", board_id: String = "jack_jill") -> voi
 	show_pair_notice(detail_panel, PairingProgress.body_types[0], PairingProgress.body_types[0], board_id, board.row_role, board.column_role)
 
 
+func show_dev_progress_overview(board_id: String = "jack_jill") -> void:
+	clear_screen("DevProgressOverview")
+	var column := dev_progress_shell("🛠️  DEV PROGRESS", "ONE WORKBENCH · THREE HONEST PRODUCTION LEDGERS", "overview", board_id)
+	var verb_counts := PairingProgress.verb_status_counts()
+	var characters := read_json_dictionary("res://data/paper_doll_characters.json")
+	var artwork: Dictionary = read_json_dictionary("res://data/paper_doll_artwork.json").get("characters", {})
+	var ready_art := 0
+	for character_id in artwork:
+		var parts: Array = artwork[character_id].get("parts", [])
+		if parts.size() >= 14 or parts.any(func(part: Dictionary): return str(part.get("slot", "")) == "full_body"):
+			ready_art += 1
+	var cards := HBoxContainer.new()
+	cards.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	cards.add_theme_constant_override("separation", 14)
+	column.add_child(cards)
+	cards.add_child(dev_dashboard_button(
+		"📜  COMMISSIONS",
+		"%d / %d finished" % [PairingProgress.completed_commission_count(), PairingProgress.total_commission_count()],
+		"Three directional 9 × 9 demand boards. Every unfinished cell remains PLACEHOLDER ACTIVE.",
+		show_gallery.bind("", board_id, "commissions")
+	))
+	cards.add_child(dev_dashboard_button(
+		"🧍  CHARACTERS",
+		"%d creatures · %d builder records · %d usable cutout" % [SpeciesDB.get_all().size(), characters.size(), ready_art],
+		"Registry, body mapping, rig declaration and artwork readiness for every current creature.",
+		show_gallery.bind("", board_id, "characters")
+	))
+	cards.add_child(dev_dashboard_button(
+		"🎞️  ANIMATION",
+		"%d verbs · %d / %d loop variants authored" % [int(verb_counts.get("total", 0)), PairingProgress.authored_loop_variant_count(), PairingProgress.loop_variant_count()],
+		"Verbs → loop sentences → phased scene plans. Prototype motion is not counted as finished animation.",
+		show_gallery.bind("", board_id, "animation")
+	))
+	var truth := PanelContainer.new()
+	truth.add_theme_stylebox_override("panel", box(PANEL, 10, 1, Color("#3d4b3e")))
+	column.add_child(truth)
+	var truth_text := label("CURRENT TRUTH  ·  Emoji Bonk v0 is the only playable breeding presentation. Scene graphs, loop families and contact contracts are authoring plans; none claim production animation coverage yet.", 13, MUTED)
+	truth_text.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	truth.add_child(truth_text)
+
+
+func show_character_progress(board_id: String = "jack_jill") -> void:
+	clear_screen("DevProgressCharacters")
+	var column := dev_progress_shell("🧍  CHARACTER WORKSHOP BOARD", "OPEN-ENDED CREATURE REGISTRY · RIG AND ART READINESS", "characters", board_id)
+	var characters := read_json_dictionary("res://data/paper_doll_characters.json")
+	var artwork: Dictionary = read_json_dictionary("res://data/paper_doll_artwork.json").get("characters", {})
+	var mapped_count := 0
+	var declared_count := 0
+	var art_count := 0
+	for species in SpeciesDB.get_all():
+		if not PairingProgress.get_species_profile(str(species.id)).is_empty():
+			mapped_count += 1
+		for character_id in characters:
+			if str(characters[character_id].get("species_id", "")) == str(species.id):
+				declared_count += 1
+				if artwork.has(character_id) and not artwork[character_id].get("parts", []).is_empty():
+					art_count += 1
+	var summary := label("%d registry entries  ·  %d body mappings  ·  %d Single Builder records  ·  %d artwork set%s with parts" % [SpeciesDB.get_all().size(), mapped_count, declared_count, art_count, "" if art_count == 1 else "s"], 13, ACCENT)
+	column.add_child(summary)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	column.add_child(scroll)
+	var grid := GridContainer.new()
+	grid.columns = 4
+	grid.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	grid.add_theme_constant_override("h_separation", 8)
+	grid.add_theme_constant_override("v_separation", 8)
+	scroll.add_child(grid)
+	for species in SpeciesDB.get_all():
+		var character_ids: Array[String] = []
+		for character_id in characters:
+			if str(characters[character_id].get("species_id", "")) == str(species.id):
+				character_ids.append(str(character_id))
+		var part_count := 0
+		for character_id in character_ids:
+			part_count += artwork.get(character_id, {}).get("parts", []).size()
+		var body_profile: Dictionary = PairingProgress.get_species_profile(str(species.id))
+		var state := "REGISTRY ONLY"
+		var state_color := MUTED
+		if not character_ids.is_empty():
+			state = "BUILDER RECORD · ART MISSING"
+			state_color = ACCENT
+		if part_count > 0:
+			state = "DRAFT CUTOUT · %d PARTS" % part_count
+			state_color = GREEN
+		var card := PanelContainer.new()
+		card.custom_minimum_size = Vector2(260, 82)
+		card.add_theme_stylebox_override("panel", box(PANEL, 7, 1, Color("#3d4b3e")))
+		var words := VBoxContainer.new()
+		card.add_child(words)
+		var emoji := str(species.get("emoji", ["❔"])[0])
+		words.add_child(label("%s  %s" % [emoji, species.name], 15, INK))
+		words.add_child(label("%s · %s" % [body_profile.get("body", "unmapped"), str(species.status).replace("-", " ")], 11, MUTED))
+		words.add_child(label(state, 10, state_color))
+		grid.add_child(card)
+
+
+func show_animation_progress(board_id: String = "jack_jill") -> void:
+	clear_screen("DevProgressAnimation")
+	var column := dev_progress_shell("🎞️  ANIMATION WORKSHOP BOARD", "VERBS → LOOP SENTENCES → PHASED SCENE PLANS", "animation", board_id)
+	var counts := PairingProgress.verb_status_counts()
+	var scene_errors := PairingProgress.validate_scene_coverage()
+	var row := HBoxContainer.new()
+	row.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	row.add_theme_constant_override("separation", 10)
+	column.add_child(row)
+	var verb_items: Array[String] = []
+	for verb_id in PairingProgress.verb_definitions:
+		var definition: Dictionary = PairingProgress.verb_definitions[verb_id]
+		verb_items.append("%s  ·  %s" % [definition.get("display_name", verb_id), str(definition.get("status", "missing")).replace("_", " ").to_upper()])
+	row.add_child(dev_list_panel("VERBS · %d" % int(counts.get("total", 0)), "%d motion prototypes · %d contract-only · 0 production-authored" % [int(counts.get("motion_prototype", 0)), int(counts.get("contract_only", 0))], verb_items))
+	var loop_items: Array[String] = []
+	for family in PairingProgress.list_loop_families():
+		loop_items.append("%s\nA Anchor · PLANNED   |   B Variation · PLANNED\n%s → %s" % [family.get("display_name", family.get("id", "Loop")), family.get("entry_contract", ""), family.get("exit_contract", "")])
+	row.add_child(dev_list_panel("LOOPS · %d VARIANTS" % PairingProgress.loop_variant_count(), "%d authored · %d planned" % [PairingProgress.authored_loop_variant_count(), PairingProgress.loop_variant_count() - PairingProgress.authored_loop_variant_count()], loop_items))
+	var scene_items: Array[String] = [
+		"INTRO / COUPLE · planned shell",
+		"LOOP A · selected reusable anchor loop",
+		"LOOP B · selected reusable variation loop",
+		"CLIMAX · board-aware planned shell",
+		"END / UNCOUPLE · planned shell",
+		"243 directional scene plans · PLACEHOLDER_PLAN",
+		"Contact + size solver · NOT IMPLEMENTED",
+		"Runtime best-fit resolver · NOT IMPLEMENTED",
+		"Playable fallback · Emoji Bonk v0 ACTIVE",
+	]
+	var compiler_state := "VALIDATED" if scene_errors.is_empty() else "%d VALIDATION ERRORS" % scene_errors.size()
+	row.add_child(dev_list_panel("SCENE COMPILER", compiler_state, scene_items))
+
+
+func dev_progress_shell(title_text: String, subtitle_text: String, current_section: String, board_id: String) -> VBoxContainer:
+	var margin := MarginContainer.new()
+	margin.position = Vector2(28, 18)
+	margin.size = Vector2(1096, 610)
+	screen_root.add_child(margin)
+	var column := VBoxContainer.new()
+	column.add_theme_constant_override("separation", 10)
+	margin.add_child(column)
+	var header := HBoxContainer.new()
+	column.add_child(header)
+	var heading := VBoxContainer.new()
+	heading.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	heading.add_child(label(title_text, 28, INK))
+	heading.add_child(label(subtitle_text, 12, ACCENT))
+	header.add_child(heading)
+	header.add_child(small_button("← MENU", show_main_menu))
+	add_dev_progress_tabs(column, current_section, board_id)
+	return column
+
+
+func add_dev_progress_tabs(parent: VBoxContainer, current_section: String, board_id: String) -> void:
+	var tabs := HBoxContainer.new()
+	tabs.alignment = BoxContainer.ALIGNMENT_CENTER
+	tabs.add_theme_constant_override("separation", 7)
+	parent.add_child(tabs)
+	for option in [
+		{"id": "overview", "label": "OVERVIEW"},
+		{"id": "commissions", "label": "COMMISSIONS"},
+		{"id": "characters", "label": "CHARACTERS"},
+		{"id": "animation", "label": "ANIMATION"},
+	]:
+		var button := small_button(option.label, show_gallery.bind("", board_id, option.id))
+		button.custom_minimum_size = Vector2(210, 34)
+		button.disabled = option.id == current_section
+		tabs.add_child(button)
+
+
+func dev_dashboard_button(title_text: String, metric: String, description: String, action: Callable) -> PanelContainer:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size = Vector2(340, 330)
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.add_theme_stylebox_override("panel", box(PANEL, 12, 1, Color("#3d4b3e")))
+	var content := VBoxContainer.new()
+	content.alignment = BoxContainer.ALIGNMENT_CENTER
+	content.add_theme_constant_override("separation", 14)
+	panel.add_child(content)
+	var heading := label(title_text, 19, INK)
+	heading.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	content.add_child(heading)
+	var metric_label := label(metric, 14, ACCENT)
+	metric_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	metric_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(metric_label)
+	var description_label := label(description, 13, MUTED)
+	description_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	description_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(description_label)
+	content.add_spacer(false)
+	content.add_child(small_button("OPEN BOARD", action, true))
+	return panel
+
+
+func dev_list_panel(title_text: String, summary_text: String, items: Array[String]) -> PanelContainer:
+	var panel := PanelContainer.new()
+	panel.custom_minimum_size.x = 350
+	panel.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	panel.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	panel.add_theme_stylebox_override("panel", box(PANEL, 9, 1, Color("#3d4b3e")))
+	var content := VBoxContainer.new()
+	content.add_theme_constant_override("separation", 6)
+	panel.add_child(content)
+	content.add_child(label(title_text, 16, INK))
+	var summary := label(summary_text, 11, ACCENT)
+	summary.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	content.add_child(summary)
+	var scroll := ScrollContainer.new()
+	scroll.size_flags_vertical = Control.SIZE_EXPAND_FILL
+	content.add_child(scroll)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 6)
+	scroll.add_child(list)
+	for item in items:
+		var words := label("• " + item, 11, MUTED)
+		words.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		list.add_child(words)
+	return panel
+
+
+func read_json_dictionary(path: String) -> Dictionary:
+	var file := FileAccess.open(path, FileAccess.READ)
+	if file == null:
+		return {}
+	var parsed = JSON.parse_string(file.get_as_text())
+	return parsed if parsed is Dictionary else {}
+
+
 func pairing_board_config(board_id: String) -> Dictionary:
 	var group := PairingProgress.get_pairing_group(board_id)
 	if group.is_empty():
@@ -1038,7 +1319,7 @@ func board_tab_button(text_value: String, target_board: String, current_board: S
 	node.add_theme_stylebox_override("disabled", compact_box(Color("#dfc78f"), 5, 2, ACCENT))
 	node.disabled = target_board == current_board
 	if not node.disabled:
-		node.pressed.connect(show_gallery.bind("", target_board))
+		node.pressed.connect(show_gallery.bind("", target_board, "commissions"))
 	return node
 
 

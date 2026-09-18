@@ -22,15 +22,25 @@
       {"verb_id": "plant_stance", "roles": {"actor": "second"}, "duration_beats": 1},
       {"verb_id": "reach_to", "roles": {"reacher": "first", "target": "second"}, "duration_beats": 1}
     ],
-    "first_larger": [
+    "first_one_larger": [
       {"verb_id": "lower_center", "roles": {"actor": "first"}, "duration_beats": 1},
       {"verb_id": "support_lift", "roles": {"support": "first", "rider": "second"}, "duration_beats": 2},
       {"verb_id": "brace", "roles": {"responder": "first"}, "duration_beats": 1}
     ],
-    "second_larger": [
+    "second_one_larger": [
       {"verb_id": "plant_stance", "roles": {"actor": "second"}, "duration_beats": 1},
       {"verb_id": "supported_climb", "roles": {"climber": "first", "support": "second"}, "duration_beats": 2},
       {"verb_id": "brace", "roles": {"responder": "second"}, "duration_beats": 1}
+    ],
+    "first_two_larger": [
+      {"verb_id": "lower_center", "roles": {"actor": "first"}, "duration_beats": 2},
+      {"verb_id": "support_lift", "roles": {"support": "first", "rider": "second"}, "duration_beats": 3},
+      {"verb_id": "brace", "roles": {"responder": "first"}, "duration_beats": 2}
+    ],
+    "second_two_larger": [
+      {"verb_id": "plant_stance", "roles": {"actor": "second"}, "duration_beats": 2},
+      {"verb_id": "supported_climb", "roles": {"climber": "first", "support": "second"}, "duration_beats": 3},
+      {"verb_id": "brace", "roles": {"responder": "second"}, "duration_beats": 2}
     ]
   },
   "board_signatures": {

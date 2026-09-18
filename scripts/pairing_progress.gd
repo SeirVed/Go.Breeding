@@ -7,6 +7,7 @@ const SPECIES_MAP_PATH := "res://data/species_body_map.json"
 const PRODUCTION_RECORDS_PATH := "res://data/pairing_production_records.json"
 const VERBS_PATH := "res://data/animation_verbs.json"
 const STORYBOARD_GRAMMAR_PATH := "res://data/pairing_storyboard_grammar.json"
+const SCENE_GRAMMAR_PATH := "res://data/animation_scene_grammar.json"
 const SIZE_SCALE := {"Small": 0.82, "Medium": 1.0, "Large": 1.22}
 const MORPH_LEAN := {"Feral": -8.0, "Neutral": 0.0, "Refined": 5.0}
 const BOARD_IDS := ["jack_jill", "jack_jack", "jill_jill"]
@@ -22,6 +23,7 @@ var production_records: Array = []
 var production_records_by_id: Dictionary = {}
 var verb_definitions: Dictionary = {}
 var storyboard_grammar: Dictionary = {}
+var scene_grammar: Dictionary = {}
 
 
 func _ready() -> void:
@@ -36,11 +38,13 @@ func _ready() -> void:
 	production_records_by_id.clear()
 	verb_definitions.clear()
 	storyboard_grammar.clear()
+	scene_grammar.clear()
 	var progress_file := FileAccess.open(PROGRESS_PATH, FileAccess.READ)
 	var map_file := FileAccess.open(SPECIES_MAP_PATH, FileAccess.READ)
 	var records_file := FileAccess.open(PRODUCTION_RECORDS_PATH, FileAccess.READ)
 	var verbs_file := FileAccess.open(VERBS_PATH, FileAccess.READ)
 	var storyboard_file := FileAccess.open(STORYBOARD_GRAMMAR_PATH, FileAccess.READ)
+	var scene_file := FileAccess.open(SCENE_GRAMMAR_PATH, FileAccess.READ)
 	if progress_file == null or map_file == null:
 		push_error("Could not load breeding script progress data")
 		return
@@ -69,6 +73,10 @@ func _ready() -> void:
 		var storyboard_document = JSON.parse_string(storyboard_file.get_as_text())
 		if storyboard_document is Dictionary:
 			storyboard_grammar = storyboard_document
+	if scene_file != null:
+		var scene_document = JSON.parse_string(scene_file.get_as_text())
+		if scene_document is Dictionary:
+			scene_grammar = scene_document
 
 
 func pair_key(first: String, second: String) -> String:
@@ -258,8 +266,10 @@ func _same_sex_description(board_id: String, first_body: Dictionary, second_body
 	var relation: String = _size_relation(first_body, second_body)
 	var size_phrase: String = str({
 		"equal": "Matched scale keeps the exchange reciprocal and easy to reverse",
-		"first_larger": "The first partner supplies reach and support while the second works inside that frame",
-		"second_larger": "The second partner supplies reach and support while the first climbs and redirects",
+		"first_one_larger": "The first partner supplies reach and support while the second works inside that frame",
+		"second_one_larger": "The second partner supplies reach and support while the first climbs and redirects",
+		"first_two_larger": "The first partner becomes the primary platform across an extreme scale gap",
+		"second_two_larger": "The second partner becomes the primary platform across an extreme scale gap",
 	}.get(relation, "The scale relationship drives the staging"))
 	var first_morph := str(first_body.get("morph", "Neutral"))
 	var second_morph := str(second_body.get("morph", "Neutral"))
@@ -439,6 +449,188 @@ func build_pairing_verb_instances(board_or_group: String, first_body_id: String,
 	return instantiate_storyboard(build_pairing_storyboard(board_or_group, first_body_id, second_body_id), first_actor_id, second_actor_id, include_contracts)
 
 
+func list_loop_families() -> Array:
+	return scene_grammar.get("loop_families", []).duplicate(true)
+
+
+func loop_variant_count() -> int:
+	return list_loop_families().size() * 2
+
+
+func authored_loop_variant_count() -> int:
+	var count := 0
+	for family in list_loop_families():
+		if str(family.get("status", "planned")) in ["authored", "runtime_ready"]:
+			count += 2
+	return count
+
+
+func verb_status_counts() -> Dictionary:
+	var counts := {"motion_prototype": 0, "contract_only": 0, "authored": 0, "other": 0}
+	for definition in verb_definitions.values():
+		var status := str(definition.get("status", "other"))
+		if counts.has(status):
+			counts[status] = int(counts[status]) + 1
+		else:
+			counts.other = int(counts.other) + 1
+	counts["total"] = verb_definitions.size()
+	return counts
+
+
+func build_pairing_scene(board_or_group: String, first_body_id: String, second_body_id: String) -> Dictionary:
+	var lookup := get_pairing_lookup(board_or_group, first_body_id, second_body_id)
+	if lookup.is_empty() or scene_grammar.is_empty() or storyboard_grammar.is_empty():
+		return {}
+	var first_body := get_body_type(first_body_id)
+	var second_body := get_body_type(second_body_id)
+	var relation := _size_relation(first_body, second_body)
+	var board_id := str(lookup.get("board_id", "jack_jill"))
+	var board_signature: Dictionary = storyboard_grammar.get("board_signatures", {}).get(board_id, {})
+	var family := _select_loop_family(board_id, first_body, second_body, relation)
+	if family.is_empty():
+		return {}
+	var recipes: Dictionary = scene_grammar.get("loop_recipes", {})
+	var intro_specs: Array = []
+	intro_specs.append_array(storyboard_grammar.get("morph_openers", {}).get(str(first_body.get("morph", "Neutral")), []))
+	intro_specs.append_array(storyboard_grammar.get("size_patterns", {}).get(relation, []))
+	intro_specs.append_array(board_signature.get("beats", []))
+	var phase_specs := {
+		"intro": intro_specs,
+		"loop_a": recipes.get(str(family.get("recipe_a", "anchored_cycle")), []),
+		"loop_b": recipes.get(str(family.get("recipe_b", "lead_exchange_cycle")), []),
+		"climax": scene_grammar.get("climax_shells", {}).get(board_id, []),
+		"end": scene_grammar.get("end_shell", []),
+	}
+	var phases: Array = []
+	var flattened: Array = []
+	var cursor := 0
+	for phase_value in scene_grammar.get("phase_order", []):
+		var phase_id := str(phase_value)
+		var beats := _compile_storyboard_beats(phase_specs.get(phase_id, []))
+		var phase_duration := _storyboard_duration(beats)
+		for beat in beats:
+			beat["index"] = flattened.size()
+			beat["phase_id"] = phase_id
+			beat["start_tick"] = int(beat.get("start_tick", 0)) + cursor
+			beat["end_tick"] = int(beat.get("end_tick", 0)) + cursor
+			flattened.append(beat)
+		var phase := {
+			"id": phase_id,
+			"display_name": _phase_display_name(phase_id),
+			"kind": "loop" if phase_id.begins_with("loop_") else "one_shot",
+			"repeatable": phase_id.begins_with("loop_"),
+			"start_tick": cursor,
+			"end_tick": cursor + phase_duration,
+			"duration_ticks": phase_duration,
+			"status": "planned",
+			"runtime_ready": false,
+			"entry_contract": family.get("entry_contract", "") if phase_id.begins_with("loop_") else "",
+			"exit_contract": family.get("exit_contract", "") if phase_id.begins_with("loop_") else "",
+			"loop_family_id": family.get("id", "") if phase_id.begins_with("loop_") else "",
+			"variant": phase_id.trim_prefix("loop_").to_upper() if phase_id.begins_with("loop_") else "",
+			"beats": beats,
+		}
+		phases.append(phase)
+		cursor += phase_duration
+	var unresolved := PackedStringArray()
+	for beat in flattened:
+		if str(beat.get("implementation_status", "contract_only")) != "motion_prototype":
+			var verb_id := str(beat.get("verb_id", ""))
+			if verb_id not in unresolved:
+				unresolved.append(verb_id)
+	return {
+		"scene_id": "placeholder_scene.%s" % str(lookup.get("commission_key", "")).replace("|", ".").replace(">", "-to-"),
+		"status": str(scene_grammar.get("status", "PLACEHOLDER_PLAN")),
+		"runtime_ready": false,
+		"architecture_version": scene_grammar.get("version", "0.1.0"),
+		"commission_key": lookup.get("commission_key", ""),
+		"board_id": board_id,
+		"group_key": lookup.get("group_key", ""),
+		"pairing_name": lookup.get("pairing_name", ""),
+		"coupling_name": lookup.get("coupling_name", ""),
+		"size_relation": relation,
+		"loop_family_id": family.get("id", ""),
+		"loop_family_name": family.get("display_name", ""),
+		"phase_order": scene_grammar.get("phase_order", []).duplicate(),
+		"phases": phases,
+		"beats": flattened,
+		"duration_ticks": cursor,
+		"unresolved_verbs": unresolved,
+		"sentence": _storyboard_sentence(flattened, lookup),
+	}
+
+
+func all_pairing_scenes() -> Array:
+	var result: Array = []
+	for board_id in BOARD_IDS:
+		for first_body in body_types:
+			for second_body in body_types:
+				result.append(build_pairing_scene(board_id, str(first_body.id), str(second_body.id)))
+	return result
+
+
+func instantiate_scene(scene: Dictionary, first_actor_id: String = "A", second_actor_id: String = "B", phase_id: String = "", include_contracts: bool = true) -> Array:
+	var beats: Array = scene.get("beats", [])
+	var source_id := str(scene.get("scene_id", "scene"))
+	if not phase_id.is_empty():
+		beats = []
+		for phase in scene.get("phases", []):
+			if str(phase.get("id", "")) == phase_id:
+				beats = phase.get("beats", []).duplicate(true)
+				source_id += "." + phase_id
+				break
+		if beats.is_empty():
+			return []
+		var first_tick := int(beats[0].get("start_tick", 0))
+		for beat in beats:
+			beat["start_tick"] = int(beat.get("start_tick", 0)) - first_tick
+			beat["end_tick"] = int(beat.get("end_tick", 0)) - first_tick
+	return instantiate_storyboard({"storyboard_id": source_id, "beats": beats}, first_actor_id, second_actor_id, include_contracts)
+
+
+func validate_scene_coverage() -> PackedStringArray:
+	var errors := PackedStringArray()
+	if scene_grammar.is_empty():
+		errors.append("Animation scene grammar is empty")
+		return errors
+	var families := list_loop_families()
+	if families.size() != 12 or loop_variant_count() != 24:
+		errors.append("Expected 12 loop families / 24 variants, found %d / %d" % [families.size(), loop_variant_count()])
+	var seen_families := {}
+	for family in families:
+		var family_id := str(family.get("id", ""))
+		if family_id.is_empty() or seen_families.has(family_id):
+			errors.append("Loop family ID is empty or duplicated: %s" % family_id)
+		seen_families[family_id] = true
+		for recipe_field in ["recipe_a", "recipe_b"]:
+			if not scene_grammar.get("loop_recipes", {}).has(str(family.get(recipe_field, ""))):
+				errors.append("%s references missing %s" % [family_id, recipe_field])
+	var scenes := all_pairing_scenes()
+	var expected := BOARD_IDS.size() * body_types.size() * body_types.size()
+	if scenes.size() != expected:
+		errors.append("Expected %d phased scenes, built %d" % [expected, scenes.size()])
+	var seen_scenes := {}
+	var required_phases: Array = scene_grammar.get("phase_order", [])
+	for scene in scenes:
+		if scene.is_empty():
+			errors.append("Scene compiler returned an empty record")
+			continue
+		var scene_id := str(scene.get("scene_id", ""))
+		if scene_id.is_empty() or seen_scenes.has(scene_id):
+			errors.append("Scene ID is empty or duplicated: %s" % scene_id)
+		seen_scenes[scene_id] = true
+		if bool(scene.get("runtime_ready", true)):
+			errors.append("%s incorrectly claims runtime readiness" % scene_id)
+		if scene.get("phase_order", []) != required_phases or scene.get("phases", []).size() != required_phases.size():
+			errors.append("%s does not contain the canonical phase sequence" % scene_id)
+		if scene.get("beats", []).is_empty() or instantiate_scene(scene, "QA_A", "QA_B").size() != scene.get("beats", []).size():
+			errors.append("%s failed full-scene instantiation" % scene_id)
+		for phase_id in ["loop_a", "loop_b"]:
+			if instantiate_scene(scene, "QA_A", "QA_B", phase_id).is_empty():
+				errors.append("%s failed %s instantiation" % [scene_id, phase_id])
+	return errors
+
+
 func validate_storyboard_coverage() -> PackedStringArray:
 	var errors := PackedStringArray()
 	if verb_definitions.is_empty():
@@ -483,7 +675,38 @@ func _size_relation(first_body: Dictionary, second_body: Dictionary) -> String:
 	var second_rank := int(rank.get(str(second_body.get("size", "Medium")), 1))
 	if first_rank == second_rank:
 		return "equal"
-	return "first_larger" if first_rank > second_rank else "second_larger"
+	var distance := absi(first_rank - second_rank)
+	if first_rank > second_rank:
+		return "first_two_larger" if distance == 2 else "first_one_larger"
+	return "second_two_larger" if distance == 2 else "second_one_larger"
+
+
+func _loop_family_by_id(family_id: String) -> Dictionary:
+	for family in scene_grammar.get("loop_families", []):
+		if str(family.get("id", "")) == family_id:
+			return family
+	return {}
+
+
+func _select_loop_family(board_id: String, first_body: Dictionary, second_body: Dictionary, relation: String) -> Dictionary:
+	var candidates: Array = scene_grammar.get("relation_candidates", {}).get(relation, [])
+	if candidates.is_empty():
+		return {}
+	var morph_rank := {"Feral": 0, "Neutral": 1, "Refined": 2}
+	var selector := int(morph_rank.get(str(first_body.get("morph", "Neutral")), 1)) * 3
+	selector += int(morph_rank.get(str(second_body.get("morph", "Neutral")), 1))
+	selector += maxi(0, BOARD_IDS.find(board_id))
+	return _loop_family_by_id(str(candidates[selector % candidates.size()]))
+
+
+func _phase_display_name(phase_id: String) -> String:
+	return {
+		"intro": "Intro / Couple",
+		"loop_a": "Loop A · Anchor",
+		"loop_b": "Loop B · Variation",
+		"climax": "Climax",
+		"end": "End / Uncouple",
+	}.get(phase_id, phase_id.capitalize())
 
 
 func _compile_storyboard_beats(specs: Array) -> Array:

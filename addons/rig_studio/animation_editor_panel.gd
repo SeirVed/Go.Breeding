@@ -14,6 +14,7 @@ var note: Label
 var storyboard_board_picker: OptionButton
 var storyboard_first_picker: OptionButton
 var storyboard_second_picker: OptionButton
+var storyboard_phase_picker: OptionButton
 var storyboard_note: Label
 
 
@@ -65,7 +66,7 @@ func setup(studio: Control, characters: Dictionary, body_types: Array = []) -> v
 	note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	note.text = "Shift-click nodes to multi-select. Simple mode composes verb blocks; Advanced exposes timed keys, interpolation and Propagate."
 	cast.add_child(note)
-	_caption(cast, "PAIRING SENTENCE · PLACEHOLDER PLAN")
+	_caption(cast, "PAIRING SCENE · PHASED PLACEHOLDER PLAN")
 	storyboard_board_picker = OptionButton.new()
 	for board in [{"id": "jack_jill", "label": "Jack & Jill · m+f"}, {"id": "jack_jack", "label": "Jack & Jack · m+m"}, {"id": "jill_jill", "label": "Jill & Jill · f+f"}]:
 		storyboard_board_picker.add_item(board.label)
@@ -76,10 +77,22 @@ func setup(studio: Control, characters: Dictionary, body_types: Array = []) -> v
 	cast.add_child(pairing_row)
 	storyboard_first_picker = _body_picker(pairing_row, "First", body_types)
 	storyboard_second_picker = _body_picker(pairing_row, "Second", body_types)
-	_button(cast, "Load sentence into Actor A/B", studio._load_pairing_storyboard)
+	storyboard_phase_picker = OptionButton.new()
+	for phase in [
+		{"id": "", "label": "Entire scene · Intro → Loops → Climax → End"},
+		{"id": "intro", "label": "Intro / Couple"},
+		{"id": "loop_a", "label": "Loop A · Anchor"},
+		{"id": "loop_b", "label": "Loop B · Variation"},
+		{"id": "climax", "label": "Climax"},
+		{"id": "end", "label": "End / Uncouple"},
+	]:
+		storyboard_phase_picker.add_item(phase.label)
+		storyboard_phase_picker.set_item_metadata(storyboard_phase_picker.item_count - 1, phase.id)
+	cast.add_child(storyboard_phase_picker)
+	_button(cast, "Load phased scene into Actor A/B", studio._load_pairing_storyboard)
 	storyboard_note = Label.new()
 	storyboard_note.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	storyboard_note.text = "Loads all beats for authoring. Contract-only beats remain visible but inert; this does not create commission progress."
+	storyboard_note.text = "Loads the full phase graph or one isolated phase. Planned/contact-only beats remain visible but inert; this never creates commission progress."
 	cast.add_child(storyboard_note)
 
 

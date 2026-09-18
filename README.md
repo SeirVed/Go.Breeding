@@ -6,6 +6,8 @@
 
 The [interactive project board](docs/project-board.html) is the clearest current snapshot of what exists, what is exploratory, what is merely planned, and what remains placeholder-only.
 
+The reusable animation design is formalized in [Parametric Choreography Architecture](docs/parametric_choreography.md). Its 243 compiled scene plans are authoring records, not finished animation coverage; `Emoji Bonk v0` remains the current playable presentation.
+
 ## High-level pitch
 Breed, reroll, and evolve demi-species across four orthogonal trait axes. Unlock new species via **readable evolutionary conditions** (e.g., `Cow + Feral + STR ≥ 120 → Minotaur`). Content is data-driven so new species, traits, and evolutions can be added without engine rewrites.
 

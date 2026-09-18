@@ -2,7 +2,7 @@
 
 > **Status: architecture plan with an invisible-rig locomotion vertical slice and editor-only Rig Studio.** `Emoji Bonk v0` remains the universal breeding placeholder. A six-profile pose provider, image manifest, shared draft walk offsets and one emergency character image test anchors and timing; the Catgirl cutout, paired retargeting, compatibility scoring and bespoke choreography are not implemented yet.
 
-The reusable motion language is split into atomic verbs and generated pairing sentences. See `docs/verb_storyboards.md`, `data/animation_verbs.json` and `data/pairing_storyboard_grammar.json`. The compiler covers all current directional board cells as `PLACEHOLDER_PLAN`; this is production planning coverage, not playable animation coverage.
+The reusable motion language is split into atomic verbs, parameter adverbs, reusable loop sentences and generated phased scenes. See `docs/parametric_choreography.md`, `docs/verb_storyboards.md`, `data/animation_verbs.json`, `data/pairing_storyboard_grammar.json` and `data/animation_scene_grammar.json`. The compiler covers all current directional board cells as `PLACEHOLDER_PLAN`; this is production planning coverage, not playable animation coverage.
 
 ## Goal
 
@@ -37,7 +37,7 @@ Each character composition selects reusable species, wardrobe and later identity
 - required anatomy and exception tags;
 - optional additive idle and reaction motion.
 
-The underlying rig profile contains geometry and motion only; it is invisible during normal character rendering. It must not contain a species palette, ears, fur, hair or clothes. Rig Studio v0.2.0 separates Single Builder character construction from an Animation Editor supporting one-to-many actors, variable timed keys, multi-node edits, onion skins, Propagate and data-driven verb blocks. Three motion verbs visibly preview; contact-dependent verbs remain explicitly `contract_only`. This is still editor authoring, not a working compatibility resolver or paired gameplay player. See `paper_doll_parts.md` for clipping/readiness/fallback and `rig_studio.md` for exact authoring boundaries.
+The underlying rig profile contains geometry and motion only; it is invisible during normal character rendering. It must not contain a species palette, ears, fur, hair or clothes. Rig Studio v0.3.0 separates Single Builder character construction from an Animation Editor supporting one-to-many actors, variable timed keys, multi-node edits, onion skins, Propagate, data-driven verb blocks and full-graph or isolated-phase loading. Nine motion verbs visibly preview; contact-dependent verbs remain explicitly `contract_only`. This is still editor authoring, not a working compatibility resolver or paired gameplay player. See `paper_doll_parts.md` for clipping/readiness/fallback and `rig_studio.md` for exact authoring boundaries.
 
 ### Partner focus and fourth-wall rule
 

@@ -1,0 +1,89 @@
+{
+  "version": "0.1.0",
+  "status": "PLACEHOLDER_PLAN",
+  "runtime_ready": false,
+  "phase_order": ["intro", "loop_a", "loop_b", "climax", "end"],
+  "architecture": {
+    "unit": "verb",
+    "parameter_layer": "adverb",
+    "composition": "sentence",
+    "runtime_container": "phase_graph",
+    "correction_layer": "contact_and_size_solver"
+  },
+  "loop_recipes": {
+    "anchored_cycle": [
+      {"verb_id": "settle_contact", "roles": {"first": "first", "second": "second"}, "duration_beats": 2},
+      {"verb_id": "hold_anchors", "roles": {"holder": "first", "receiver": "second"}, "duration_beats": 1},
+      {"verb_id": "pelvis_pulse", "roles": {"driver": "first"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "second"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "sway_together", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}
+    ],
+    "lead_exchange_cycle": [
+      {"verb_id": "exchange_lead", "roles": {"first": "first", "second": "second"}, "duration_beats": 2},
+      {"verb_id": "hold_anchors", "roles": {"holder": "second", "receiver": "first"}, "duration_beats": 1},
+      {"verb_id": "pelvis_pulse", "roles": {"driver": "second"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "first"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "sway_together", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}
+    ],
+    "first_supported_cycle": [
+      {"verb_id": "support_lift", "roles": {"support": "first", "rider": "second"}, "duration_beats": 2},
+      {"verb_id": "brace", "roles": {"responder": "first"}, "duration_beats": 1},
+      {"verb_id": "pelvis_pulse", "roles": {"driver": "first"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "second"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "hold_anchors", "roles": {"holder": "first", "receiver": "second"}, "duration_beats": 1}
+    ],
+    "second_supported_cycle": [
+      {"verb_id": "supported_climb", "roles": {"climber": "first", "support": "second"}, "duration_beats": 2},
+      {"verb_id": "brace", "roles": {"responder": "second"}, "duration_beats": 1},
+      {"verb_id": "pelvis_pulse", "roles": {"driver": "second"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "first"}, "duration_beats": 4, "parallel_group": "cadence"},
+      {"verb_id": "hold_anchors", "roles": {"holder": "second", "receiver": "first"}, "duration_beats": 1}
+    ]
+  },
+  "loop_families": [
+    {"id": "grounded_front", "display_name": "Grounded Front-Aligned", "orientation": "front", "support_model": "both_grounded", "entry_contract": "paired_grounded_front", "exit_contract": "paired_grounded_front", "supported_size_relations": ["equal", "first_one_larger", "second_one_larger"], "recipe_a": "anchored_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "grounded_rear", "display_name": "Grounded Rear-Aligned", "orientation": "rear", "support_model": "both_grounded", "entry_contract": "paired_grounded_rear", "exit_contract": "paired_grounded_rear", "supported_size_relations": ["equal", "first_one_larger", "second_one_larger"], "recipe_a": "anchored_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "standing_front", "display_name": "Standing Front", "orientation": "front", "support_model": "both_standing", "entry_contract": "paired_standing_front", "exit_contract": "paired_standing_front", "supported_size_relations": ["equal", "first_one_larger", "second_one_larger"], "recipe_a": "anchored_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "standing_rear", "display_name": "Standing Rear", "orientation": "rear", "support_model": "both_standing", "entry_contract": "paired_standing_rear", "exit_contract": "paired_standing_rear", "supported_size_relations": ["equal", "first_one_larger", "second_one_larger"], "recipe_a": "anchored_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "first_mounted", "display_name": "First Mounted", "orientation": "mounted", "support_model": "second_supports", "entry_contract": "first_mounted", "exit_contract": "first_mounted", "supported_size_relations": ["equal", "second_one_larger"], "recipe_a": "second_supported_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "second_mounted", "display_name": "Second Mounted", "orientation": "mounted", "support_model": "first_supports", "entry_contract": "second_mounted", "exit_contract": "second_mounted", "supported_size_relations": ["equal", "first_one_larger"], "recipe_a": "first_supported_cycle", "recipe_b": "anchored_cycle", "status": "planned"},
+    {"id": "seated_lap", "display_name": "Seated / Lap-Supported", "orientation": "front", "support_model": "seated_support", "entry_contract": "paired_seated", "exit_contract": "paired_seated", "supported_size_relations": ["equal", "first_one_larger", "second_one_larger"], "recipe_a": "anchored_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "side_reclined", "display_name": "Side / Reclined", "orientation": "side", "support_model": "shared_ground", "entry_contract": "paired_reclined", "exit_contract": "paired_reclined", "supported_size_relations": ["equal", "first_one_larger", "second_one_larger"], "recipe_a": "anchored_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "first_supporting", "display_name": "First Supporting / Lifting", "orientation": "supported", "support_model": "first_supports", "entry_contract": "first_supporting", "exit_contract": "first_supporting", "supported_size_relations": ["first_one_larger", "first_two_larger"], "recipe_a": "first_supported_cycle", "recipe_b": "anchored_cycle", "status": "planned"},
+    {"id": "second_supporting", "display_name": "Second Supporting / Lifting", "orientation": "supported", "support_model": "second_supports", "entry_contract": "second_supporting", "exit_contract": "second_supporting", "supported_size_relations": ["second_one_larger", "second_two_larger"], "recipe_a": "second_supported_cycle", "recipe_b": "lead_exchange_cycle", "status": "planned"},
+    {"id": "extreme_scale", "display_name": "Extreme-Scale Climb / Support", "orientation": "adaptive", "support_model": "extreme_scale_support", "entry_contract": "extreme_scale_contact", "exit_contract": "extreme_scale_contact", "supported_size_relations": ["first_two_larger", "second_two_larger"], "recipe_a": "first_supported_cycle", "recipe_b": "second_supported_cycle", "status": "planned"},
+    {"id": "reciprocal_swap", "display_name": "Reciprocal / Lead-Swapping Hold", "orientation": "adaptive", "support_model": "reciprocal", "entry_contract": "paired_reciprocal", "exit_contract": "paired_reciprocal", "supported_size_relations": ["equal"], "recipe_a": "lead_exchange_cycle", "recipe_b": "anchored_cycle", "status": "planned"}
+  ],
+  "relation_candidates": {
+    "equal": ["grounded_front", "grounded_rear", "standing_front", "standing_rear", "first_mounted", "second_mounted", "seated_lap", "side_reclined", "reciprocal_swap"],
+    "first_one_larger": ["grounded_front", "grounded_rear", "standing_front", "standing_rear", "second_mounted", "seated_lap", "side_reclined", "first_supporting"],
+    "second_one_larger": ["grounded_front", "grounded_rear", "standing_front", "standing_rear", "first_mounted", "seated_lap", "side_reclined", "second_supporting"],
+    "first_two_larger": ["first_supporting", "extreme_scale"],
+    "second_two_larger": ["second_supporting", "extreme_scale"]
+  },
+  "climax_shells": {
+    "jack_jill": [
+      {"verb_id": "hold_anchors", "roles": {"holder": "first", "receiver": "second"}, "duration_beats": 1},
+      {"verb_id": "pelvis_pulse", "roles": {"driver": "first"}, "duration_beats": 3, "parallel_group": "climax"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "second"}, "duration_beats": 3, "parallel_group": "climax"},
+      {"verb_id": "sway_together", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}
+    ],
+    "jack_jack": [
+      {"verb_id": "exchange_lead", "roles": {"first": "first", "second": "second"}, "duration_beats": 1},
+      {"verb_id": "pelvis_pulse", "roles": {"driver": "second"}, "duration_beats": 3, "parallel_group": "climax"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "first"}, "duration_beats": 3, "parallel_group": "climax"},
+      {"verb_id": "brace", "roles": {"responder": "second"}, "duration_beats": 1}
+    ],
+    "jill_jill": [
+      {"verb_id": "exchange_lead", "roles": {"first": "first", "second": "second"}, "duration_beats": 1},
+      {"verb_id": "sway_together", "roles": {"first": "first", "second": "second"}, "duration_beats": 3, "parallel_group": "climax"},
+      {"verb_id": "reaction_bounce", "roles": {"responder": "second"}, "duration_beats": 3, "parallel_group": "climax"},
+      {"verb_id": "nuzzle", "roles": {"actor": "first", "partner": "second"}, "duration_beats": 1}
+    ]
+  },
+  "end_shell": [
+    {"verb_id": "release", "roles": {"actor": "first"}, "duration_beats": 1},
+    {"verb_id": "release", "roles": {"actor": "second"}, "duration_beats": 1},
+    {"verb_id": "reset_loop", "roles": {"first": "first", "second": "second"}, "duration_beats": 2}
+  ]
+}

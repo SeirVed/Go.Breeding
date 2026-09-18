@@ -260,12 +260,18 @@ func _run() -> void:
 	screen._load_pairing_storyboard()
 	var loaded_template: Dictionary = screen._multi_template()
 	var loaded_actors: Array = loaded_template.get("actors", [])
-	if screen._current_verbs().size() != 14 or int(loaded_template.get("duration_ticks", 0)) <= 240 or loaded_actors.size() < 2 or str(loaded_actors[0].get("size", "")) != "small" or str(loaded_actors[1].get("size", "")) != "large" or str(loaded_actors[1].get("role", "")) != "male" or str(loaded_template.get("storyboard_source", {}).get("status", "")) != "PLACEHOLDER_PLAN":
-		_fail("Loading a compiled pairing sentence into Actor A/B failed")
+	if screen._current_verbs().size() < 20 or loaded_template.get("scene_phases", []).size() != 5 or int(loaded_template.get("duration_ticks", 0)) <= 240 or loaded_actors.size() < 2 or str(loaded_actors[0].get("size", "")) != "small" or str(loaded_actors[1].get("size", "")) != "large" or str(loaded_actors[1].get("role", "")) != "male" or str(loaded_template.get("storyboard_source", {}).get("status", "")) != "PLACEHOLDER_PLAN" or str(loaded_template.get("storyboard_source", {}).get("scene_id", "")).is_empty():
+		_fail("Loading a compiled phased pairing scene into Actor A/B failed")
+		return
+	screen._animation_editor_panel.storyboard_phase_picker.select(2)
+	screen._load_pairing_storyboard()
+	if str(screen._multi_template().get("active_phase", "")) != "loop_a" or screen._current_verbs().is_empty() or screen._current_verbs().size() >= loaded_template.get("verbs", []).size():
+		_fail("Loading an isolated scene phase failed")
 		return
 	screen._header_action("Undo")
+	screen._header_action("Undo")
 	if screen._current_verbs().size() != 1 or int(screen._multi_template().get("duration_ticks", 0)) != 240:
-		_fail("Pairing sentence load was not one undoable operation")
+		_fail("Phased scene loads were not independently undoable operations")
 		return
 	print("RIG_STUDIO_V020: builder creation, variable keys, multi-select, onion skins, propagation and verb composition passed")
 	print("MULTI_RIG_SMOKE: independent cast sizes, arbitrary rig count, keyed actor poses and stage motion passed")

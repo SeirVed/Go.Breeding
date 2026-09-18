@@ -1,6 +1,6 @@
-# Rig Studio v0.2.0
+# Rig Studio v0.3.0
 
-> **Status: functional editor-only authoring draft.** Character construction, variable timed keys, multi-actor staging, three motion-verb prototypes and a complete draft Human cutout are testable. Production-polished Human artwork, contact constraints, alternate skeleton topologies and gameplay animation selection are not implemented.
+> **Status: functional editor-only authoring draft.** Character construction, variable timed keys, multi-actor staging, nine motion-verb prototypes, phased-scene loading and a complete draft Human cutout are testable. Production-polished Human artwork, contact constraints, alternate skeleton topologies and gameplay animation selection are not implemented.
 
 ## What it is
 
@@ -36,9 +36,9 @@ The timeline is no longer fixed to eight poses. Each key stores an integer tick,
 - `pelvis_pulse` / Thrust;
 - `reaction_bounce`.
 
-Approach, Circle Partner, Plant Stance, Lower Centre, Rise and Sway Together now also preview. `reach_to`, `hold_anchors`, Support Lift, Supported Climb, Rotate/Exchange Lead, Settle Contact, Nuzzle, Release and Reset Loop remain `contract_only`. They deliberately do not claim working contact choreography. `data/pairing_storyboard_grammar.json` composes these verbs into 243 directional `PLACEHOLDER_PLAN` sentences; see `docs/verb_storyboards.md`. The intended evaluation order is base pose, body/root verbs, contact constraints, reaction verbs, secondary motion, then manual overrides. Baking verbs into destructive keys is not part of v0.2.0.
+Approach, Circle Partner, Plant Stance, Lower Centre, Rise and Sway Together now also preview. `reach_to`, `hold_anchors`, Support Lift, Supported Climb, Rotate/Exchange Lead, Settle Contact, Nuzzle, Release and Reset Loop remain `contract_only`. They deliberately do not claim working contact choreography. `data/pairing_storyboard_grammar.json` still supports flat planning sentences; `data/animation_scene_grammar.json` now composes the canonical Intro → Loop A → Loop B → Climax → End graph from 12 loop families and 24 A/B variants. See `docs/verb_storyboards.md` and `docs/parametric_choreography.md`. The intended evaluation order is base pose, body/root verbs, contact constraints, reaction verbs, secondary motion, then manual overrides. Baking verbs into destructive keys is not part of v0.3.0.
 
-Animation Editor can load any compiled board/body-type sentence into Actor A/B as one undoable authoring operation. It binds symbolic roles, adjusts the first two cast profiles, expands the timeline and lists all beats. This is a scaffold for refinement, not playable coverage; unresolved contract beats remain inert and the stored source metadata keeps `runtime_ready: false`.
+Animation Editor can load any compiled board/body-type scene into Actor A/B as one undoable authoring operation. A phase selector loads the entire graph or isolates Intro, Loop A, Loop B, Climax or End for focused work. It binds symbolic roles, adjusts the first two cast profiles, expands the timeline, retains the five phase records and lists all selected beats. This is a scaffold for refinement, not playable coverage; unresolved contract beats remain inert and stored source metadata keeps `runtime_ready: false`.
 
 ## Data and safety
 
@@ -47,6 +47,7 @@ Animation Editor can load any compiled board/body-type sentence into Actor A/B a
 - `data/paper_doll_studio.json` — rig offsets, variable timed keys, actors and verb instances.
 - `data/anatomy_components.json` — exclusive topology and additive attachment contracts.
 - `data/animation_verbs.json` — reusable verb definitions and implementation status.
+- `data/animation_scene_grammar.json` — phase graph, loop recipes, 12 families, 24 variants and directional-size compatibility candidates.
 
 Undo/Redo snapshots characters, artwork and studio motion data together. Save All refuses to overwrite any of those source files if they changed externally after Rig Studio loaded. The six-stage build check compiles the editor plugin, exercises creation, anatomy metadata, art readiness, variable keys, independent cast sizing, multi-node edits, onion skins, Propagate and visible verb motion, then verifies source and exported gameplay. Editor scripts remain excluded from the playable package.
 

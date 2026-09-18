@@ -146,7 +146,7 @@ func _build_ui() -> void:
 	header.add_theme_constant_override("separation", 8)
 	root.add_child(header)
 	var title := Label.new()
-	title.text = "RIG STUDIO  ·  v0.2.0"
+	title.text = "RIG STUDIO  ·  v0.3.0"
 	title.add_theme_font_size_override("font_size", 20)
 	header.add_child(title)
 	_scene_picker = OptionButton.new()
@@ -515,10 +515,12 @@ func _load_pairing_storyboard() -> void:
 	var board_id := str(board_picker.get_item_metadata(board_picker.selected))
 	var first_body_id := str(first_picker.get_item_metadata(first_picker.selected))
 	var second_body_id := str(second_picker.get_item_metadata(second_picker.selected))
-	var storyboard: Dictionary = _pairing_progress.build_pairing_storyboard(board_id, first_body_id, second_body_id)
-	if storyboard.is_empty():
-		_animation_editor_panel.storyboard_note.text = "The selected pairing did not compile."
+	var scene: Dictionary = _pairing_progress.build_pairing_scene(board_id, first_body_id, second_body_id)
+	if scene.is_empty():
+		_animation_editor_panel.storyboard_note.text = "The selected phased scene did not compile."
 		return
+	var phase_picker := _animation_editor_panel.storyboard_phase_picker
+	var phase_id := str(phase_picker.get_item_metadata(phase_picker.selected))
 	_push_undo()
 	var lookup: Dictionary = _pairing_progress.get_pairing_lookup(board_id, first_body_id, second_body_id)
 	var height_defaults := {"small": 42.0, "medium": 72.0, "large": 102.0}
@@ -530,15 +532,27 @@ func _load_pairing_storyboard() -> void:
 		actor["size"] = size_id
 		actor["height_inches"] = float(height_defaults.get(size_id, 72.0))
 		actors[actor_index] = actor
-	var instances: Array = _pairing_progress.instantiate_storyboard(storyboard, str(actors[0].get("id", "A")), str(actors[1].get("id", "B")))
+	var instances: Array = _pairing_progress.instantiate_scene(scene, str(actors[0].get("id", "A")), str(actors[1].get("id", "B")), phase_id)
+	if instances.is_empty():
+		_animation_editor_panel.storyboard_note.text = "The selected phase contains no authoring beats."
+		return
 	var template := _multi_template()
 	template["actors"] = actors
-	template["duration_ticks"] = int(storyboard.get("duration_ticks", 240))
+	var loaded_duration := int(scene.get("duration_ticks", 240))
+	if not phase_id.is_empty():
+		loaded_duration = 1
+		for instance in instances:
+			loaded_duration = maxi(loaded_duration, int(instance.get("end_tick", 1)))
+	template["duration_ticks"] = loaded_duration
 	template["verbs"] = instances
+	template["scene_phases"] = scene.get("phases", []).duplicate(true)
+	template["active_phase"] = phase_id
 	template["storyboard_source"] = {
-		"storyboard_id": storyboard.get("storyboard_id", ""),
-		"commission_key": storyboard.get("commission_key", ""),
-		"status": storyboard.get("status", "PLACEHOLDER_PLAN"),
+		"scene_id": scene.get("scene_id", ""),
+		"commission_key": scene.get("commission_key", ""),
+		"loop_family_id": scene.get("loop_family_id", ""),
+		"architecture_version": scene.get("architecture_version", "0.1.0"),
+		"status": scene.get("status", "PLACEHOLDER_PLAN"),
 		"runtime_ready": false,
 	}
 	_studio_data["motion_templates"][MULTI_TEMPLATE_ID] = template
@@ -549,7 +563,8 @@ func _load_pairing_storyboard() -> void:
 	_apply_multi_preview()
 	_refresh_cast_ui()
 	_refresh_timeline()
-	_animation_editor_panel.storyboard_note.text = "%s · %d beats · PLACEHOLDER_PLAN · unresolved contact verbs remain inert." % [storyboard.get("pairing_name", "Pairing"), instances.size()]
+	var phase_label := "entire scene" if phase_id.is_empty() else phase_id.replace("_", " ")
+	_animation_editor_panel.storyboard_note.text = "%s · %s · %s · %d beats · PLACEHOLDER_PLAN · unresolved contact verbs remain inert." % [scene.get("pairing_name", "Pairing"), scene.get("loop_family_name", "Loop family"), phase_label, instances.size()]
 
 
 func _choose_cast_actor(index: int) -> void:

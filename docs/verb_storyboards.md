@@ -17,7 +17,7 @@ The nine current motion prototypes are Approach, Circle Partner, Plant Stance, L
 
 1. the directional commission and board (`m+f`, `m+m` or `f+f`);
 2. the first partner's Feral, Neutral or Refined opener;
-3. equal scale, first-larger or second-larger mechanics;
+3. equal scale, one-band directional differences or two-band directional extremes;
 4. the board's lead/response voice;
 5. contact settle, hold, cadence and reaction;
 6. release and loop reset.
@@ -26,7 +26,13 @@ The output contains the source commission key, descriptor, readable sentence, ti
 
 `instantiate_storyboard()` binds symbolic `first` and `second` references to concrete Rig Studio actor IDs such as `A` and `B`. A preview-only option removes `contract_only` beats so the nine implemented body-motion verbs can be evaluated without pretending the missing contact beats ran. The full instance list retains inert contracts for authoring and inspection.
 
-Rig Studio's Animation Editor exposes board, first-body and second-body selectors plus **Load sentence into Actor A/B**. Loading is one undoable operation: it applies the board's roles and size bands to the first two actors, extends the timeline duration, stores source metadata and inserts all fourteen beats. Implemented beats preview; inert contracts remain visible as the work queue. Loading never writes commission progress.
+Rig Studio's Animation Editor exposes board, first-body, second-body and phase selectors plus **Load phased scene into Actor A/B**. The flat storyboard remains available for diagnostics, while normal authoring now uses `build_pairing_scene()` and `data/animation_scene_grammar.json`. Loading the entire graph or one isolated phase is one undoable operation: it applies roles and size bands to the first two actors, extends the timeline, stores source metadata and inserts the selected beats. Implemented beats preview; inert contracts remain visible as the work queue. Loading never writes commission progress.
+
+## Then phased scenes
+
+Every current commission also compiles into Intro / Couple → Loop A → Loop B → Climax → End / Uncouple. The animation grammar declares 12 biomechanical loop families with Anchor and Variation forms, giving 24 independently trackable loop variants. Entry and exit contracts are stored on loop phases so future transition and contact solvers can reject incompatible joins instead of guessing.
+
+All 24 variants remain `planned`; none is production-authored. `validate_scene_coverage()` verifies the family/variant count, recipe references, five-phase topology, 243 directional records, actor binding and the strict `runtime_ready: false` boundary. The canonical architectural contract lives in `docs/parametric_choreography.md`.
 
 Directional order matters. `Scout → Titan` uses the larger second partner as support and a Supported Climb. `Titan → Scout` lowers the larger first partner and uses Support Lift. They are different storyboards even though the same archetypes appear.
 
