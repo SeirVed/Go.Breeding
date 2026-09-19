@@ -10,6 +10,7 @@ $artifactRoot = Join-Path $projectRoot "artifacts\build-checks"
 $exportRoot = Join-Path $projectRoot "export"
 $qaExecutable = Join-Path $exportRoot "Go.Breeding-v0.2.4-win64-build-check.exe"
 $qaPack = [System.IO.Path]::ChangeExtension($qaExecutable, ".pck")
+$crashDummyCatalogPath = Join-Path $projectRoot "data\crash_dummy_part_catalog.json"
 
 New-Item -ItemType Directory -Force -Path $artifactRoot | Out-Null
 New-Item -ItemType Directory -Force -Path $exportRoot | Out-Null
@@ -75,6 +76,11 @@ function Invoke-CheckedProcess {
 }
 
 Write-Host "[1/6] Verifying Godot version"
+$crashDummyCatalog = Get-Content -LiteralPath $crashDummyCatalogPath -Raw | ConvertFrom-Json
+$crashDummyDefinitionCount = @($crashDummyCatalog.part_definitions.PSObject.Properties).Count
+if ($crashDummyDefinitionCount -lt 90) {
+    throw "Crash-dummy catalog unexpectedly contains only $crashDummyDefinitionCount definitions."
+}
 $versionResult = Invoke-CheckedProcess -FilePath $GodotPath -ArgumentList @("--headless", "--version") -LogName "version"
 $version = (Get-Content -LiteralPath $versionResult.StdoutPath -Raw).Trim()
 if ($version -notmatch "^4\.7\.2\.") {
@@ -137,7 +143,7 @@ if ($exportErrors -match "Couldn't save project\.binary|Can't open file from pat
 $exportOutput = Get-Content -LiteralPath $exportResult.StdoutPath -Raw
 $packedFiles = ($exportOutput -split "`r?`n") | Where-Object { $_ -match "Storing File:" }
 $packedFileAudit = $packedFiles -join "`n"
-if ($packedFileAudit -match "style_exploration" -or $packedFileAudit -match "API\.png") {
+if ($packedFileAudit -match "style_exploration" -or $packedFileAudit -match "art/offline" -or $packedFileAudit -match "API\.png") {
     throw "Export audit failed: private research media or API.png was packed into the QA build."
 }
 if ($packedFileAudit -match "addons/rig_studio" -or $packedFileAudit -match "res://tools/") {

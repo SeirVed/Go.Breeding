@@ -32,3 +32,8 @@ api.txt
 /art/style_exploration/**/*.mp3
 /art/style_exploration/**/*.ogg
 /art/style_exploration/**/*.import
+
+# Local crash-dummy SVG masters, generated atlases and review composites.
+/art/offline/**
+!/art/offline/.gdignore
+!/art/offline/README.md
