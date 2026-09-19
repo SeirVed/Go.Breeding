@@ -196,8 +196,12 @@ def render_labelled_family_pages(entries: list[dict[str, Any]], chunks: dict[str
                 chunk = Image.open(chunk_path).convert("RGBA")
                 thumb = fit_thumbnail(chunk, (cell_width - 44, cell_height - 112))
                 page.alpha_composite(thumb, (x + (cell_width - thumb.width) // 2, y + 18 + (cell_height - 112 - thumb.height) // 2))
-                state = "SVG READY"
-                state_colour = (105, 229, 194, 255)
+                if entry["status"] == "reserved":
+                    state = "SVG STUDY · RESERVED"
+                    state_colour = (241, 204, 116, 255)
+                else:
+                    state = "SVG READY"
+                    state_colour = (105, 229, 194, 255)
             else:
                 state = "PLANNED · NO SVG" if entry["status"] != "initial_svg" else "INITIAL SVG MISSING"
                 state_colour = (181, 172, 151, 255) if entry["status"] != "initial_svg" else (255, 168, 92, 255)
@@ -213,7 +217,7 @@ def render_labelled_family_pages(entries: list[dict[str, Any]], chunks: dict[str
     return results
 
 
-def pack_runtime_atlas(catalog: dict[str, Any], entries: list[dict[str, Any]], chunks: dict[str, Path], output_dir: Path) -> tuple[Path | None, Path]:
+def pack_runtime_atlas(catalog: dict[str, Any], entries: list[dict[str, Any]], chunks: dict[str, Path], output_dir: Path) -> tuple[list[Path], Path]:
     metadata: dict[str, Any] = {
         "schema_version": 1,
         "morph_contract": catalog["morph_contract"],
@@ -229,38 +233,51 @@ def pack_runtime_atlas(catalog: dict[str, Any], entries: list[dict[str, Any]], c
         ready.append((entry, image))
 
     metadata_path = output_dir / "crash_dummy_runtime_atlas.json"
-    if not ready:
-        metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-        return None, metadata_path
-
-    max_width, padding = 4096, 12
+    max_size, padding = 4096, 12
+    pages: list[list[tuple[dict[str, Any], Image.Image, int, int]]] = []
     placements: list[tuple[dict[str, Any], Image.Image, int, int]] = []
     x = y = padding
     row_height = 0
-    used_width = 0
     for entry, image in ready:
-        if x + image.width + padding > max_width and x > padding:
+        if image.width + padding * 2 > max_size or image.height + padding * 2 > max_size:
+            raise ValueError(f"{entry['id']} exceeds a {max_size}x{max_size} atlas page")
+        if x + image.width + padding > max_size:
             x = padding
             y += row_height + padding
+            row_height = 0
+        if y + image.height + padding > max_size:
+            pages.append(placements)
+            placements = []
+            x = y = padding
             row_height = 0
         placements.append((entry, image, x, y))
         x += image.width + padding
         row_height = max(row_height, image.height)
-        used_width = max(used_width, x)
-    used_height = y + row_height + padding
-    atlas = Image.new("RGBA", (max(1, used_width), max(1, used_height)), (0, 0, 0, 0))
-    for entry, image, px, py in placements:
-        atlas.alpha_composite(image, (px, py))
-        metadata["entries"][entry["id"]] = {
-            **entry,
-            "art_state": "offline_svg",
-            "rect": [px, py, image.width, image.height],
-        }
-    atlas_path = output_dir / "crash_dummy_runtime_atlas.png"
-    atlas.save(atlas_path, format="PNG", optimize=False)
-    metadata["atlas"] = {"file": atlas_path.name, "size": list(atlas.size), "padding": padding}
+    if placements:
+        pages.append(placements)
+
+    atlas_paths: list[Path] = []
+    page_metadata: list[dict[str, Any]] = []
+    for page_index, page in enumerate(pages):
+        width = max(px + image.width + padding for _, image, px, _ in page)
+        height = max(py + image.height + padding for _, image, _, py in page)
+        atlas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+        for entry, image, px, py in page:
+            atlas.alpha_composite(image, (px, py))
+            metadata["entries"][entry["id"]] = {
+                **entry,
+                "art_state": "offline_svg",
+                "page": page_index,
+                "rect": [px, py, image.width, image.height],
+            }
+        suffix = "" if page_index == 0 else f"_{page_index:02}"
+        atlas_path = output_dir / f"crash_dummy_runtime_atlas{suffix}.png"
+        atlas.save(atlas_path, format="PNG", optimize=False)
+        atlas_paths.append(atlas_path)
+        page_metadata.append({"file": atlas_path.name, "size": [width, height]})
+    metadata["atlas"] = {"max_page_size": max_size, "padding": padding, "pages": page_metadata}
     metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-    return atlas_path, metadata_path
+    return atlas_paths, metadata_path
 
 
 def main() -> int:
@@ -289,10 +306,10 @@ def main() -> int:
         chunks[entry["id"]] = destination
 
     pages = render_labelled_family_pages(entries, chunks, output_dir)
-    atlas_path, metadata_path = pack_runtime_atlas(catalog, entries, chunks, output_dir)
+    atlas_paths, metadata_path = pack_runtime_atlas(catalog, entries, chunks, output_dir)
     print(f"CRASH_DUMMY_ATLAS: {len(chunks)} SVGs · {len(entries) - len(chunks)} catalog-only · {len(pages)} labelled family pages")
     print(f"CRASH_DUMMY_METADATA: {metadata_path}")
-    if atlas_path is not None:
+    for atlas_path in atlas_paths:
         print(f"CRASH_DUMMY_RUNTIME_ATLAS: {atlas_path}")
     if missing_initial:
         print("CRASH_DUMMY_INITIAL_MISSING: " + ", ".join(missing_initial))

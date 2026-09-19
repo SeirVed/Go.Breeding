@@ -2,12 +2,14 @@
 
 > **Status: semantic catalog and offline media pipeline.** The public repository defines every known part, topology and atlas label. SVG masters, raster chunks, generated atlases and assembled review examples remain local under `art/offline/crash_dummy_v01/` until individual assets are explicitly promoted.
 
+The current local study has 173 separate SVG masters (all expanded catalog entries), 173 raster chunks, 15 labelled family pages and five bounded runtime-atlas pages. That is an art-completeness study, **not** a claim that reserved creature parts are approved, mounted in Rig Studio or playable. Reserved entries remain marked `reserved` even when an SVG study exists.
+
 ## Source order
 
 1. `data/crash_dummy_part_catalog.json` defines semantic parts, variants, reuse and topology requirements.
 2. One independent SVG master is authored for each expanded ID selected for production.
 3. `tools/build_crash_dummy_atlas.py` renders those vectors directly at the requested density.
-4. The tool emits individual PNG chunks, exact runtime-atlas rectangles and labelled family pages.
+4. The tool emits individual PNG chunks, exact runtime-atlas rectangles and labelled family pages. Runtime textures are paged to at most 4096 × 4096 pixels; each entry records its page index and rectangle.
 5. Rig Studio mounts chosen definitions as character-specific instances.
 
 The raster atlas is generated output, never an editing source. Corrections happen in one SVG and propagate on the next build without degrading unrelated pieces.
@@ -26,7 +28,7 @@ Composition order is explicit: foundation → structural form → soft form → 
 
 ## Missing art remains visible
 
-The labelled atlas expands every catalog definition even when no SVG exists. Missing initial masters receive an orange `INITIAL SVG MISSING` card; reserved future entries receive a neutral `PLANNED · NO SVG` card. Runtime atlas metadata also retains every expanded ID with `art_state: missing` and a null rectangle. This makes unused and mutant-ready parts auditable without falsely treating them as finished assets.
+The labelled atlas expands every catalog definition even when no SVG exists. Missing initial masters receive an orange `INITIAL SVG MISSING` card; reserved future entries without art receive a neutral `PLANNED · NO SVG` card. A rendered reserved study is labelled `SVG STUDY · RESERVED` rather than production-ready. Runtime atlas metadata retains every expanded ID; missing entries have a null rectangle, while rendered entries have a page index and exact rectangle. This makes unused and mutant-ready parts auditable without falsely treating studies as finished game assets.
 
 ## Offline boundary
 
