@@ -6,7 +6,7 @@
   "views": ["front", "back", "side", "three_quarter"],
   "morph_contract": {
     "principle": "Form presets, structural proportions, soft-form modules and anatomy modules are independent composition axes.",
-    "composition_order": ["foundation", "structural_form", "soft_form", "anatomy", "species_attachment", "presentation"],
+    "composition_order": ["foundation", "structural_form", "soft_form", "anatomy", "species_attachment", "facial_expression", "presentation"],
     "channels": {
       "shoulder_width": {"kind": "structural", "default": 1.0, "range": [0.7, 1.4], "target_parts": ["torso", "joint_shoulder"]},
       "ribcage_width": {"kind": "structural", "default": 1.0, "range": [0.75, 1.35], "target_parts": ["torso", "chest"]},
@@ -56,6 +56,15 @@
   "part_definitions": {
     "head_shell": {"display_name": "Head Shell", "family": "core", "forms": ["neutral"], "views": ["front", "back"], "mirrorable": false, "repeatable": true, "mount": "head", "status": "initial_svg"},
     "face": {"display_name": "Face Plate", "family": "core", "forms": ["neutral", "masc", "femm"], "views": ["front"], "mirrorable": false, "repeatable": true, "mount": "head", "status": "initial_svg"},
+    "face_eye": {"display_name": "Eye Base", "family": "facial_expression", "views": ["front"], "mirrorable": true, "repeatable": true, "mount": "face_eye", "status": "reserved"},
+    "face_pupil": {"display_name": "Pupil", "family": "facial_expression", "views": ["front"], "mirrorable": true, "repeatable": true, "mount": "face_eye", "status": "reserved"},
+    "face_lid": {"display_name": "Eyelid", "family": "facial_expression", "views": ["front"], "mirrorable": true, "repeatable": true, "mount": "face_eye", "status": "reserved"},
+    "face_brow": {"display_name": "Eyebrow", "family": "facial_expression", "views": ["front"], "mirrorable": true, "repeatable": true, "mount": "face_eye", "status": "reserved"},
+    "face_nose": {"display_name": "Nose", "family": "facial_expression", "views": ["front"], "mirrorable": false, "repeatable": false, "mount": "face", "status": "reserved"},
+    "face_mouth": {"display_name": "Mouth", "family": "facial_expression", "views": ["front"], "mirrorable": false, "repeatable": false, "mount": "face_mouth", "status": "reserved"},
+    "face_jaw": {"display_name": "Lower Jaw", "family": "facial_expression", "views": ["front"], "mirrorable": false, "repeatable": false, "mount": "face_jaw", "status": "reserved"},
+    "face_tongue": {"display_name": "Tongue", "family": "facial_expression", "views": ["front"], "mirrorable": false, "repeatable": false, "mount": "face_mouth", "status": "reserved"},
+    "face_cheek": {"display_name": "Cheek", "family": "facial_expression", "views": ["front"], "mirrorable": true, "repeatable": true, "mount": "face", "status": "reserved"},
     "neck": {"display_name": "Neck", "family": "core", "forms": ["neutral"], "views": ["front", "back"], "mirrorable": false, "repeatable": true, "mount": "neck", "status": "initial_svg"},
     "torso": {"display_name": "Torso", "family": "core", "forms": ["neutral", "masc", "femm"], "views": ["front", "back"], "mirrorable": false, "repeatable": true, "mount": "torso", "status": "initial_svg"},
     "chest": {"display_name": "Chest / Pectoral Form", "family": "structural_form", "forms": ["neutral", "masc", "femm"], "views": ["front"], "mirrorable": false, "repeatable": false, "mount": "chest_form", "status": "initial_svg"},

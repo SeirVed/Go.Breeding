@@ -8,6 +8,7 @@ Param-driven paper‑doll with **bands** for Feral/Refined and Neotenous/Peramor
 ## Node topology (Creature.tscn)
 - `Skeleton2D` (optional for later)
 - `Body/` Sprite2D slots: Base, Head, Ears, Tail, Arms, Legs, Addons (horns/claws/crest)
+- `Face/` planned child slots: paired eyes, pupils, lids and brows; central nose/muzzle, mouth and jaw; optional cheeks and tongue. These are not implemented runtime nodes yet.
 - `FX/` GPUParticles2D nodes: ElementAura, Footsteps, Breath
 - `Anim` (AnimationPlayer/Tree)
 - `Audio` (species SFX bank)
@@ -27,3 +28,5 @@ Param-driven paper‑doll with **bands** for Feral/Refined and Neotenous/Peramor
 
 ## Performance notes
 Single texture atlases per body part family; keep anchors consistent across species. Data-driven swaps support an open-ended creature registry rather than a fixed monster count. See [Paired Paper-Doll Animation Pipeline](animation_pipeline.md).
+
+Art creation follows the [Modular Character Art Production Groups](art_production_groups.md) contract: individually editable SVGs, an immediate assembled-character test, and explicit promotion from study to runtime-tested asset. A generated whole-sheet image is reference art, not an automatically valid cutout atlas.

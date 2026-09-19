@@ -24,6 +24,12 @@ See `VERSION.md` and `CHANGELOG.md` for exact release history.
 - Report playable coverage separately from bespoke commission progress.
 - Validate one newly added monster flows through the registry without hard-coded roster-count changes.
 
+## Next: coherent cutout art slice
+
+- Use the [modular art production groups](art_production_groups.md) to author one cow front-view Core + Face & Expression + minimal Species kit from independent SVG masters.
+- Assemble and check each small batch on the invisible rig before adding more variants; then test back view, expression poses, walk seams and game-size readability.
+- Keep the existing bovine whole-sheet generation as offline research. Its mislabeled body cells are not a usable production atlas, and no completed cow cutout is claimed yet.
+
 ## Next: Guild Star Ballot
 
 - Add one global Gold/Silver/Bronze ballot per player across all three boards.

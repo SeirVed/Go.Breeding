@@ -2,6 +2,9 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Formalized modular SVG production groups and their assembly gates: Core, Face & Expression, Main form variants, Species kit, Soft form/anatomy, Extended appendages, Alternate foundations, Presentation/effects and Wildcard/mutant. A complete cow front-view slice precedes any attempt to fill every catalog cell.
+- Added nine reserved facial-component definitions, bringing the semantic catalog to 108 definitions / 182 expanded entries. The legacy face plate remains a compatibility fallback; modular eyes, pupils, lids, brows, nose, mouth, jaw, tongue and cheeks are planned only, with no approved art or runtime facial controller.
+- Recorded the failed whole-sheet bovine atlas cutout test transparently: several labelled body cells became extra cow heads. Its media stays offline as research, not production sprite coverage.
 - Added the public crash-dummy parts contract: 99 semantic definitions expand to 173 neutral/MASC/FEMM and front/back catalog entries across plantigrade, digitigrade, unguligrade, serpentine, tauric, quadruped and amorphous foundations. Mirrorable/repeatable definitions support future mutant instances without duplicating artwork.
 - Decoupled structural dimorphism, soft forms and anatomy: shoulders/ribcage/waist/pelvis/limb mass are authoring channels, breasts/glutes/belly are separately scalable secondary-motion modules, and genital modules remain independently swappable. Species, archetype and individual profiles can now vary dimorphism without multiplying rigs.
 - Added an offline-only SVG/atlas workspace and a public atlas packer that renders vectors directly, emits individual raster chunks and exact rectangles in bounded 4096 × 4096 runtime pages, and produces labelled family pages containing every definition—including explicit missing/reserved/study cards. Local media is blocked from Git, Godot imports and exports.

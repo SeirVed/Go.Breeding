@@ -20,6 +20,8 @@ Single Builder constructs and diagnoses one reusable paper doll. Its character s
 
 The Default Template mounts the complete fourteen-piece Human Zero cutout. Incomplete characters remain visible over editor guides while authoring; gameplay uses the universal emergency silhouette until all 14 essential humanoid slots—or one valid `full_body` draft—are present.
 
+**Planned, not in v0.3.1:** a separate Face & Expression authoring group with paired eye/pupil/lid/brow mounts and central mouth/jaw controls. The new catalog names are reserved only. Single Builder cannot yet bind or animate those facial pieces; its existing whole-head/face artwork path remains the compatibility preview. The intended slot and acceptance contract is in [Modular Character Art Production Groups](art_production_groups.md).
+
 ## Animation Editor
 
 Animation Editor stages one to many actors. Every actor independently selects a character, role, Small/Medium/Large band, exact height and resting stage position. Root keys animate stage motion; other node keys animate actor-local pose offsets. Shift-click selects several nodes and dragging preserves their relationship.
