@@ -6,6 +6,7 @@ desktop.ini
 *.tmp
 *.log
 export/
+/tools/candidate23_probe_cache/
 
 # Local Python bytecode from development helpers
 __pycache__/
