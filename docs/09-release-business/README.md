@@ -2,6 +2,8 @@
 
 [All areas](../README.md) · [Task / handoff template](../00-project-hq/task-template.md)
 
+**Continuing in a fresh chat? Read the [area handoff](HANDOFF.md) first.**
+
 Licensing, distribution, storefronts, supporter model and demand metrics.
 
 ## Starting point

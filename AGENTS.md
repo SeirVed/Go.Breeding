@@ -2,7 +2,7 @@
 
 ## Find the right context
 
-- Start with `docs/README.md`, then the owning area's README and relevant specifications. Do not load every area by default.
+- Start with `docs/README.md`, then the owning area's `HANDOFF.md`, README and relevant specifications. Handoffs are dated snapshots; verify current source and the user's latest request before acting. Do not load every area by default.
 - `docs/00-project-hq/navigation.json` maps areas, canonical files and former document paths. Resolve older references through that map.
 - Code remains in `scripts/`, scenes in `scenes/`, registries in `data/`, schemas in `schemas/`, and Rig Studio in `addons/rig_studio/`.
 - Use one chat per coherent outcome. Follow `docs/00-project-hq/task-template.md` for substantial tasks and handoffs.

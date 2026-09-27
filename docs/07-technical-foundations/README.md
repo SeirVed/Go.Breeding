@@ -2,6 +2,8 @@
 
 [All areas](../README.md) · [Task / handoff template](../00-project-hq/task-template.md)
 
+**Continuing in a fresh chat? Read the [area handoff](HANDOFF.md) first.**
+
 Persistence, content schemas, loading, performance, platform support and engineering contracts.
 
 ## Starting point

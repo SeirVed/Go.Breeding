@@ -2,6 +2,8 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Added dated section handoffs for all thirteen work areas, with source references, implementation boundaries, open questions and suggested next tasks. Area indexes and the navigation map expose them for fresh sessions.
+
 - Organised documentation into thirteen subject areas with linked landing pages, a central workspace index, a machine-readable navigation/migration map and a task handoff template. Technical source and asset paths remain stable; the project board keeps its existing address.
 - Added a concise repository working guide, separated internal documentation into ignored private folders, and excluded documentation from Godot imports and playable exports.
 

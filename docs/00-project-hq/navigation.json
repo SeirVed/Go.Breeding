@@ -7,6 +7,7 @@
       "title": "Project HQ",
       "summary": "Direction, priorities, project status and decisions that cross disciplines.",
       "index": "docs/00-project-hq/README.md",
+      "handoff": "docs/00-project-hq/HANDOFF.md",
       "documents": [
         "docs/00-project-hq/repository-guide.md",
         "docs/00-project-hq/task-template.md",
@@ -24,6 +25,7 @@
       "title": "Gameplay",
       "summary": "Rules, genetics, ranch management, progression and economy.",
       "index": "docs/01-gameplay/README.md",
+      "handoff": "docs/01-gameplay/HANDOFF.md",
       "documents": [
         "docs/01-gameplay/breeding_logic.md",
         "docs/01-gameplay/trait_system.md",
@@ -41,6 +43,7 @@
       "title": "World & Story",
       "summary": "Locations, species identities, lore, dialogue, events and quests.",
       "index": "docs/02-world-story/README.md",
+      "handoff": "docs/02-world-story/HANDOFF.md",
       "documents": [
         "docs/02-world-story/species_list.md"
       ],
@@ -54,6 +57,7 @@
       "title": "Artwork",
       "summary": "Visual direction, character kits, environments, facial parts, SVG masters and atlases.",
       "index": "docs/03-artwork/README.md",
+      "handoff": "docs/03-artwork/HANDOFF.md",
       "documents": [
         "docs/03-artwork/art_style.md",
         "docs/03-artwork/art_production_groups.md",
@@ -75,6 +79,7 @@
       "title": "Animation & Rig Studio",
       "summary": "Rig geometry, attachments, motion, facial controls, timelines, reusable verbs and authoring tools.",
       "index": "docs/04-animation-rig-studio/README.md",
+      "handoff": "docs/04-animation-rig-studio/HANDOFF.md",
       "documents": [
         "docs/04-animation-rig-studio/animation_pipeline.md",
         "docs/04-animation-rig-studio/breeding_animation_matrix.md",
@@ -97,6 +102,7 @@
       "title": "UI & UX",
       "summary": "Menus, navigation, galleries, developer boards, controls, readability and accessibility.",
       "index": "docs/05-ui-ux/README.md",
+      "handoff": "docs/05-ui-ux/HANDOFF.md",
       "documents": [],
       "related_paths": [
         "scripts/main.gd",
@@ -110,6 +116,7 @@
       "title": "Sound & Music",
       "summary": "Music, ambience, effects, feedback sounds and audio controls.",
       "index": "docs/06-sound-music/README.md",
+      "handoff": "docs/06-sound-music/HANDOFF.md",
       "documents": [],
       "related_paths": [
         "scripts/main.gd",
@@ -121,6 +128,7 @@
       "title": "Technical Foundations",
       "summary": "Persistence, content schemas, loading, performance, platform support and engineering contracts.",
       "index": "docs/07-technical-foundations/README.md",
+      "handoff": "docs/07-technical-foundations/HANDOFF.md",
       "documents": [],
       "related_paths": [
         "project.godot",
@@ -136,6 +144,7 @@
       "title": "Testing & Builds",
       "summary": "Build instructions, bug reproduction, integration checks, exports and verification evidence.",
       "index": "docs/08-testing-builds/README.md",
+      "handoff": "docs/08-testing-builds/HANDOFF.md",
       "documents": [
         "docs/08-testing-builds/build_checks.md"
       ],
@@ -150,6 +159,7 @@
       "title": "Release & Business",
       "summary": "Licensing, distribution, storefronts, supporter model and demand metrics.",
       "index": "docs/09-release-business/README.md",
+      "handoff": "docs/09-release-business/HANDOFF.md",
       "documents": [
         "docs/09-release-business/license_decision.md",
         "docs/09-release-business/distribution_model.md",
@@ -167,6 +177,7 @@
       "title": "Research & Experiments",
       "summary": "Unproven methods, tool comparisons and bounded experiments before production adoption.",
       "index": "docs/10-research-experiments/README.md",
+      "handoff": "docs/10-research-experiments/HANDOFF.md",
       "documents": [
         "docs/10-research-experiments/pairing_production_pipeline.md"
       ],
@@ -181,6 +192,7 @@
       "title": "Inbox · Unsorted Ideas",
       "summary": "Capture suggestions quickly, then route them to the owning area.",
       "index": "docs/11-inbox/README.md",
+      "handoff": "docs/11-inbox/HANDOFF.md",
       "documents": [],
       "related_paths": [
         "docs/00-project-hq/task-template.md"
@@ -191,6 +203,7 @@
       "title": "Archive · Completed & Superseded",
       "summary": "Finished task notes and replaced proposals retained for context.",
       "index": "docs/12-archive/README.md",
+      "handoff": "docs/12-archive/HANDOFF.md",
       "documents": [],
       "related_paths": [
         "CHANGELOG.md",

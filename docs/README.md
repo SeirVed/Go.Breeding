@@ -24,7 +24,7 @@ Browse by subject below. Each folder has a short README linking its specificatio
 
 ## Starting a task
 
-1. Open the area's README and the relevant specification or visual reference.
+1. Open the area's `HANDOFF.md`, README and relevant specification or visual reference. Each handoff is a dated snapshot, not an automatic instruction to implement its proposed next task.
 2. Start a chat for one coherent outcome; use `Area | outcome` as its title.
 3. For a longer task, copy the [task template](00-project-hq/task-template.md) into that area using a descriptive filename.
 4. On completion or handoff, record actual results, unresolved questions and the next step. Put accepted decisions in the canonical specification and link to them.
