@@ -1,6 +1,6 @@
 # Design Vision
 
-> **Status: canonical direction.** This states intent, not completion; see the [documentation index](README.md) for status definitions.
+> **Status: canonical direction.** This states intent, not completion; see the [documentation index](../README.md) for status definitions.
 
 ## Core statement
 **Go.Breeding** is a single‑player, systems‑driven breeding sim. It prioritizes **emergent genetics**, readable evolution conditions, and a data‑driven content pipeline. The goal is a sandbox where **lineages tell stories** through traits and species unlocks, not scripted narrative.
@@ -30,4 +30,4 @@ Layered text emoji give the prototype a tiny clockwork-world identity. `Emoji Bo
 - Real‑time action combat.
 - Online multiplayer (import/export only).
 
-The planned Guild Star Ballot is development telemetry, not multiplayer. Its privacy and transparency rules are defined in [Dev Metrics](dev_metrics.md).
+The planned Guild Star Ballot is development telemetry, not multiplayer. Its privacy and transparency rules are defined in [Dev Metrics](../09-release-business/dev_metrics.md).

@@ -2,7 +2,7 @@
 
 > **Status: architecture plan with an invisible-rig locomotion vertical slice and editor-only Rig Studio.** `Emoji Bonk v0` remains the universal breeding placeholder. A six-profile pose provider, image manifest, shared draft walk offsets and one emergency character image test anchors and timing; the Catgirl cutout, paired retargeting, compatibility scoring and bespoke choreography are not implemented yet.
 
-The reusable motion language is split into atomic verbs, parameter adverbs, reusable loop sentences and generated phased scenes. See `docs/parametric_choreography.md`, `docs/verb_storyboards.md`, `data/animation_verbs.json`, `data/pairing_storyboard_grammar.json` and `data/animation_scene_grammar.json`. The compiler covers all current directional board cells as `PLACEHOLDER_PLAN`; this is production planning coverage, not playable animation coverage.
+The reusable motion language is split into atomic verbs, parameter adverbs, reusable loop sentences and generated phased scenes. See `docs/04-animation-rig-studio/parametric_choreography.md`, `docs/04-animation-rig-studio/verb_storyboards.md`, `data/animation_verbs.json`, `data/pairing_storyboard_grammar.json` and `data/animation_scene_grammar.json`. The compiler covers all current directional board cells as `PLACEHOLDER_PLAN`; this is production planning coverage, not playable animation coverage.
 
 ## Goal
 

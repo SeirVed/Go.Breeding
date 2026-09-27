@@ -23,4 +23,4 @@ Matrix → **9 base silhouettes** (Size × Morph). Optional tags layered later:
 - Characters choose a neutral base mannequin, then compose reusable species, wardrobe and identity part sets. Ears, tails, horns, fur, scales, skin treatment and palettes never live in the rig profile itself.
 - Development axis (neotenous/peramorphous) drives **proportion presets** (head/limb scaling) and **anim speed** later.
 
-The creature registry is open-ended. New monsters declare stable IDs, body mappings, measurements, and exception tags, then inherit the most compatible available template. See [Paired Paper-Doll Animation Pipeline](animation_pipeline.md).
+The creature registry is open-ended. New monsters declare stable IDs, body mappings, measurements, and exception tags, then inherit the most compatible available template. See [Paired Paper-Doll Animation Pipeline](../04-animation-rig-studio/animation_pipeline.md).

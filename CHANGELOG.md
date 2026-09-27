@@ -2,6 +2,9 @@
 
 ## Unreleased — Documentation and Dev Metrics
 
+- Organised documentation into thirteen subject areas with linked landing pages, a central workspace index, a machine-readable navigation/migration map and a task handoff template. Technical source and asset paths remain stable; the project board keeps its existing address.
+- Added a concise repository working guide, separated internal documentation into ignored private folders, and excluded documentation from Godot imports and playable exports.
+
 - Formalized modular SVG production groups and their assembly gates: Core, Face & Expression, Main form variants, Species kit, Soft form/anatomy, Extended appendages, Alternate foundations, Presentation/effects and Wildcard/mutant. A complete cow front-view slice precedes any attempt to fill every catalog cell.
 - Added nine reserved facial-component definitions, bringing the semantic catalog to 108 definitions / 182 expanded entries. The legacy face plate remains a compatibility fallback; modular eyes, pupils, lids, brows, nose, mouth, jaw, tongue and cheeks are planned only, with no approved art or runtime facial controller.
 - Recorded the failed whole-sheet bovine atlas cutout test transparently: several labelled body cells became extra cow heads. Its media stays offline as research, not production sprite coverage.

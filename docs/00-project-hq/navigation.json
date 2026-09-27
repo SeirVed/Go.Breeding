@@ -1,0 +1,234 @@
+{
+  "schema_version": 1,
+  "entrypoint": "docs/README.md",
+  "areas": [
+    {
+      "id": "00-project-hq",
+      "title": "Project HQ",
+      "summary": "Direction, priorities, project status and decisions that cross disciplines.",
+      "index": "docs/00-project-hq/README.md",
+      "documents": [
+        "docs/00-project-hq/repository-guide.md",
+        "docs/00-project-hq/task-template.md",
+        "docs/00-project-hq/design_vision.md",
+        "docs/00-project-hq/dev_map.md"
+      ],
+      "related_paths": [
+        "docs/project-board.html",
+        "VERSION.md",
+        "CHANGELOG.md"
+      ]
+    },
+    {
+      "id": "01-gameplay",
+      "title": "Gameplay",
+      "summary": "Rules, genetics, ranch management, progression and economy.",
+      "index": "docs/01-gameplay/README.md",
+      "documents": [
+        "docs/01-gameplay/breeding_logic.md",
+        "docs/01-gameplay/trait_system.md",
+        "docs/01-gameplay/invisible_traits.md",
+        "docs/01-gameplay/unlock_paths.md"
+      ],
+      "related_paths": [
+        "scripts/breeding_engine.gd",
+        "scripts/game_state.gd",
+        "data/species.json"
+      ]
+    },
+    {
+      "id": "02-world-story",
+      "title": "World & Story",
+      "summary": "Locations, species identities, lore, dialogue, events and quests.",
+      "index": "docs/02-world-story/README.md",
+      "documents": [
+        "docs/02-world-story/species_list.md"
+      ],
+      "related_paths": [
+        "data/locations.json",
+        "data/species.json"
+      ]
+    },
+    {
+      "id": "03-artwork",
+      "title": "Artwork",
+      "summary": "Visual direction, character kits, environments, facial parts, SVG masters and atlases.",
+      "index": "docs/03-artwork/README.md",
+      "documents": [
+        "docs/03-artwork/art_style.md",
+        "docs/03-artwork/art_production_groups.md",
+        "docs/03-artwork/appearance_system.md",
+        "docs/03-artwork/silhouettes.md",
+        "docs/03-artwork/crash_dummy_parts.md",
+        "docs/03-artwork/anatomy_asset_library.md"
+      ],
+      "related_paths": [
+        "art",
+        "art/offline/README.md",
+        "data/crash_dummy_part_catalog.json",
+        "data/paper_doll_artwork.json",
+        "tools/build_crash_dummy_atlas.py"
+      ]
+    },
+    {
+      "id": "04-animation-rig-studio",
+      "title": "Animation & Rig Studio",
+      "summary": "Rig geometry, attachments, motion, facial controls, timelines, reusable verbs and authoring tools.",
+      "index": "docs/04-animation-rig-studio/README.md",
+      "documents": [
+        "docs/04-animation-rig-studio/animation_pipeline.md",
+        "docs/04-animation-rig-studio/breeding_animation_matrix.md",
+        "docs/04-animation-rig-studio/paper_doll_walk_lab.md",
+        "docs/04-animation-rig-studio/paper_doll_parts.md",
+        "docs/04-animation-rig-studio/rig_studio.md",
+        "docs/04-animation-rig-studio/verb_storyboards.md",
+        "docs/04-animation-rig-studio/parametric_choreography.md"
+      ],
+      "related_paths": [
+        "addons/rig_studio",
+        "scripts/paper_doll.gd",
+        "data/paper_doll_studio.json",
+        "data/animation_verbs.json",
+        "data/animation_scene_grammar.json"
+      ]
+    },
+    {
+      "id": "05-ui-ux",
+      "title": "UI & UX",
+      "summary": "Menus, navigation, galleries, developer boards, controls, readability and accessibility.",
+      "index": "docs/05-ui-ux/README.md",
+      "documents": [],
+      "related_paths": [
+        "scripts/main.gd",
+        "scenes/main.tscn",
+        "data/breeding_script_progress.json",
+        "scripts/pairing_progress.gd"
+      ]
+    },
+    {
+      "id": "06-sound-music",
+      "title": "Sound & Music",
+      "summary": "Music, ambience, effects, feedback sounds and audio controls.",
+      "index": "docs/06-sound-music/README.md",
+      "documents": [],
+      "related_paths": [
+        "scripts/main.gd",
+        "docs/09-release-business/distribution_model.md"
+      ]
+    },
+    {
+      "id": "07-technical-foundations",
+      "title": "Technical Foundations",
+      "summary": "Persistence, content schemas, loading, performance, platform support and engineering contracts.",
+      "index": "docs/07-technical-foundations/README.md",
+      "documents": [],
+      "related_paths": [
+        "project.godot",
+        "scripts/game_state.gd",
+        "data",
+        "schemas",
+        "scripts/species_db.gd",
+        "scenes"
+      ]
+    },
+    {
+      "id": "08-testing-builds",
+      "title": "Testing & Builds",
+      "summary": "Build instructions, bug reproduction, integration checks, exports and verification evidence.",
+      "index": "docs/08-testing-builds/README.md",
+      "documents": [
+        "docs/08-testing-builds/build_checks.md"
+      ],
+      "related_paths": [
+        "scripts/build_check.ps1",
+        "tools/rig_studio_smoke.gd",
+        "export_presets.cfg"
+      ]
+    },
+    {
+      "id": "09-release-business",
+      "title": "Release & Business",
+      "summary": "Licensing, distribution, storefronts, supporter model and demand metrics.",
+      "index": "docs/09-release-business/README.md",
+      "documents": [
+        "docs/09-release-business/license_decision.md",
+        "docs/09-release-business/distribution_model.md",
+        "docs/09-release-business/dev_metrics.md"
+      ],
+      "related_paths": [
+        "LICENSE.md",
+        "COPYRIGHT.md",
+        "THIRD_PARTY_NOTICES.md",
+        "CONTRIBUTING.md"
+      ]
+    },
+    {
+      "id": "10-research-experiments",
+      "title": "Research & Experiments",
+      "summary": "Unproven methods, tool comparisons and bounded experiments before production adoption.",
+      "index": "docs/10-research-experiments/README.md",
+      "documents": [
+        "docs/10-research-experiments/pairing_production_pipeline.md"
+      ],
+      "related_paths": [
+        "schemas/pairing_production_record.schema.json",
+        "data/pairing_production_records.json",
+        "art/offline/README.md"
+      ]
+    },
+    {
+      "id": "11-inbox",
+      "title": "Inbox · Unsorted Ideas",
+      "summary": "Capture suggestions quickly, then route them to the owning area.",
+      "index": "docs/11-inbox/README.md",
+      "documents": [],
+      "related_paths": [
+        "docs/00-project-hq/task-template.md"
+      ]
+    },
+    {
+      "id": "12-archive",
+      "title": "Archive · Completed & Superseded",
+      "summary": "Finished task notes and replaced proposals retained for context.",
+      "index": "docs/12-archive/README.md",
+      "documents": [],
+      "related_paths": [
+        "CHANGELOG.md",
+        "VERSION.md",
+        "docs/12-archive/original-overview.txt"
+      ]
+    }
+  ],
+  "document_moves": {
+    "docs/design_vision.md": "docs/00-project-hq/design_vision.md",
+    "docs/dev_map.md": "docs/00-project-hq/dev_map.md",
+    "docs/breeding_logic.md": "docs/01-gameplay/breeding_logic.md",
+    "docs/trait_system.md": "docs/01-gameplay/trait_system.md",
+    "docs/invisible_traits.md": "docs/01-gameplay/invisible_traits.md",
+    "docs/unlock_paths.md": "docs/01-gameplay/unlock_paths.md",
+    "docs/species_list.md": "docs/02-world-story/species_list.md",
+    "docs/art_style.md": "docs/03-artwork/art_style.md",
+    "docs/art_production_groups.md": "docs/03-artwork/art_production_groups.md",
+    "docs/appearance_system.md": "docs/03-artwork/appearance_system.md",
+    "docs/silhouettes.md": "docs/03-artwork/silhouettes.md",
+    "docs/crash_dummy_parts.md": "docs/03-artwork/crash_dummy_parts.md",
+    "docs/anatomy_asset_library.md": "docs/03-artwork/anatomy_asset_library.md",
+    "docs/animation_pipeline.md": "docs/04-animation-rig-studio/animation_pipeline.md",
+    "docs/breeding_animation_matrix.md": "docs/04-animation-rig-studio/breeding_animation_matrix.md",
+    "docs/paper_doll_walk_lab.md": "docs/04-animation-rig-studio/paper_doll_walk_lab.md",
+    "docs/paper_doll_parts.md": "docs/04-animation-rig-studio/paper_doll_parts.md",
+    "docs/rig_studio.md": "docs/04-animation-rig-studio/rig_studio.md",
+    "docs/verb_storyboards.md": "docs/04-animation-rig-studio/verb_storyboards.md",
+    "docs/parametric_choreography.md": "docs/04-animation-rig-studio/parametric_choreography.md",
+    "docs/build_checks.md": "docs/08-testing-builds/build_checks.md",
+    "docs/license_decision.md": "docs/09-release-business/license_decision.md",
+    "docs/distribution_model.md": "docs/09-release-business/distribution_model.md",
+    "docs/dev_metrics.md": "docs/09-release-business/dev_metrics.md",
+    "docs/pairing_production_pipeline.md": "docs/10-research-experiments/pairing_production_pipeline.md",
+    "Overview.txt": "docs/12-archive/original-overview.txt"
+  },
+  "legacy_entries": {
+    "docs/Make.md": "docs/README.md",
+    "docs/project-board.html": "docs/project-board.html"
+  }
+}

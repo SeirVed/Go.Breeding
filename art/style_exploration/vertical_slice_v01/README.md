@@ -25,7 +25,7 @@ The original cat draft is preserved as `cat-female-source-rejected-thighs.png` s
 
 Four Seedream V5 Pro tests are prepared at $0.09 each. They test whether the SFW masters can produce usable local adult-anatomy donors without destroying species identity. Explicit outputs and exact provider receipts belong under the git-ignored `artifacts/seedream/vertical_slice_2026-09-14/` tree.
 
-The provider upload was authorized and all four tests completed successfully. Exact task IDs and costs are recorded in `docs/wiro_credit_ledger.md`.
+The provider upload was authorized and all four tests completed successfully. Exact task IDs and costs are recorded in `docs/09-release-business/private/wiro_credit_ledger.md`.
 
 The results prove that Seedream can preserve all four broad morphologies, including the naga's no-leg topology and the Void-born's starfield material. It does not reliably preserve background, proportions, accessory coverage, or the simplified production style. These outputs are therefore useful as **local anatomy donors only**, not replacement character masters.
 

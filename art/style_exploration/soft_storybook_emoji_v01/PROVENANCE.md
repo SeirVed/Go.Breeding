@@ -43,4 +43,4 @@ See `artifacts/seedance/README.md` in a working copy for the exact prompt and lo
 
 ## Reproduction guidance
 
-The canonical reusable visual grammar and prompt template are in `docs/art_style.md`. Future concepts should use a plain solid review background not present in the character palette. Transparency should be produced and verified as a separate step.
+The canonical reusable visual grammar and prompt template are in `docs/03-artwork/art_style.md`. Future concepts should use a plain solid review background not present in the character palette. Transparency should be produced and verified as a separate step.

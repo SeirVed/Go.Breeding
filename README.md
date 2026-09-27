@@ -4,9 +4,9 @@
 
 > **Project status:** early public prototype. The repository distinguishes implemented, placeholder, and planned work. Start with the [documentation index](docs/README.md).
 
-The [interactive project board](docs/project-board.html) is the clearest current snapshot of what exists, what is exploratory, what is merely planned, and what remains placeholder-only.
+Start with the [project workspace index](docs/README.md) to browse thirteen subject areas and their working files. The [interactive project board](docs/project-board.html) remains a planning snapshot; current specifications and runtime evidence may be newer.
 
-The reusable animation design is formalized in [Parametric Choreography Architecture](docs/parametric_choreography.md). Its 243 compiled scene plans are authoring records, not finished animation coverage; `Emoji Bonk v0` remains the current playable presentation.
+The reusable animation design is formalized in [Parametric Choreography Architecture](docs/04-animation-rig-studio/parametric_choreography.md). Its 243 compiled scene plans are authoring records, not finished animation coverage; `Emoji Bonk v0` remains the current playable presentation.
 
 ## High-level pitch
 Breed, reroll, and evolve demi-species across four orthogonal trait axes. Unlock new species via **readable evolutionary conditions** (e.g., `Cow + Feral + STR ≥ 120 → Minotaur`). Content is data-driven so new species, traits, and evolutions can be added without engine rewrites.
@@ -22,21 +22,32 @@ Breed, reroll, and evolve demi-species across four orthogonal trait axes. Unlock
 ```
 go.breeding/
 ├─ README.md
-├─ docs/
-│  ├─ design_vision.md
-│  ├─ trait_system.md
-│  ├─ species_list.md
-│  ├─ breeding_logic.md
-│  ├─ silhouettes.md
-│  ├─ invisible_traits.md
-│  ├─ unlock_paths.md
-│  ├─ dev_map.md
-│  └─ appearance_system.md
+├─ AGENTS.md          # Short working and navigation guide
+├─ docs/              # Human-readable area indexes and specifications
+│  ├─ 00-project-hq/
+│  ├─ 01-gameplay/
+│  ├─ 02-world-story/
+│  ├─ 03-artwork/
+│  ├─ 04-animation-rig-studio/
+│  ├─ 05-ui-ux/
+│  ├─ 06-sound-music/
+│  ├─ 07-technical-foundations/
+│  ├─ 08-testing-builds/
+│  ├─ 09-release-business/
+│  ├─ 10-research-experiments/
+│  ├─ 11-inbox/
+│  └─ 12-archive/
 ├─ project.godot      # Godot 4.7 project entry point
 ├─ scenes/            # Scene files
 ├─ scripts/           # UI flow, persistence, and game state
-└─ data/              # Data-driven location registry
+├─ data/              # Canonical runtime and authoring registries
+├─ schemas/           # Data contracts
+├─ addons/rig_studio/  # Editor tooling
+├─ art/               # Runtime art and explicitly isolated local studies
+└─ tools/             # Authoring and validation helpers
 ```
+
+The [repository guide](docs/00-project-hq/repository-guide.md) explains how area folders, focused chats and the technical tree fit together. Use the [task / handoff template](docs/00-project-hq/task-template.md) to carry decisions between chats; [navigation.json](docs/00-project-hq/navigation.json) provides machine-readable paths and the document move map.
 
 See [`docs/`](docs/README.md) for status-labelled specifications. Phase 0 uses layered text emoji composites; the paired paper-doll plan lets compatible sprite variants and future monsters enter progressively more specific templates. The creature registry is open-ended: any roster count is a snapshot, not a cap.
 

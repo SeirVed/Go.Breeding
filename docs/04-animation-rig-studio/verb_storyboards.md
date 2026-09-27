@@ -32,7 +32,7 @@ Rig Studio's Animation Editor exposes board, first-body, second-body and phase s
 
 Every current commission also compiles into Intro / Couple → Loop A → Loop B → Climax → End / Uncouple. The animation grammar declares 12 biomechanical loop families with Anchor and Variation forms, giving 24 independently trackable loop variants. Entry and exit contracts are stored on loop phases so future transition and contact solvers can reject incompatible joins instead of guessing.
 
-All 24 variants remain `planned`; none is production-authored. `validate_scene_coverage()` verifies the family/variant count, recipe references, five-phase topology, 243 directional records, actor binding and the strict `runtime_ready: false` boundary. The canonical architectural contract lives in `docs/parametric_choreography.md`.
+All 24 variants remain `planned`; none is production-authored. `validate_scene_coverage()` verifies the family/variant count, recipe references, five-phase topology, 243 directional records, actor binding and the strict `runtime_ready: false` boundary. The canonical architectural contract lives in `docs/04-animation-rig-studio/parametric_choreography.md`.
 
 Directional order matters. `Scout → Titan` uses the larger second partner as support and a Supported Climb. `Titan → Scout` lowers the larger first partner and uses Support Lift. They are different storyboards even though the same archetypes appear.
 

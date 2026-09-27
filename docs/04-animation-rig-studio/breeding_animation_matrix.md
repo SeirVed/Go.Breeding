@@ -67,7 +67,7 @@ These 243 targets are an ordered **body-template** matrix, not a species-pair ma
 
 These values should not multiply the base script count.
 
-The planned best-fit resolver and fallback ladder are specified in [Paired Paper-Doll Animation Pipeline](animation_pipeline.md). The player prioritisation system is specified in [Dev Metrics: Guild Star Ballot](dev_metrics.md).
+The planned best-fit resolver and fallback ladder are specified in [Paired Paper-Doll Animation Pipeline](animation_pipeline.md). The player prioritisation system is specified in [Dev Metrics: Guild Star Ballot](../09-release-business/dev_metrics.md).
 
 ## Exception tags
 

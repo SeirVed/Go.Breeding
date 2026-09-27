@@ -27,6 +27,6 @@ Param-driven paper‑doll with **bands** for Feral/Refined and Neotenous/Peramor
 - **Long tail**: species-specific add-ons, bespoke pair variants, thumbnails, and codex cards.
 
 ## Performance notes
-Single texture atlases per body part family; keep anchors consistent across species. Data-driven swaps support an open-ended creature registry rather than a fixed monster count. See [Paired Paper-Doll Animation Pipeline](animation_pipeline.md).
+Single texture atlases per body part family; keep anchors consistent across species. Data-driven swaps support an open-ended creature registry rather than a fixed monster count. See [Paired Paper-Doll Animation Pipeline](../04-animation-rig-studio/animation_pipeline.md).
 
 Art creation follows the [Modular Character Art Production Groups](art_production_groups.md) contract: individually editable SVGs, an immediate assembled-character test, and explicit promotion from study to runtime-tested asset. A generated whole-sheet image is reference art, not an automatically valid cutout atlas.

@@ -2,6 +2,7 @@
 .codex-browser-profile*/
 artifacts/
 docs/chat_archive/
+docs/**/private/
 desktop.ini
 *.tmp
 *.log
